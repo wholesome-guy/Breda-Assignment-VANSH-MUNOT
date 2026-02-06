@@ -1,5 +1,8 @@
 #include "Player.h"
 #include "GameEngine.h"
+#include "Sword.h"
+#include "Rifle.h"
+#include "RPG.h"
 
 
 //constructor unity start
@@ -9,57 +12,57 @@ Player::Player():
 {
     init_playerSprite();
     init_Variables();
+    init_Weapons();
+
 }
 
 void Player::init_playerSprite()
 {
     //loadind from memory - new texture which is an image
-    player_Texture_m = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Triangle_PNG_Red.png"));
+    player_Texture_m = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Player_PNG.png"));
     
     //setting sprite properties
     player_Sprite_m.setTexture(player_Texture_m, true);
     player_Sprite_m.setPosition({ 100.f, 100.f });
     player_Sprite_m.setScale({ 1.f, 1.f });
     player_Sprite_m.setOrigin({ static_cast<float>(player_Texture_m.getSize().x / 2),static_cast<float>(player_Texture_m.getSize().y / 2) });
+
 }
 void Player::init_Variables()
 {
     player_Speed_m = 5.0f;
     //singleton access
-    game_Window_m = GameEngine::getInstance()->getWindow();
-
-    
+    game_Window_m = GameEngine::getInstance()->getWindow();   
 }
 
-#pragma region Setting weapons
-void Player::set_Sword(Weapon* weapon)
+
+void Player::init_Weapons()
 {
-    _sword_m = weapon;  
+    //initialising weapons
+    _sword_m = new Sword();  
     current_Weapon_m = _sword_m;
     current_weapon_Ammo_m = _sword_m->_Ammo;
     current_weapon_Cooldown_m = _sword_m->cooldown_Timer;
-}
-void Player::set_Rifle(Weapon* weapon)
-{
-    _rifle_m = weapon;
-}
-void Player::set_RPG(Weapon* weapon)
-{
-    _RPG_m = weapon;
+
+    _rifle_m = new Rifle();
+    _RPG_m = new RPG();
+
 }
 
-#pragma endregion
 
 void Player::update(float deltatime)
 {
+    
     player_Movement();
-    current_Weapon_m->weapon_Rotate(*game_Window_m);
+    weapon_Movement();
 
+    //weapon cooldown timer
     if (is_weapon_Cooldown_m)
     {
         weapon_Cooldown(deltatime);
     }
 
+    //attack
     player_Attack();
  
 }
@@ -67,6 +70,9 @@ void Player::update(float deltatime)
 void Player::render(sf::RenderTarget& target)
 {
     target.draw(player_Sprite_m);
+
+    //only current weapon is rendered
+    current_Weapon_m->render(*game_Window_m);
 }
 
 //checks keyboard inputs and normalises the input vector
@@ -78,13 +84,11 @@ void Player::player_Movement()
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
     {
         keyboard_Input.x -= 1.0f;
-        player_Sprite_m.setScale({ -1.f, 1.f });
 
     }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
     {
         keyboard_Input.x += 1.0f;
-        player_Sprite_m.setScale({ 1.f, 1.f });
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
@@ -112,8 +116,31 @@ void Player::player_Movement()
     }
     //sprite move function
     player_Sprite_m.move(player_Velocity);
+}
 
-    current_Weapon_m->weapon_Position(player_Velocity);
+void Player::weapon_Movement()
+{
+    //rotates current weapon to always point at mouse
+    current_Weapon_m->weapon_Rotate(*game_Window_m);
+
+    //moves to player position
+    current_Weapon_m->weapon_Position(player_Sprite_m.getPosition());
+
+    float angle = current_Weapon_m->weapon_RotationAngle;
+
+    if (angle >= 90.f && angle <= 270.f)
+    {
+        //  player face left
+        player_Sprite_m.setScale({ -1.f, 1.f });
+        current_Weapon_m->weapon_Sprite.setScale({ 1,-1 });
+    }
+    else
+    {
+        // player face right
+        player_Sprite_m.setScale({ 1.f, 1.f });
+        current_Weapon_m->weapon_Sprite.setScale({ 1,1 });
+
+    }
 
 }
 void Player::player_Attack()
@@ -180,6 +207,7 @@ void Player::transform_Weapon()
             current_weapon_Cooldown_m = _RPG_m->cooldown_Timer;
         break;
     }
+    current_Weapon_m->weapon_Position(player_Sprite_m.getPosition());
     can_Attack_m = true;
 
 }

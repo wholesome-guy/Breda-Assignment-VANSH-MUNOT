@@ -13,11 +13,6 @@ public:
 	void update(float deltatime) override;
 	void render(sf::RenderTarget& target) override;
 
-	void set_Sword(Weapon* weapon);
-	void set_Rifle(Weapon* weapon);
-	void set_RPG(Weapon* weapon);
-
-
 
 private:
 
@@ -43,6 +38,9 @@ private:
 	void init_Variables();
 	void player_Movement();
 	void player_Attack();
+
+	void init_Weapons();
+	void weapon_Movement();
 	void weapon_Cooldown(float deltatime);
 	void transform_Weapon();
 

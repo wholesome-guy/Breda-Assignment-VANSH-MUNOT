@@ -17,9 +17,9 @@ void RPG::init_Variables()
 
 void RPG::init_Sprite()
 {
-    weapon_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Rifle_PNG.png"));
+    weapon_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/RPG_PNG.png"));
     weapon_Sprite.setTexture(weapon_Texture, true);
-    weapon_Sprite.setOrigin({ static_cast<float>(weapon_Texture.getSize().x / 2),static_cast<float>(weapon_Texture.getSize().y / 2) });
+    weapon_Sprite.setOrigin({15,13});
     weapon_Sprite.setPosition({ 100,100 });
 }
 
@@ -35,7 +35,6 @@ void RPG::render(sf::RenderTarget& target)
 void RPG::Attack()
 {
     std::cout << "RPG attack" << std::endl;
-
 }
 
 void RPG::weapon_Rotate(sf::RenderWindow& game_Window)
@@ -48,12 +47,19 @@ void RPG::weapon_Rotate(sf::RenderWindow& game_Window)
     float dy_Weapon_Mouse = mouse_Position.y - weapon_Position.y;
     float dx_Weapon_Mouse = mouse_Position.x - weapon_Position.x;
 
-    sf::Angle rotation_Angle = sf::degrees((atan2(dy_Weapon_Mouse, dx_Weapon_Mouse) * Radians_To_Degrees));
+    weapon_RotationAngle = (atan2(dy_Weapon_Mouse, dx_Weapon_Mouse) * Radians_To_Degrees);
+    if (weapon_RotationAngle < 0)
+    {
+        weapon_RotationAngle += 360;
+    }
+
+    sf::Angle rotation_Angle = sf::degrees(weapon_RotationAngle);    
     weapon_Sprite.setRotation(rotation_Angle);
 }
 
 void RPG::weapon_Position(sf::Vector2f player_position)
 {
-    weapon_Sprite.move(player_position);
-
+    sf::Vector2f offset = { 0,10 };
+    weapon_Sprite.setPosition(player_position + offset);
 }
+

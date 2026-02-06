@@ -13,6 +13,9 @@ public:
 
 	int _Ammo;
 	float cooldown_Timer;
+	float weapon_RotationAngle;
+	sf::Sprite weapon_Sprite;
+
 
 	virtual void Attack() =0;
 	virtual void weapon_Position(sf::Vector2f player_Position) = 0;
@@ -25,7 +28,6 @@ protected:
 	float _Range;
 
 	sf::Texture weapon_Texture;
-	sf::Sprite weapon_Sprite;
 
 
 };

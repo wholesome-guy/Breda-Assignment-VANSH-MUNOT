@@ -1,9 +1,8 @@
 #pragma once
 
-#include "EntityBase.h"
 #include "Weapon.h"
 
-class Sword : public Weapon,public EntityBase
+class Sword : public Weapon
 {
 public:
 
@@ -14,7 +13,6 @@ public:
 
 	void weapon_Position(sf::Vector2f player_Position) override;
 	void weapon_Rotate(sf::RenderWindow& gameWindow) override;
-
 	void Attack() override;
 
 private:

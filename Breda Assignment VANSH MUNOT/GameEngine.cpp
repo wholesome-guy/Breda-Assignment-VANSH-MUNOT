@@ -1,9 +1,7 @@
 #include "GameEngine.h"
 
 #include "Player.h"
-#include "Sword.h"
-#include "Rifle.h"
-#include "RPG.h"
+
 //singleton method 
 //a pointer of instance is set to null
 GameEngine* GameEngine::instance = nullptr;
@@ -33,33 +31,7 @@ void GameEngine::init_gameWindow()
 
 void GameEngine::init_Entities()
 {
-	//created a sword and set the smart pointer
-	auto _Sword = std::make_unique<Sword>();
-	Sword* sword_Ptr = _Sword.get();   
-	//assign a raw pointer with the smartpointer,because GameEngine.cpp owns the sword. 
-	// the player can only refer to it.
-	//smart pointer = ownership(cant be copied), raw pointer = no ownership, just uses the address copyable
-
-	auto _Rifle = std::make_unique<Rifle>();
-	Rifle* rifle_Ptr = _Rifle.get();
-
-	auto _RPG = std::make_unique<RPG>();
-	RPG* rpg_Ptr = _RPG.get();
-
-	//makes player
-	auto _Player = std::make_unique<Player>();
-
-	//set sword
-	_Player->set_Sword(sword_Ptr);
-	_Player->set_Rifle(rifle_Ptr);
-	_Player->set_RPG(rpg_Ptr);
-
-	//move is used to transfer ownership from smart pointer to entity list
-	Entities.push_back(std::move(_Player));
-	Entities.push_back(std::move(_Sword));
-	Entities.push_back(std::move(_Rifle));
-	Entities.push_back(std::move(_RPG));
-
+	Entities.push_back(std::make_unique<Player>());
 }
 
 void GameEngine::run()
