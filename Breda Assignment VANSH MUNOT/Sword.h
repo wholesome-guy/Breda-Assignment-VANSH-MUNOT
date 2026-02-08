@@ -23,7 +23,7 @@ private:
 	void init_Sprite();
 	float swingDuration = 0.15f;
 	float swingTimer = 0.f;
-
+	const float Radians_To_Degrees = 180 / 3.14f;
 	float swingAngle = 60.f;
 
 };

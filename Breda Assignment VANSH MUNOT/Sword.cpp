@@ -38,30 +38,34 @@ void Sword::Attack()
 {
     std::cout << "sword attack" << "\n";
 
-    /*sf::Vector2f swordPos = weapon_Sprite.getPosition();
+    sf::Vector2f sword_Position = weapon_Sprite.getPosition();
 
-    Enemy* enemy = GameEngine::get_Instance()->get_Enemy();
+    auto& enemies = GameEngine::get_Instance()->get_Enemies();
 
-        sf::Vector2f enemyPos = enemy->get_Position();
-        sf::Vector2f diff = enemyPos - swordPos;
+    for (auto& e : enemies)
+    {
+        sf::Vector2f enemy_Position = e->get_Position();
+        sf::Vector2f difference = enemy_Position - sword_Position;
 
-        float dist = std::sqrt(diff.x * diff.x + diff.y * diff.y);
-        if (dist < _Range)
+        float distance = std::sqrt(difference.x * difference.x + difference.y * difference.y);
+        if (distance < _Range)
         {
 
-            float angleToEnemy = atan2(diff.y, diff.x) * 180.f / 3.14159f;
+            float angle_To_Enemy = atan2(difference.y, difference.x) * Radians_To_Degrees;
 
-            if (angleToEnemy < 0)
+            if (angle_To_Enemy < 0)
             {
-                angleToEnemy += 360.f;
+                angle_To_Enemy += 360.f;
             }
-            float angleDiff = std::abs(angleToEnemy - weapon_RotationAngle);
+            float angle_Difference = std::abs(angle_To_Enemy - weapon_RotationAngle);
 
-            if (angleDiff < 45.f) // 90° cone
-            {           
-                enemy->take_Damage(_Damage);
+            if (angle_Difference < 45.f) // 90° cone
+            {
+                e->take_Damage(_Damage);
             }
-        }*/
+        }
+    }
+        
 
 }
 
@@ -70,7 +74,7 @@ void Sword::weapon_Rotate(sf::RenderWindow& game_Window)
     sf::Vector2f weapon_Position = weapon_Sprite.getPosition();
     sf::Vector2f mouse_Position = game_Window.mapPixelToCoords(sf::Mouse::getPosition());
 
-    const float Radians_To_Degrees = 180 / 3.14f;
+    
 
     float dy_Weapon_Mouse = mouse_Position.y - weapon_Position.y;
     float dx_Weapon_Mouse = mouse_Position.x - weapon_Position.x;

@@ -37,6 +37,10 @@ sf::Vector2f Enemy::get_Position()
 {
 	return enemy_Sprite_m.getPosition();
 }
+void Enemy::set_Position(sf::Vector2f position)
+{
+    enemy_Sprite_m.setPosition(position);
+}
 
 void Enemy::take_Damage(float _Damage)
 {

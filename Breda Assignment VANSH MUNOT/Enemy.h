@@ -14,7 +14,7 @@ public:
 	void take_Damage(float _Damage);
 
 	sf::Vector2f get_Position();
-
+	void set_Position(sf::Vector2f position);
 private:
 
 	void init_Variables();

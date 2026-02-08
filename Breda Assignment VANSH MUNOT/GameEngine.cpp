@@ -1,6 +1,7 @@
 #include "GameEngine.h"
 #include "Player.h"
 
+
 //singleton method 
 //a pointer of instance is set to null
 GameEngine* GameEngine::instance = nullptr;
@@ -37,12 +38,17 @@ void GameEngine::init_Entities()
 	//transfer ownership by using move? smart pointer owns the object, transfer of ownership = move
 	Entities.push_back(std::move(player));
 
-	auto enemy = std::make_unique<Enemy>();
 
-	_Enemy_m = enemy.get();
+	auto enemy_list = std::make_unique<EnemySpawner>();
 
-	Entities.push_back(std::move(enemy));
+	_EnemySpawner_m = enemy_list.get();
+	
+	Entities.push_back(std::move(enemy_list));
 
+}
+std::vector<std::unique_ptr<Enemy>>& GameEngine::get_Enemies()
+{
+	return _EnemySpawner_m->get_Enemies();
 }
 
 void GameEngine::run()

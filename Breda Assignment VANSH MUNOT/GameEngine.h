@@ -9,6 +9,7 @@
 #include "EntityBase.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "EnemySpawner.h"
 
 class GameEngine
 {
@@ -39,10 +40,8 @@ public:
 		return _Player_m;
 	}
 
-	Enemy* get_Enemy()
-	{
-		return _Enemy_m;
-	}
+	std::vector<std::unique_ptr<Enemy>>& get_Enemies();
+	
 
 private:
 	
@@ -56,7 +55,7 @@ private:
 	std::vector<std::unique_ptr<EntityBase>> Entities;
 
 	Player* _Player_m;
-	Enemy* _Enemy_m;
+	EnemySpawner* _EnemySpawner_m;
 	//basic functions
 	void update(float deltatime);
 	void render();
