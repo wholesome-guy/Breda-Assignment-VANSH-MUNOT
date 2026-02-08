@@ -7,7 +7,8 @@
 #include <iostream>
 #include<vector>
 #include "EntityBase.h"
-
+#include "Player.h"
+#include "Enemy.h"
 
 class GameEngine
 {
@@ -22,15 +23,25 @@ public:
 	void run();
 
 	// Singleton access
-	static GameEngine* getInstance() 
+	static GameEngine* get_Instance() 
 	{ 
 		return instance; 
 	}
 
 	// Get the game window
-	sf::RenderWindow* getWindow() 
+	sf::RenderWindow* get_Window() 
 	{ 
 		return game_Window_m; 
+	}
+
+	Player* get_Player()
+	{
+		return _Player_m;
+	}
+
+	Enemy* get_Enemy()
+	{
+		return _Enemy_m;
 	}
 
 private:
@@ -44,6 +55,8 @@ private:
 	// thus to all entity derived classes
 	std::vector<std::unique_ptr<EntityBase>> Entities;
 
+	Player* _Player_m;
+	Enemy* _Enemy_m;
 	//basic functions
 	void update(float deltatime);
 	void render();

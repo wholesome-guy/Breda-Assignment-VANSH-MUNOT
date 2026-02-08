@@ -1,5 +1,4 @@
 #include "GameEngine.h"
-
 #include "Player.h"
 
 //singleton method 
@@ -31,7 +30,19 @@ void GameEngine::init_gameWindow()
 
 void GameEngine::init_Entities()
 {
-	Entities.push_back(std::make_unique<Player>());
+	//make player
+	auto player = std::make_unique<Player>();
+	//pass for reference raw pointer
+	_Player_m = player.get();
+	//transfer ownership by using move? smart pointer owns the object, transfer of ownership = move
+	Entities.push_back(std::move(player));
+
+	auto enemy = std::make_unique<Enemy>();
+
+	_Enemy_m = enemy.get();
+
+	Entities.push_back(std::move(enemy));
+
 }
 
 void GameEngine::run()
@@ -68,8 +79,7 @@ void GameEngine::update(float deltatime)
 	for (auto& e : Entities)
 	{
 		e->update(deltatime);
-	}
-
+	}	
 }
 
 //render objects here

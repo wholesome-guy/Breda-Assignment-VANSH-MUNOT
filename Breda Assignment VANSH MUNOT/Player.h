@@ -13,6 +13,8 @@ public:
 	void update(float deltatime) override;
 	void render(sf::RenderTarget& target) override;
 
+	sf::Vector2f get_Position();
+
 
 private:
 

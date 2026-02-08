@@ -62,4 +62,8 @@ void RPG::weapon_Position(sf::Vector2f player_position)
     sf::Vector2f offset = { 0,10 };
     weapon_Sprite.setPosition(player_position + offset);
 }
+void RPG::weapon_Scale(sf::Vector2f _Scale)
+{
+    weapon_Sprite.setScale(_Scale);
+}
 

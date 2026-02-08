@@ -32,7 +32,7 @@ void Player::init_Variables()
 {
     player_Speed_m = 5.0f;
     //singleton access
-    game_Window_m = GameEngine::getInstance()->getWindow();   
+    game_Window_m = GameEngine::get_Instance()->get_Window();   
 }
 
 
@@ -132,13 +132,13 @@ void Player::weapon_Movement()
     {
         //  player face left
         player_Sprite_m.setScale({ -1.f, 1.f });
-        current_Weapon_m->weapon_Sprite.setScale({ 1,-1 });
+        current_Weapon_m->weapon_Scale({ 1,-1 });
     }
     else
     {
         // player face right
         player_Sprite_m.setScale({ 1.f, 1.f });
-        current_Weapon_m->weapon_Sprite.setScale({ 1,1 });
+        current_Weapon_m->weapon_Scale({ 1,1 });
 
     }
 
@@ -211,6 +211,12 @@ void Player::transform_Weapon()
     can_Attack_m = true;
 
 }
+
+sf::Vector2f Player::get_Position()
+{
+    return player_Sprite_m.getPosition();
+}
+
 
 
 
