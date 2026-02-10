@@ -32,12 +32,17 @@ public:
 	// Get the game window
 	sf::RenderWindow* get_Window() 
 	{ 
-		return game_Window_m; 
+		return game_Window; 
 	}
 
 	Player* get_Player()
 	{
-		return _Player_m;
+		return _Player;
+	}
+
+	sf::Vector2u get_Window_Size()
+	{
+		return _Window_Size;
 	}
 
 	std::vector<std::unique_ptr<Enemy>>& get_Enemies();
@@ -49,13 +54,14 @@ private:
 	static GameEngine* instance;
 
 	sf::Clock clock;
-	sf::RenderWindow* game_Window_m;
+	sf::RenderWindow* game_Window;
+	sf::Vector2u _Window_Size;
 	// a kind of array that stores smart pointer to enitity base classes 
 	// thus to all entity derived classes
 	std::vector<std::unique_ptr<EntityBase>> Entities;
 
-	Player* _Player_m;
-	EnemySpawner* _EnemySpawner_m;
+	Player* _Player;
+	EnemySpawner* _EnemySpawner;
 	//basic functions
 	void update(float deltatime);
 	void render();

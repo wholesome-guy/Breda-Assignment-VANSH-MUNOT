@@ -19,17 +19,20 @@ public:
 
 private:
     // Spawner properties
-    float spawn_Timer_m = 0;
-    float spawn_Interval_m;
-    int max_Enemies_m;
-    int current_Enemy_Count_m;
+    float spawn_Timer = 0;
+    float spawn_Interval;
+    int max_Enemies;
+    int current_Enemy_Count;
 
     // Spawn area boundaries
-    sf::Vector2f spawn_Area_Min_m;
-    sf::Vector2f spawn_Area_Max_m;
+    sf::Vector2f spawn_Area_Min;
+    sf::Vector2f spawn_Area_Max;
 
+    float screen_Width;
+    float screen_Height;
+    float spawn_Margin;
     // Container for spawned enemies
-    std::vector<std::unique_ptr<Enemy>> _Enemies_m;
+    std::vector<std::unique_ptr<Enemy>> _Enemies;
 
     void init_Variables();
 

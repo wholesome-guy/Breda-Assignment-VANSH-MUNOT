@@ -17,7 +17,7 @@ GameEngine::GameEngine()
 //destructor -- unity on destroy method
 GameEngine::~GameEngine()
 {
-	delete game_Window_m;
+	delete game_Window;
 	//clean instance
 	instance = nullptr;
 }
@@ -25,8 +25,9 @@ GameEngine::~GameEngine()
 //intialise the game window
 void GameEngine::init_gameWindow()
 {
-	game_Window_m = new sf::RenderWindow(sf::VideoMode({ 960,540 }), "Game");
-	game_Window_m->setFramerateLimit(60);
+	_Window_Size = { 640,360 };
+	game_Window = new sf::RenderWindow(sf::VideoMode(_Window_Size), "Game");
+	game_Window->setFramerateLimit(60);
 }
 
 void GameEngine::init_Entities()
@@ -34,27 +35,27 @@ void GameEngine::init_Entities()
 	//make player
 	auto player = std::make_unique<Player>();
 	//pass for reference raw pointer
-	_Player_m = player.get();
+	_Player = player.get();
 	//transfer ownership by using move? smart pointer owns the object, transfer of ownership = move
 	Entities.push_back(std::move(player));
 
 
 	auto enemy_list = std::make_unique<EnemySpawner>();
 
-	_EnemySpawner_m = enemy_list.get();
+	_EnemySpawner = enemy_list.get();
 	
 	Entities.push_back(std::move(enemy_list));
 
 }
 std::vector<std::unique_ptr<Enemy>>& GameEngine::get_Enemies()
 {
-	return _EnemySpawner_m->get_Enemies();
+	return _EnemySpawner->get_Enemies();
 }
 
 void GameEngine::run()
 {
 	// update and render loop when game is running
-	while (game_Window_m->isOpen())
+	while (game_Window->isOpen())
 	{
 		poll_Event();
 
@@ -70,11 +71,11 @@ void GameEngine::run()
 //method to check(poll) events of the game window/ application
 void GameEngine::poll_Event()
 {
-	while (auto event = game_Window_m->pollEvent())
+	while (auto event = game_Window->pollEvent())
 	{
 		if (event->is<sf::Event::Closed>())
 		{
-			game_Window_m->close();
+			game_Window->close();
 		}
 	}
 }
@@ -91,12 +92,12 @@ void GameEngine::update(float deltatime)
 //render objects here
 void GameEngine::render()
 {
-	game_Window_m->clear();
+	game_Window->clear();
 
 	for (auto& e : Entities)
 	{
-		e->render(*game_Window_m);
+		e->render(*game_Window);
 	}
 
-	game_Window_m->display();
+	game_Window->display();
 }

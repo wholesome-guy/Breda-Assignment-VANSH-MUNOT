@@ -2,19 +2,23 @@
 #include "EntityBase.h"
 #include "Player.h"
 
-class Enemy:public EntityBase
+class Enemy
 {
+
 public:
 
 	Enemy();
+	~Enemy() = default;
 
-	void update(float deltatime) override;
-	void render(sf::RenderTarget& target) override;
+	void update(float deltatime);
+	void render(sf::RenderTarget& target);
 
 	void take_Damage(float _Damage);
 
 	sf::Vector2f get_Position();
+	sf::FloatRect get_GlobalBounds();
 	void set_Position(sf::Vector2f position);
+	void set_Color(sf::Color colour);
 private:
 
 	void init_Variables();
@@ -22,12 +26,12 @@ private:
 
 	void enemy_Movement(float deltatime);
 
-	float enemy_Speed_m;
+	float enemy_Speed;
 
-	sf::Texture enemy_Texture_m;
-	sf::Sprite enemy_Sprite_m;
+	sf::Texture enemy_Texture;
+	sf::Sprite enemy_Sprite;
 
-	Player* _Player_m;
+	Player* _Player;
 
 };
 

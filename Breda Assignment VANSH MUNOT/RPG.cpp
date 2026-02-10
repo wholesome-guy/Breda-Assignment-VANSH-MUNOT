@@ -44,10 +44,10 @@ void RPG::weapon_Rotate(sf::RenderWindow& game_Window)
 
     const float Radians_To_Degrees = 180 / 3.14f;
 
-    float dy_Weapon_Mouse = mouse_Position.y - weapon_Position.y;
-    float dx_Weapon_Mouse = mouse_Position.x - weapon_Position.x;
+    float dy_Weaponouse = mouse_Position.y - weapon_Position.y;
+    float dx_Weaponouse = mouse_Position.x - weapon_Position.x;
 
-    weapon_RotationAngle = (atan2(dy_Weapon_Mouse, dx_Weapon_Mouse) * Radians_To_Degrees);
+    weapon_RotationAngle = (atan2(dy_Weaponouse, dx_Weaponouse) * Radians_To_Degrees);
     if (weapon_RotationAngle < 0)
     {
         weapon_RotationAngle += 360;
