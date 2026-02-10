@@ -81,7 +81,8 @@ void Player::init_UI()
 void Player::init_Variables()
 {
     player_Speed = 5.0f;
-    player_Health = 100;
+    max_player_Health = 100;
+    player_Health = max_player_Health;
     //singleton access
     game_Window = GameEngine::get_Instance()->get_Window();  
 
@@ -353,6 +354,14 @@ void Player::enemy_Collision()
         if (player_Sprite.getGlobalBounds().findIntersection(e->get_GlobalBounds()))
         {
             player_Health--;
+
+            player_Health = std::clamp(player_Health, 0.f, max_player_Health);
+
+            if (player_Health <= 0)
+            {
+
+            }
+
         }
 
     }

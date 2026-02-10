@@ -23,7 +23,8 @@ private:
 
 	sf::RenderWindow* game_Window;
 	float player_Speed;
-	int player_Health;
+	float max_player_Health;
+	float player_Health;
 
 	Weapon* current_Weapon = nullptr;
 	Weapon* _Sword = nullptr;

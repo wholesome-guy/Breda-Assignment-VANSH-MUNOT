@@ -10,6 +10,8 @@ Enemy::Enemy() :enemy_Sprite(enemy_Texture)
 void Enemy::init_Variables()
 {
     enemy_Speed = 50.0f;
+    max_enemy_Health = 100.f;
+    enemy_Health = max_enemy_Health;
     _Player = GameEngine::get_Instance()->get_Player();
 }
 void Enemy::init_Sprite()
@@ -48,7 +50,16 @@ void Enemy::set_Position(sf::Vector2f position)
 
 void Enemy::take_Damage(float _Damage)
 {
-	std::cout << "took damage " << _Damage << "\n";
+    enemy_Health -= _Damage;
+
+    enemy_Health = std::clamp(enemy_Health, 0.f, max_enemy_Health);
+
+    set_Color(sf::Color::Red);
+
+    if (enemy_Health <= 0)
+    {
+        is_Dead = true;
+    }
 }
 
 void Enemy::enemy_Movement(float deltatime)
@@ -70,4 +81,9 @@ void Enemy::enemy_Movement(float deltatime)
 void Enemy::set_Color(sf::Color colour)
 {
     enemy_Sprite.setColor(colour);
+}
+
+bool Enemy::get_Dead_Bool()
+{
+    return is_Dead;
 }

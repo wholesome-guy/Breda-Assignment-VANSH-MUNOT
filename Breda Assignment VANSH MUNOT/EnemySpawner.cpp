@@ -10,8 +10,8 @@ void EnemySpawner::init_Variables()
 	spawn_Interval = 2.f;
 	max_Enemies = 10;
 	spawn_Timer = 0;
-	spawn_Area_Min = { -640,-360 };
-	spawn_Area_Max = { 1280,720 };
+	spawn_Area_Min = { 0,0 };
+	spawn_Area_Max = { 640,360 };
 }
 void EnemySpawner::update(float deltatime)
 {
@@ -23,10 +23,11 @@ void EnemySpawner::update(float deltatime)
 		spawn_Timer = 0.0f; // Reset timer
 	}
 
-	// Update all enemies
-	for (auto& e : _Enemies)
+	for (int i = 0; i < _Enemies.size(); i++)
 	{
-		e->update(deltatime);
+		update_Enemy(i, deltatime);
+
+		erase_Enemy(i);
 	}
 }
 void EnemySpawner::render(sf::RenderTarget& target)
@@ -46,6 +47,19 @@ void EnemySpawner::spawn_Enemy()
 
 	current_Enemy_Count++;
 
+}
+void EnemySpawner::update_Enemy(int i,float deltatime)
+{
+	_Enemies[i]->update(deltatime);
+}
+
+void EnemySpawner::erase_Enemy(int i)
+{
+	if (_Enemies[i]->get_Dead_Bool())
+	{
+		_Enemies.erase(_Enemies.begin() + i);
+		current_Enemy_Count--;
+	}
 }
 sf::Vector2f EnemySpawner::get_Random_Spawn_Position()
 {

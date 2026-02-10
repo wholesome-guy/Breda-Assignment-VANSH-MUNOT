@@ -62,7 +62,6 @@ void Sword::Attack()
             if (angle_Difference < 45.f) // 90° cone
             {
                 e->take_Damage(_Damage);
-                e->set_Color(sf::Color::Red);
             }
         }
     }
