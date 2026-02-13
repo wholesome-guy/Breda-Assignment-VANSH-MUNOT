@@ -99,12 +99,12 @@ void Player::init_Weapons()
 {
     //initialising weapons
     _Sword = new Sword();  
-    current_Weapon = _Sword;
-    current_weapon_Ammo = _Sword->_Ammo;
-    current_weapon_Cooldown = _Sword->cooldown_Timer;
-
     _Rifle = new Rifle();
     _RPG = new RPG();
+
+    current_Weapon = _Rifle;
+    current_weapon_Ammo = _Rifle->_Ammo;
+    current_weapon_Cooldown = _Rifle->cooldown_Timer;
 
 }
 

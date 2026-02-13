@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Weapon.h"
+#include "Projectile.h"
+#include "Bullet.h"
+#include <vector>
 
 class Rifle : public Weapon
 {
@@ -22,6 +25,8 @@ private:
 
 	void init_Variables();
 	void init_Sprite();
+
+	std::vector<std::unique_ptr<Bullet>> Bullets;
 
 };
 

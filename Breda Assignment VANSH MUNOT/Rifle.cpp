@@ -10,9 +10,9 @@ Rifle::Rifle() : Weapon()
 void Rifle::init_Variables()
 {
     _Ammo = 30;
-    _Damage = 25.f;
+    _Damage = 100.f;
     _Range = 60.f;
-    cooldown_Timer = 0.05f;
+    cooldown_Timer = 0.1f;
 
 }
 
@@ -26,16 +26,37 @@ void Rifle::init_Sprite()
 
 void Rifle::update(float deltatime)
 {
+    for (int i = 0; i < Bullets.size(); i++)
+    {
+        Bullets[i]->update(deltatime);
+
+        if (Bullets[i]->shouldDespawn())
+        {
+            Bullets.erase(Bullets.begin() + i);
+        }
+    }
 }
 
 void Rifle::render(sf::RenderTarget& target)
 {
     target.draw(weapon_Sprite);
+
+    for (auto& b : Bullets)
+    {
+        b->render(target);
+    }
 }
 
 void Rifle::Attack()
 {
     std::cout << "Rifle attack" << std::endl;
+
+    sf::Vector2f Position = weapon_Sprite.getPosition();
+    sf::Angle Rotation = weapon_Sprite.getRotation();
+    //cos = horizontal component, sin = vertical component
+    sf::Vector2f shoot_Direction(std::cos(Rotation.asRadians()), std::sin(Rotation.asRadians()));
+
+    Bullets.push_back(std::make_unique<Bullet>(Position, Rotation, shoot_Direction,_Damage));
 
 }
 
@@ -57,6 +78,18 @@ void Rifle::weapon_Rotate(sf::RenderWindow& game_Window)
 
     sf::Angle rotation_Angle = sf::degrees(weapon_RotationAngle);    
     weapon_Sprite.setRotation(rotation_Angle);
+
+    if (weapon_RotationAngle >= 90.f && weapon_RotationAngle <= 270.f)
+    {
+        //  player face left
+        weapon_Scale({ 1,-1 });
+    }
+    else
+    {
+        // player face right
+        weapon_Scale({ 1,1 });
+
+    } 
 }
 
 void Rifle::weapon_Position(sf::Vector2f player_position)

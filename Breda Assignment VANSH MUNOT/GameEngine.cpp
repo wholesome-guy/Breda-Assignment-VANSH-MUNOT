@@ -29,7 +29,7 @@ void GameEngine::init_gameWindow()
 {
 	_Window_Size = { 640,360 };
 	game_Window = new sf::RenderWindow(sf::VideoMode(_Window_Size), "Game");
-	game_Window->setFramerateLimit(60);
+	//game_Window->setFramerateLimit(60);
 }
 
 

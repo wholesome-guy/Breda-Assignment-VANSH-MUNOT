@@ -135,23 +135,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemySpawner.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MathFunctions.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Rifle.cpp" />
     <ClCompile Include="RPG.cpp" />
     <ClCompile Include="Sword.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemySpawner.h" />
     <ClInclude Include="EntityBase.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="MathFunctions.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="Rifle.h" />
     <ClInclude Include="RPG.h" />
     <ClInclude Include="Sword.h" />

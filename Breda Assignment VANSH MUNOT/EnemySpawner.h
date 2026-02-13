@@ -40,6 +40,5 @@ private:
     void update_Enemy(int i,float deltatime);
     void erase_Enemy(int i);
     sf::Vector2f get_Random_Spawn_Position();
-    //void cleanup_Dead_Enemies();
 };
 
