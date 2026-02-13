@@ -141,6 +141,7 @@
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MathFunctions.cpp" />
+    <ClCompile Include="Missle.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Rifle.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="EntityBase.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="MathFunctions.h" />
+    <ClInclude Include="Missle.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="Rifle.h" />

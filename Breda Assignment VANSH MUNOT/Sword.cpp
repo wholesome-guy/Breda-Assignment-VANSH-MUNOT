@@ -85,7 +85,7 @@ void Sword::attack_Enemy_Collision()
         sf::Vector2f difference = enemy_Position - sword_Position;
 
         //distance between sowrd and enemy
-        float distance = std::sqrt(difference.x * difference.x + difference.y * difference.y);
+        float distance = std::sqrtf(difference.x * difference.x + difference.y * difference.y);
 
         if (distance < _Range)
         {

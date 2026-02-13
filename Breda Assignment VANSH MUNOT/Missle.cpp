@@ -1,9 +1,10 @@
-#include "Bullet.h"
+#include "Missle.h"
+
 #include "GameEngine.h"
-Bullet::Bullet(sf::Vector2f position, sf::Angle rotation, sf::Vector2f direction,float _Damage, float _Range) : Projectile()
+Missle::Missle(sf::Vector2f position, sf::Angle rotation, sf::Vector2f direction, float _Damage, float _Range) : Projectile()
 {
 	init_Sprite(position, rotation);
-	init_Variables(_Damage,_Range);
+	init_Variables(_Damage, _Range);
 
 	float magnitude = sqrtf((direction.x * direction.x) + (direction.y * direction.y));
 
@@ -12,16 +13,18 @@ Bullet::Bullet(sf::Vector2f position, sf::Angle rotation, sf::Vector2f direction
 
 }
 
-void Bullet::init_Variables(float damage, float range)
+void Missle::init_Variables(float damage,float range)
 {
-	_Speed = 500.f;
+	_Speed = 200.f;
 	_Damage = damage;
 	despawn_Time = range;
 	despawn_Timer = 0.f;
 	should_Despawn = false;
+	is_Moving = true;
+	explosion_Radius = 200;
 }
 
-void Bullet::init_Sprite(sf::Vector2f position, sf::Angle rotation)
+void Missle::init_Sprite(sf::Vector2f position, sf::Angle rotation)
 {
 	projectile_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Sword_PNG.png"));
 	projectile_Sprite = sf::Sprite(projectile_Texture);
@@ -31,13 +34,14 @@ void Bullet::init_Sprite(sf::Vector2f position, sf::Angle rotation)
 
 
 	projectile_Sprite.setPosition(position);
-
 	projectile_Sprite.setRotation(rotation);
 }
-void Bullet::update(float deltatime)
+void Missle::update(float deltatime)
 {
-	projectile_Sprite.move(projectile_Velocity * deltatime);
-
+	if (is_Moving)
+	{
+		projectile_Sprite.move(projectile_Velocity * deltatime);
+	}
 
 	if (despawn_Timer < despawn_Time)
 	{
@@ -45,23 +49,23 @@ void Bullet::update(float deltatime)
 	}
 	else
 	{
-		should_Despawn = true;
+		explosion();
 	}
 
 	collision();
 
 }
-void Bullet::render(sf::RenderTarget& target)
+void Missle::render(sf::RenderTarget& target)
 {
 	target.draw(projectile_Sprite);
 }
 
-bool Bullet::shouldDespawn() const
+bool Missle::shouldDespawn() const
 {
 	return should_Despawn;
 }
 
-void Bullet::collision()
+void Missle::collision()
 {
 	auto& enemies = GameEngine::get_Instance()->get_Enemies();
 
@@ -69,9 +73,34 @@ void Bullet::collision()
 	{
 		if (projectile_Sprite.getGlobalBounds().findIntersection(e->get_GlobalBounds()))
 		{
-			should_Despawn = true;
-			e->take_Damage(_Damage);
+			explosion();
 		}
 	}
 
+}
+
+void Missle::explosion()
+{
+	is_Moving = false;
+
+	sf::Vector2f missile_Position = projectile_Sprite.getPosition();
+	auto& enemies = GameEngine::get_Instance()->get_Enemies();
+
+	for (auto& e : enemies)
+	{
+		sf::Vector2f enemy_Position = e->get_Position();
+
+		sf::Vector2f difference = missile_Position - enemy_Position;
+
+		float magnitude = std::sqrtf(difference.x * difference.x + difference.y * difference.y);
+
+		if (magnitude < explosion_Radius)
+		{
+			e->take_Damage(_Damage);
+		}
+
+	}
+
+	should_Despawn = true;
+	std::cout << "explosion" << "\n";
 }

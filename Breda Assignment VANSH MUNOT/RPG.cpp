@@ -9,8 +9,8 @@ RPG::RPG() : Weapon()
 void RPG::init_Variables()
 {
     _Ammo = 2;
-    _Damage = 25.f;
-    _Range = 60.f;
+    _Damage = 90.f;
+    _Range = 1.5f;
     cooldown_Timer = 2.f;
 
 }
@@ -25,16 +25,35 @@ void RPG::init_Sprite()
 
 void RPG::update(float deltatime)
 {
+    for (int i = 0; i < Missiles.size(); i++)
+    {
+        Missiles[i]->update(deltatime);
+
+        if (Missiles[i]->shouldDespawn())
+        {
+            Missiles.erase(Missiles.begin() + i);
+        }
+    }
 }
 
 void RPG::render(sf::RenderTarget& target)
 {
     target.draw(weapon_Sprite);
+    for (auto& m : Missiles)
+    {
+        m->render(target);
+    }
 }
 
 void RPG::Attack()
 {
     std::cout << "RPG attack" << std::endl;
+    sf::Vector2f Position = weapon_Sprite.getPosition();
+    sf::Angle Rotation = weapon_Sprite.getRotation();
+    //cos = horizontal component, sin = vertical component
+    sf::Vector2f shoot_Direction(std::cos(Rotation.asRadians()), std::sin(Rotation.asRadians()));
+
+    Missiles.push_back(std::make_unique<Missle>(Position, Rotation, shoot_Direction, _Damage, _Range));
 }
 
 void RPG::weapon_Rotate(sf::RenderWindow& game_Window)

@@ -11,7 +11,7 @@ void Rifle::init_Variables()
 {
     _Ammo = 30;
     _Damage = 100.f;
-    _Range = 60.f;
+    _Range = 4.f;
     cooldown_Timer = 0.1f;
 
 }
@@ -56,7 +56,7 @@ void Rifle::Attack()
     //cos = horizontal component, sin = vertical component
     sf::Vector2f shoot_Direction(std::cos(Rotation.asRadians()), std::sin(Rotation.asRadians()));
 
-    Bullets.push_back(std::make_unique<Bullet>(Position, Rotation, shoot_Direction,_Damage));
+    Bullets.push_back(std::make_unique<Bullet>(Position, Rotation, shoot_Direction,_Damage,_Range));
 
 }
 

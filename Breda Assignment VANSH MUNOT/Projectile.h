@@ -28,7 +28,7 @@ protected:
 	bool should_Despawn;
 
 	virtual void init_Sprite(sf::Vector2f position, sf::Angle rotation) = 0;
-	virtual void init_Variables(float _Damage) = 0;
+	virtual void init_Variables(float _Damage, float _Range) = 0;
 
 	virtual void collision() =0;
  
