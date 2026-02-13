@@ -74,5 +74,19 @@ private:
 	//intialise window
 	void init_gameWindow();
 
+	//FPS 
+	float updateInterval = 0.5f; // How often to update the FPS display
+
+	float accum = 0; // FPS accumulated over the interval
+	int frames = 0; // Frames drawn over the interval
+	float timeleft = updateInterval;
+
+	void FPS_Counter(float deltatime);
+
+	sf::Text FPS_Text;
+	sf::Font game_Font;
+
+	void init_Text();
+
 };
 

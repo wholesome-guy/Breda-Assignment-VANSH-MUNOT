@@ -21,10 +21,19 @@ private:
 	
 	void init_Variables();
 	void init_Sprite();
-	float swingDuration = 0.15f;
-	float swingTimer = 0.f;
+
 	const float Radians_To_Degrees = 180 / 3.14f;
-	float swingAngle = 60.f;
+	
+	bool is_Swinging;
+	float swing_Timer;
+	float swing_Duration;
+	float swing_Start_Angle;
+	float swing_End_Angle;
+
+	void attack_Animation_Intialiser();
+	void attack_Animation_Update(float deltatime);
+	void attack_Enemy_Collision();
+
 
 };
 

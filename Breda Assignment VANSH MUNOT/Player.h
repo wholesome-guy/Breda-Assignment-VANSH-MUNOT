@@ -41,7 +41,7 @@ private:
 	void init_playerSprite();
 	void init_UI();
 	void init_Variables();
-	void player_Movement();
+	void player_Movement(float deltatime);
 	void wall_Collision();
 	void enemy_Collision();
 

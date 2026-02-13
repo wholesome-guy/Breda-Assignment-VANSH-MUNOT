@@ -69,11 +69,11 @@ void Enemy::enemy_Movement(float deltatime)
 
     sf::Vector2f _Direction = player_Position - enemy_Position;
 
-    float agnitude = std::sqrt(_Direction.x * _Direction.x + _Direction.y * _Direction.y);
+    float _magnitude = std::sqrt(_Direction.x * _Direction.x + _Direction.y * _Direction.y);
 
-    if (agnitude != 0)
+    if (_magnitude != 0)
     {
-        _Direction = _Direction / agnitude; // normalize
+        _Direction = _Direction / _magnitude; // normalize
 
     }
     enemy_Sprite.move(_Direction * enemy_Speed * deltatime);

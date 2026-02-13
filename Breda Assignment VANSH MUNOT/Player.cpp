@@ -80,7 +80,7 @@ void Player::init_UI()
 }
 void Player::init_Variables()
 {
-    player_Speed = 5.0f;
+    player_Speed = 250.0f;
     max_player_Health = 100;
     player_Health = max_player_Health;
     //singleton access
@@ -112,7 +112,7 @@ void Player::init_Weapons()
 void Player::update(float deltatime)
 {
     
-    player_Movement();
+    player_Movement(deltatime);
     weapon_Movement();
 
     //weapon cooldown timer
@@ -120,6 +120,8 @@ void Player::update(float deltatime)
     {
         weapon_Cooldown(deltatime);
     }
+
+    current_Weapon->update(deltatime);
 
     //attack
     player_Attack();
@@ -142,7 +144,7 @@ void Player::render(sf::RenderTarget& target)
 }
 
 //checks keyboard inputs and normalises the input vector
-void Player::player_Movement()
+void Player::player_Movement(float deltatime)
 {
     sf::Vector2f keyboard_Input = {0,0};
     sf::Vector2f player_Velocity;
@@ -174,11 +176,11 @@ void Player::player_Movement()
     if (keyboard_Input.x != 0 && keyboard_Input.y != 0)
     {
         float maginutude_Kinput = std::sqrtf(powf(keyboard_Input.x, 2) + powf(keyboard_Input.y, 2));
-        player_Velocity = (keyboard_Input / maginutude_Kinput) * player_Speed;
+        player_Velocity = (keyboard_Input / maginutude_Kinput) * player_Speed * deltatime;
     }
     else
     {
-        player_Velocity = keyboard_Input * player_Speed;
+        player_Velocity = keyboard_Input * player_Speed * deltatime;
     }
     //sprite move function
     player_Sprite.move(player_Velocity);
@@ -196,16 +198,13 @@ void Player::weapon_Movement()
 
     if (angle >= 90.f && angle <= 270.f)
     {
-        //  player face left
+        //  player face left when weapn faces left
         player_Sprite.setScale({ -1.f, 1.f });
-        current_Weapon->weapon_Scale({ 1,-1 });
     }
     else
     {
-        // player face right
+        // player face right when when faces right
         player_Sprite.setScale({ 1.f, 1.f });
-        current_Weapon->weapon_Scale({ 1,1 });
-
     }
 
 }
