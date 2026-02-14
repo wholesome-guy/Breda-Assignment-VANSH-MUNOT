@@ -20,7 +20,10 @@ public:
 	virtual void weapon_Position(sf::Vector2f player_Position) = 0;
 	virtual void weapon_Rotate(sf::RenderWindow& gameWindow) = 0;
 	virtual void weapon_Scale(sf::Vector2f _Scale)=0;
-
+	virtual void weapon_Colour(sf::Color colour)
+	{
+		weapon_Sprite.setColor(colour);
+	}
 protected:
 
 	float _Damage;

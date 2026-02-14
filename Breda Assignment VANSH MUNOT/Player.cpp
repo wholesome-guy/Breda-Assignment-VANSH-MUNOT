@@ -11,16 +11,11 @@
 //constructor unity start
 Player::Player():
     //intialiser list for things with no default constructors
-	player_Sprite(player_Texture),
-    ammo_Text(game_Font,"x/x"),
-    ammo_Sprite(ammo_Texture),
-    health_Text(game_Font,"1"),
-    health_Sprite(health_Texture)
+	player_Sprite(player_Texture)
 {
     init_playerSprite();
     init_Variables();
     init_Weapons();
-    init_UI();
 
 }
 
@@ -34,49 +29,6 @@ void Player::init_playerSprite()
     player_Sprite.setPosition({ 100.f, 100.f });
     player_Sprite.setScale({ 1.f, 1.f });
     player_Sprite.setOrigin({ static_cast<float>(player_Texture.getSize().x / 2),static_cast<float>(player_Texture.getSize().y / 2) });
-}
-void Player::init_UI()
-{
-    if (game_Font.openFromFile("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/SpecialElite-Regular.ttf"))
-    {
-        std::cout << "got the font" << "\n";
-    }
-    game_Font.setSmooth(false);
-
-    std::stringstream ammo_string;
-
-    ammo_string << current_weapon_Ammo;
-
-    ammo_Text.setString(ammo_string.str());
-    ammo_Text.setCharacterSize(30);
-    ammo_Text.setStyle(sf::Text::Bold);
-    ammo_Text.setFillColor(sf::Color::White);
-    ammo_Text.setPosition({ 18.f, 31.f });
-    ammo_Text.setScale({ 0.5f,0.5f });
-
-    ammo_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Ammo_UI_PNG.png"));
-    ammo_Sprite.setTexture(ammo_Texture, true);
-    ammo_Sprite.setScale({ 0.025f, 0.025f });
-    ammo_Sprite.setPosition({ 8.f, 40.f });
-    ammo_Sprite.setOrigin({ static_cast<float>(ammo_Texture.getSize().x / 2),static_cast<float>(ammo_Texture.getSize().y / 2) });
-
-    std::stringstream health_string;
-
-    health_string << player_Health;
-
-    health_Text.setString(health_string.str());
-    health_Text.setCharacterSize(30);
-    health_Text.setStyle(sf::Text::Bold);
-    health_Text.setFillColor(sf::Color::White);
-    health_Text.setPosition({ 18.f, 11.f });
-    health_Text.setScale({ 0.5f,0.5f });
-    
-
-    health_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Heart_UI_PNG.png"));
-    health_Sprite.setTexture(health_Texture,true);
-    health_Sprite.setScale({ 0.025f, 0.025f });
-    health_Sprite.setPosition({ 8.f,20.f });
-    health_Sprite.setOrigin({ static_cast<float>(health_Texture.getSize().x / 2),static_cast<float>(health_Texture.getSize().y / 2) });
 }
 void Player::init_Variables()
 {
@@ -93,8 +45,11 @@ void Player::init_Variables()
     screen_Width = static_cast<float>(screen_Size.x);
     screen_Height = static_cast<float>(screen_Size.y);
 
-    invincibility_Time = 1.f;
+    invincibility_Time = 0.5f;
     invincibility_Timer = 0;
+
+    weapon_Transform_Timer = 0;
+    weapon_Transfrom_Time = 3.f;
 }
 
 
@@ -128,22 +83,21 @@ void Player::update(float deltatime)
 
     //attack
     player_Attack();
-
+    weapon_Transformation_Cooldown(deltatime);
+    
     wall_Collision();
     enemy_Collision(deltatime);
 
-    update_UI();
- 
 }
 
 void Player::render(sf::RenderTarget& target)
 {
     target.draw(player_Sprite);
 
-    render_UI(target);
-
     //only current weapon is rendered
     current_Weapon->render(*game_Window);
+
+
 }
 
 //checks keyboard inputs and normalises the input vector
@@ -220,14 +174,12 @@ void Player::player_Attack()
             current_Weapon->Attack();
             current_weapon_Ammo--;
 
-            
-
             if (current_weapon_Ammo <= 0)
             {
-                transform_Weapon();
+                //start Transformation
+                is_weapon_Transforming = true;
             }
             is_weapon_Cooldown = true;
-
 
         }
     }
@@ -249,37 +201,50 @@ void Player::weapon_Cooldown(float deltatime)
 
 void Player::transform_Weapon()
 {
+        //get seed
+        std::random_device rd;
+        //intialise  m twister
+        std::mt19937 gen(rd());
 
-    //get seed
-    std::random_device rd;
-    //intialise  m twister
-    std::mt19937 gen(rd());
+        std::uniform_int_distribution<int> random_weapon(0, 2);
 
-    std::uniform_int_distribution<int> random_weapon(0, 2);
+        int random_Number = random_weapon(gen);
 
-    int random_Number = random_weapon(gen);
-
-    can_Attack = false;
-
-    switch (random_Number)
-    {
+        switch (random_Number)
+        {
         case 0:
             weapon_Assigner(_Sword);
-        break;
+            break;
 
         case 1:
             weapon_Assigner(_Rifle);
 
-        break;
+            break;
 
         case 2:
             weapon_Assigner(_RPG);
 
-        break;
-    }
-    current_Weapon->weapon_Position(player_Sprite.getPosition());
-    can_Attack = true;
+            break;
+        }
+        current_Weapon->weapon_Position(player_Sprite.getPosition());
+        can_Attack = true;
+}
 
+void Player::weapon_Transformation_Cooldown(float deltatime)
+{
+    if (is_weapon_Transforming)
+    {
+        can_Attack = false;
+
+        weapon_Transform_Timer += deltatime;
+        if (weapon_Transform_Timer > weapon_Transfrom_Time)
+        {
+            //complete tranformation
+            is_weapon_Transforming = false;
+            weapon_Transform_Timer = 0;
+            transform_Weapon();
+        }
+    }
 }
 
 void Player::weapon_Assigner(Weapon* weapon)
@@ -292,6 +257,44 @@ void Player::weapon_Assigner(Weapon* weapon)
 sf::Vector2f Player::get_Position()
 {
     return player_Sprite.getPosition();
+}
+
+float Player::get_Cooldown(int i)
+{
+    switch (i)
+    {
+    case 0:
+        return(current_weapon_Cooldown - weapon_cooldown_Timer);
+        break;
+
+    case 1:    
+        return(weapon_Transfrom_Time - weapon_Transform_Timer);
+        break;
+    }
+}
+
+bool Player::get_CoolDown_Bool(int i)
+{
+    switch (i)
+    {
+    case 0:
+        return is_weapon_Cooldown;
+        break;
+
+    case 1:
+        return is_weapon_Transforming;
+        break;
+    }
+}
+
+float Player::get_Health()
+{
+    return player_Health;
+}
+
+int Player::get_Ammo()
+{
+    return current_weapon_Ammo;
 }
 
 void Player::wall_Collision()
@@ -323,31 +326,6 @@ void Player::wall_Collision()
     }
 }
 
-void Player::update_UI()
-{
-    std::stringstream ammo_string;
-
-    ammo_string << current_weapon_Ammo;
-
-    ammo_Text.setString(ammo_string.str());
-
-
-    std::stringstream health_string;
-
-    health_string << player_Health;
-
-    health_Text.setString(health_string.str());
-}
-
-void Player::render_UI(sf::RenderTarget& target)
-{
-    target.draw(ammo_Text);
-    target.draw(ammo_Sprite);
-
-    target.draw(health_Text);
-    target.draw(health_Sprite);
-}
-
 void Player::enemy_Collision(float deltatime)
 {
     if (can_Damage)
@@ -376,15 +354,18 @@ void Player::enemy_Collision(float deltatime)
         if (invincibility_Timer > invincibility_Time)
         {
             can_Damage = true;
+
+            player_Sprite.setColor(sf::Color::White);
+            current_Weapon->weapon_Colour(sf::Color::White);
+
             invincibility_Timer = 0;
         }
-    }
-    
-
-    
-
-
-    
+        else
+        {
+            player_Sprite.setColor(sf::Color::Color(255, 255, 255, 55));
+            current_Weapon->weapon_Colour(sf::Color::Color(255, 255, 255, 55));
+        }
+    }   
 
 }
 

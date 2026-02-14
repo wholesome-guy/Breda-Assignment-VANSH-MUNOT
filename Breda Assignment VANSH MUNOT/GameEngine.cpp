@@ -1,6 +1,6 @@
 #include "GameEngine.h"
 #include "Player.h"
-
+#include "PlayerUI.h"
 
 //singleton method 
 //a pointer of instance is set to null
@@ -67,10 +67,16 @@ void GameEngine::init_Entities()
 	
 	Entities.push_back(std::move(enemy_list));
 
+	Entities.push_back(std::make_unique<PlayerUI>());
+
 }
 std::vector<std::unique_ptr<Enemy>>& GameEngine::get_Enemies()
 {
 	return _EnemySpawner->get_Enemies();
+}
+Player* GameEngine::get_Player()
+{
+	return _Player;
 }
 
 void GameEngine::run()

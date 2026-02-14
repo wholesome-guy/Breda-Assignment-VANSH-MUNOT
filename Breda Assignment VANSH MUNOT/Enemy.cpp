@@ -13,6 +13,9 @@ void Enemy::init_Variables()
     max_enemy_Health = 100.f;
     enemy_Health = max_enemy_Health;
     _Player = GameEngine::get_Instance()->get_Player();
+
+    flash_Time = 0.2f;
+    flash_Timer = 0;
 }
 void Enemy::init_Sprite()
 {
@@ -28,6 +31,8 @@ void Enemy::init_Sprite()
 void Enemy::update(float deltatime)
 {
     enemy_Movement(deltatime);
+
+    enemy_Flashing(deltatime);
 }
 
 void Enemy::render(sf::RenderTarget& target)
@@ -54,7 +59,9 @@ void Enemy::take_Damage(float _Damage)
 
     enemy_Health = std::clamp(enemy_Health, 0.f, max_enemy_Health);
 
+    //flash
     set_Color(sf::Color::Red);
+    start_Flash = true;
 
     if (enemy_Health <= 0)
     {
@@ -77,6 +84,29 @@ void Enemy::enemy_Movement(float deltatime)
 
     }
     enemy_Sprite.move(_Direction * enemy_Speed * deltatime);
+
+    //flip
+    if (_Direction.x < 0) 
+    {
+        enemy_Sprite.setScale({ -1, 1 });
+    }
+    else
+    {
+        enemy_Sprite.setScale({ 1, 1 });
+    }
+}
+void Enemy::enemy_Flashing(float deltatime)
+{
+    if (start_Flash)
+    {
+        flash_Timer += deltatime;
+        if (flash_Timer > flash_Time)
+        {
+            start_Flash = false;
+            set_Color(sf::Color::White);
+            flash_Timer = 0;
+        }
+    }
 }
 void Enemy::set_Color(sf::Color colour)
 {

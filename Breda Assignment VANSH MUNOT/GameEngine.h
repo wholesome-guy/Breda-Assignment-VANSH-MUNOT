@@ -35,10 +35,7 @@ public:
 		return game_Window; 
 	}
 
-	Player* get_Player()
-	{
-		return _Player;
-	}
+	Player* get_Player();
 
 	sf::Vector2u get_Window_Size()
 	{

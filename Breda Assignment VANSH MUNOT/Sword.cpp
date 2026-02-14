@@ -13,8 +13,8 @@ Sword::Sword() : Weapon()
 
 void Sword::init_Variables()
 {
-    _Ammo = 30;
-    _Damage = 20.f;
+    _Ammo = 15;
+    _Damage = 25.f;
     _Range = 150.f;
     cooldown_Timer = 0.5f;
 
@@ -173,4 +173,5 @@ void Sword::weapon_Scale(sf::Vector2f _Scale)
 {
     weapon_Sprite.setScale(_Scale);
 }
+
 

@@ -40,5 +40,11 @@ private:
 
 	Player* _Player;
 
+	void enemy_Flashing(float deltatime);
+
+	bool start_Flash = false;
+	float flash_Time;
+	float flash_Timer;
+
 };
 

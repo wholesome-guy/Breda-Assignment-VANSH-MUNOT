@@ -102,3 +102,4 @@ void Rifle::weapon_Scale(sf::Vector2f _Scale)
 {
     weapon_Sprite.setScale(_Scale);
 }
+

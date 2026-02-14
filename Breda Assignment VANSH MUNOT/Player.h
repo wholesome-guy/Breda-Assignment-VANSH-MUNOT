@@ -15,6 +15,13 @@ public:
 
 	sf::Vector2f get_Position();
 
+	float get_Cooldown(int i);
+	bool get_CoolDown_Bool(int i);
+
+	float get_Health();
+	int get_Ammo();
+	
+
 
 private:
 
@@ -38,12 +45,15 @@ private:
 	bool can_Attack = true;
 	bool is_weapon_Cooldown = false;
 
-	int current_weapon_Ammo;
+	int current_weapon_Ammo = 0;
 	float current_weapon_Cooldown;
-	float weapon_cooldown_Timer =0;
+	float weapon_cooldown_Timer = 0;
+
+	float weapon_Transfrom_Time;
+	float weapon_Transform_Timer;
+	bool is_weapon_Transforming = false;
 
 	void init_playerSprite();
-	void init_UI();
 	void init_Variables();
 	void player_Movement(float deltatime);
 	void wall_Collision();
@@ -55,6 +65,7 @@ private:
 	void weapon_Movement();
 	void weapon_Cooldown(float deltatime);
 	void transform_Weapon();
+	void weapon_Transformation_Cooldown(float deltatime);
 	void weapon_Assigner(Weapon* weapon);
 
 
@@ -62,18 +73,6 @@ private:
 	float sprite_Offset_Y;
 	float screen_Width;
 	float screen_Height;
-
-	//UI
-	sf::Font game_Font;
-	sf::Text ammo_Text;
-	sf::Text health_Text;
-
-	sf::Texture ammo_Texture;
-	sf::Sprite ammo_Sprite;
-	sf::Texture health_Texture;
-	sf::Sprite health_Sprite;
-	void render_UI(sf::RenderTarget& target);
-	void update_UI();
 
 };
 
