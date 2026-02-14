@@ -13,10 +13,10 @@ Sword::Sword() : Weapon()
 
 void Sword::init_Variables()
 {
-    _Ammo = 6;
-    _Damage = 50.f;
+    _Ammo = 30;
+    _Damage = 20.f;
     _Range = 150.f;
-    cooldown_Timer = 0.1f;
+    cooldown_Timer = 0.5f;
 
     is_Swinging = false;
     swing_Timer = 0.f;

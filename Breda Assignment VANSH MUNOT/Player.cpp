@@ -92,6 +92,9 @@ void Player::init_Variables()
     sf::Vector2u screen_Size = GameEngine::get_Instance()->get_Window_Size();
     screen_Width = static_cast<float>(screen_Size.x);
     screen_Height = static_cast<float>(screen_Size.y);
+
+    invincibility_Time = 1.f;
+    invincibility_Timer = 0;
 }
 
 
@@ -102,9 +105,9 @@ void Player::init_Weapons()
     _Rifle = new Rifle();
     _RPG = new RPG();
 
-    current_Weapon = _RPG;
-    current_weapon_Ammo = _RPG->_Ammo;
-    current_weapon_Cooldown = _RPG->cooldown_Timer;
+    current_Weapon = _Sword;
+    current_weapon_Ammo = _Sword->_Ammo;
+    current_weapon_Cooldown = _Sword->cooldown_Timer;
 
 }
 
@@ -127,7 +130,7 @@ void Player::update(float deltatime)
     player_Attack();
 
     wall_Collision();
-    enemy_Collision();
+    enemy_Collision(deltatime);
 
     update_UI();
  
@@ -345,25 +348,43 @@ void Player::render_UI(sf::RenderTarget& target)
     target.draw(health_Sprite);
 }
 
-void Player::enemy_Collision()
+void Player::enemy_Collision(float deltatime)
 {
-    auto& enemies = GameEngine::get_Instance()->get_Enemies();
-    for (auto& e : enemies)
+    if (can_Damage)
     {
-        if (player_Sprite.getGlobalBounds().findIntersection(e->get_GlobalBounds()))
+        auto& enemies = GameEngine::get_Instance()->get_Enemies();
+        for (auto& e : enemies)
         {
-            player_Health--;
-
-            player_Health = std::clamp(player_Health, 0.f, max_player_Health);
-
-            if (player_Health <= 0)
+            if (player_Sprite.getGlobalBounds().findIntersection(e->get_GlobalBounds()))
             {
+                player_Health--;
 
+                player_Health = std::clamp(player_Health, 0.f, max_player_Health);
+
+                if (player_Health <= 0)
+                {
+                    //death
+                }
+                can_Damage = false;
             }
-
         }
-
     }
+    else
+    {
+        invincibility_Timer += deltatime;
+
+        if (invincibility_Timer > invincibility_Time)
+        {
+            can_Damage = true;
+            invincibility_Timer = 0;
+        }
+    }
+    
+
+    
+
+
+    
 
 }
 

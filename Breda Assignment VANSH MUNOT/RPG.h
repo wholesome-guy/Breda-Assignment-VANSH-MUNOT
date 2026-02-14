@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Weapon.h"
-#include "Missle.h"
+#include "Missile.h"
 class RPG : public Weapon
 {
 public:
@@ -23,7 +23,7 @@ private:
 	void init_Variables();
 	void init_Sprite();
 
-	std::vector<std::unique_ptr<Missle>> Missiles;
+	std::vector<std::unique_ptr<Missile>> Missiles;
 
 
 };

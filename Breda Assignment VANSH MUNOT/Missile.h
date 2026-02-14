@@ -1,10 +1,10 @@
 #pragma once
 #include "Projectile.h"
 
-class Missle :public Projectile
+class Missile:public Projectile
 {
 public:
-	Missle(sf::Vector2f position, sf::Angle rotation, sf::Vector2f direction, float _Damage,float _Range);
+	Missile(sf::Vector2f position, sf::Angle rotation, sf::Vector2f direction, float _Damage, float _Range);
 
 	void update(float deltatime) override;
 
@@ -21,6 +21,17 @@ private:
 
 	bool is_Moving = true;
 	float explosion_Radius;
+
+	sf::Texture explosion_Texture;
+	sf::Sprite explosion_Sprite;
+
+	bool is_Exploding = false;
+	float explosion_Timer;
+	float explosion_Time = 3;
+
+	bool end_Explosion = false;
+
+	bool can_Damage = true;
 
 };
 

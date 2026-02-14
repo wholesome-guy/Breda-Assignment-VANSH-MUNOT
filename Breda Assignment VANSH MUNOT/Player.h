@@ -26,6 +26,10 @@ private:
 	float max_player_Health;
 	float player_Health;
 
+	float invincibility_Time;
+	float invincibility_Timer;
+	bool can_Damage =true;
+
 	Weapon* current_Weapon = nullptr;
 	Weapon* _Sword = nullptr;
 	Weapon* _Rifle = nullptr;
@@ -43,7 +47,7 @@ private:
 	void init_Variables();
 	void player_Movement(float deltatime);
 	void wall_Collision();
-	void enemy_Collision();
+	void enemy_Collision(float deltatime);
 
 	void player_Attack();
 

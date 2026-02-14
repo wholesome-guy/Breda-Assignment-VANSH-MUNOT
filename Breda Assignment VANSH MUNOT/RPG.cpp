@@ -8,8 +8,8 @@ RPG::RPG() : Weapon()
 
 void RPG::init_Variables()
 {
-    _Ammo = 2;
-    _Damage = 90.f;
+    _Ammo = 4;
+    _Damage = 100.f;
     _Range = 1.5f;
     cooldown_Timer = 2.f;
 
@@ -53,7 +53,7 @@ void RPG::Attack()
     //cos = horizontal component, sin = vertical component
     sf::Vector2f shoot_Direction(std::cos(Rotation.asRadians()), std::sin(Rotation.asRadians()));
 
-    Missiles.push_back(std::make_unique<Missle>(Position, Rotation, shoot_Direction, _Damage, _Range));
+    Missiles.push_back(std::make_unique<Missile>(Position, Rotation, shoot_Direction, _Damage, _Range));
 }
 
 void RPG::weapon_Rotate(sf::RenderWindow& game_Window)

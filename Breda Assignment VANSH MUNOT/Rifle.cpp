@@ -10,7 +10,7 @@ Rifle::Rifle() : Weapon()
 void Rifle::init_Variables()
 {
     _Ammo = 30;
-    _Damage = 100.f;
+    _Damage = 50.f;
     _Range = 4.f;
     cooldown_Timer = 0.1f;
 
