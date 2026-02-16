@@ -1,4 +1,5 @@
 #include "EnemySpawner.h"
+#include "GameEngine.h"
 #include <random>
 
 EnemySpawner::EnemySpawner()
@@ -8,10 +9,10 @@ EnemySpawner::EnemySpawner()
 void EnemySpawner::init_Variables()
 {
 	spawn_Interval = 2.f;
-	max_Enemies = 10;
+	max_Enemies = 100;
 	spawn_Timer = 0;
-	spawn_Area_Min = { 0,0 };
-	spawn_Area_Max = { 640,360 };
+	spawn_Area_Min = { -1280,-720 };
+	spawn_Area_Max = { 2560,1440 };
 }
 void EnemySpawner::update(float deltatime)
 {
@@ -59,6 +60,7 @@ void EnemySpawner::erase_Enemy(int i)
 	{
 		_Enemies.erase(_Enemies.begin() + i);
 		current_Enemy_Count--;
+		killed_Enemy_Count++;
 	}
 }
 sf::Vector2f EnemySpawner::get_Random_Spawn_Position()
@@ -77,5 +79,10 @@ sf::Vector2f EnemySpawner::get_Random_Spawn_Position()
 }
 std::vector<std::unique_ptr<Enemy>>& EnemySpawner::get_Enemies()
 {
-return _Enemies;
+	return _Enemies;
 }
+int EnemySpawner::get_Kill_Count()
+{
+	return killed_Enemy_Count;
+}
+

@@ -22,6 +22,8 @@ void Sword::init_Variables()
     swing_Timer = 0.f;
     swing_Duration = 0.25f;
 
+    _EnemySpawner = GameEngine::get_Instance()->get_EnemySpawner();
+
 }
 
 void Sword::init_Sprite()
@@ -77,7 +79,7 @@ void Sword::attack_Enemy_Collision()
 {
     sf::Vector2f sword_Position = weapon_Sprite.getPosition();
 
-    auto& enemies = GameEngine::get_Instance()->get_Enemies();
+    auto& enemies = _EnemySpawner->get_Enemies();
 
     for (auto& e : enemies)
     {

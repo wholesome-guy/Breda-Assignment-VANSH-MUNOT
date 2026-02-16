@@ -16,6 +16,7 @@ public:
 
     // Getters
     std::vector<std::unique_ptr<Enemy>>& get_Enemies();
+    int get_Kill_Count();
 
 private:
     // Spawner properties
@@ -23,6 +24,7 @@ private:
     float spawn_Interval;
     int max_Enemies;
     int current_Enemy_Count;
+    int killed_Enemy_Count;
 
     // Spawn area boundaries
     sf::Vector2f spawn_Area_Min;
@@ -30,15 +32,17 @@ private:
 
     float screen_Width;
     float screen_Height;
-    float spawn_Margin;
+
     // Container for spawned enemies
     std::vector<std::unique_ptr<Enemy>> _Enemies;
 
+    //functions
     void init_Variables();
 
     void spawn_Enemy();
     void update_Enemy(int i,float deltatime);
     void erase_Enemy(int i);
     sf::Vector2f get_Random_Spawn_Position();
+    
 };
 

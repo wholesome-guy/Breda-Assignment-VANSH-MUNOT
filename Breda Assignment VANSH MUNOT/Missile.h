@@ -14,24 +14,28 @@ public:
 
 private:
 
-	void init_Sprite(sf::Vector2f position, sf::Angle rotation) override;
-	void init_Variables(float _Damage, float _Range) override;
-	void collision() override;
-	void explosion();
-
-	bool is_Moving = true;
-	float explosion_Radius;
-
 	sf::Texture explosion_Texture;
 	sf::Sprite explosion_Sprite;
 
+	bool end_Explosion = false;
+	bool can_Damage = true;
+	bool is_Moving = true;
 	bool is_Exploding = false;
+
+	float explosion_Radius;
 	float explosion_Timer;
 	float explosion_Time = 3;
+	
+	//Function
 
-	bool end_Explosion = false;
+	void init_Sprite(sf::Vector2f position, sf::Angle rotation) override;
+	void init_Variables(float _Damage, float _Range) override;
+	void collision() override;
 
-	bool can_Damage = true;
+
+	void explosion();
+
+
 
 };
 

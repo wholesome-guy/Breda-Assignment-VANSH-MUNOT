@@ -35,15 +35,20 @@ public:
 		return game_Window; 
 	}
 
-	Player* get_Player();
+	Player* get_Player()
+	{
+		return _Player;
+	}
 
 	sf::Vector2u get_Window_Size()
 	{
 		return _Window_Size;
 	}
 
-	std::vector<std::unique_ptr<Enemy>>& get_Enemies();
-	
+	EnemySpawner* get_EnemySpawner()
+	{
+		return _EnemySpawner;
+	}
 
 private:
 	
@@ -70,20 +75,6 @@ private:
 	void poll_Event();
 	//intialise window
 	void init_gameWindow();
-
-	//FPS 
-	float updateInterval = 0.5f; // How often to update the FPS display
-
-	float accum = 0; // FPS accumulated over the interval
-	int frames = 0; // Frames drawn over the interval
-	float timeleft = updateInterval;
-
-	void FPS_Counter(float deltatime);
-
-	sf::Text FPS_Text;
-	sf::Font game_Font;
-
-	void init_Text();
 
 };
 

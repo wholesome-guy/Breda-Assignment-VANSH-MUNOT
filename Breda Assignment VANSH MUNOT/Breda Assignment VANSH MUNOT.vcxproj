@@ -140,11 +140,9 @@
     <ClCompile Include="EnemySpawner.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MathFunctions.cpp" />
     <ClCompile Include="Missile.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerUI.cpp" />
-    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Rifle.cpp" />
     <ClCompile Include="RPG.cpp" />
     <ClCompile Include="Sword.cpp" />

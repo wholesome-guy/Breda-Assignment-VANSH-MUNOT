@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Weapon.h"
-
+#include "EnemySpawner.h"
 class Sword : public Weapon
 {
 public:
@@ -30,6 +30,8 @@ private:
 	float swing_Duration;
 	float swing_Start_Angle;
 	float swing_End_Angle;
+
+	EnemySpawner* _EnemySpawner;
 
 	void attack_Animation_Intialiser();
 	void attack_Animation_Update(float deltatime);

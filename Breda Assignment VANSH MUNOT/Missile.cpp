@@ -7,6 +7,7 @@ explosion_Sprite(explosion_Texture)
 	init_Sprite(position, rotation);
 	init_Variables(_Damage, _Range);
 
+	//Finding velocity
 	float magnitude = sqrtf((direction.x * direction.x) + (direction.y * direction.y));
 
 	projectile_Velocity = { (direction.x / magnitude) * _Speed, (direction.y / magnitude) * _Speed };
@@ -16,16 +17,21 @@ explosion_Sprite(explosion_Texture)
 
 void Missile::init_Variables(float damage, float range)
 {
+	//properties
 	_Speed = 200.f;
 	_Damage = damage;
 	despawn_Time = range;
 	despawn_Timer = 0.f;
+
 	should_Despawn = false;
 	is_Moving = true;
+	//explosion
 	explosion_Radius = 200;
-
 	explosion_Timer = 0;
 	explosion_Time = 2;
+
+	_EnemySpawner = GameEngine::get_Instance()->get_EnemySpawner();
+
 }
 
 void Missile::init_Sprite(sf::Vector2f position, sf::Angle rotation)
@@ -48,22 +54,26 @@ void Missile::init_Sprite(sf::Vector2f position, sf::Angle rotation)
 }
 void Missile::update(float deltatime)
 {
+	//moving function
 	if (is_Moving)
 	{
 		projectile_Sprite.move(projectile_Velocity * deltatime);
 	}
 
+	//despwan
 	if (despawn_Timer < despawn_Time)
 	{
 		despawn_Timer += deltatime;
 	}
 	else
 	{
+		//explode on despawn if no collision occurs
 		explosion();
 	}
 
 	collision();
 
+	//explosion timer
 	if (is_Exploding)
 	{
 		explosion_Timer += deltatime;
@@ -91,7 +101,7 @@ bool Missile::shouldDespawn() const
 
 void Missile::collision()
 {
-	auto& enemies = GameEngine::get_Instance()->get_Enemies();
+	auto& enemies = _EnemySpawner->get_Enemies();
 
 	for (auto& e : enemies)
 	{
@@ -114,7 +124,7 @@ void Missile::explosion()
 		explosion_Sprite.setPosition(missile_Position);
 		is_Exploding = true;
 
-		auto& enemies = GameEngine::get_Instance()->get_Enemies();
+		auto& enemies = _EnemySpawner->get_Enemies();
 
 		for (auto& e : enemies)
 		{

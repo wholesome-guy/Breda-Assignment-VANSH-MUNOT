@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "EnemySpawner.h"
 
 class Projectile
 {
@@ -31,6 +32,9 @@ protected:
 	virtual void init_Variables(float _Damage, float _Range) = 0;
 
 	virtual void collision() =0;
+
+	EnemySpawner* _EnemySpawner;
+
  
 };
 

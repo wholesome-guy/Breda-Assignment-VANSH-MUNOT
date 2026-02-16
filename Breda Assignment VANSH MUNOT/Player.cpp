@@ -5,9 +5,7 @@
 #include "RPG.h"
 #include <sstream>
 #include <random>
-
-
-
+#include "EnemySpawner.h"
 //constructor unity start
 Player::Player():
     //intialiser list for things with no default constructors
@@ -19,6 +17,8 @@ Player::Player():
 
 }
 
+#pragma region Intialise Variables
+
 void Player::init_playerSprite()
 {
     //loadind from memory - new texture which is an image
@@ -27,24 +27,36 @@ void Player::init_playerSprite()
     //setting sprite properties
     player_Sprite.setTexture(player_Texture, true);
     player_Sprite.setPosition({ 100.f, 100.f });
-    player_Sprite.setScale({ 1.f, 1.f });
+    player_Sprite.setScale({ 1.5f, 1.5f });
     player_Sprite.setOrigin({ static_cast<float>(player_Texture.getSize().x / 2),static_cast<float>(player_Texture.getSize().y / 2) });
 }
 void Player::init_Variables()
 {
+    //Player Properties 
     player_Speed = 250.0f;
     max_player_Health = 100;
-    player_Health = max_player_Health;
+    current_player_Health = max_player_Health;
+
     //singleton access
     game_Window = GameEngine::get_Instance()->get_Window();  
 
+    //Sprite Offset
     sprite_Offset_X = static_cast<float>(player_Texture.getSize().x / 2);
     sprite_Offset_Y = static_cast<float>(player_Texture.getSize().y / 2);
 
+    //Screen Size
     sf::Vector2u screen_Size = GameEngine::get_Instance()->get_Window_Size();
     screen_Width = static_cast<float>(screen_Size.x);
     screen_Height = static_cast<float>(screen_Size.y);
 
+    if (_EnemySpawner == nullptr)
+    {
+        // This will tell you if GameEngine hasn't created it yet
+        std::cout << "ERROR: EnemySpawner is null!" << std::endl;
+    }
+    _EnemySpawner = GameEngine::get_Instance()->get_EnemySpawner();
+
+    //Timers
     invincibility_Time = 0.5f;
     invincibility_Timer = 0;
 
@@ -60,49 +72,51 @@ void Player::init_Weapons()
     _Rifle = new Rifle();
     _RPG = new RPG();
 
+    //first weapon on start
     current_Weapon = _Sword;
     current_weapon_Ammo = _Sword->_Ammo;
     current_weapon_Cooldown = _Sword->cooldown_Timer;
-
 }
 
+#pragma endregion
+
+#pragma region Core Loops
 
 void Player::update(float deltatime)
 {
-    
+    //movement
     player_Movement(deltatime);
     weapon_Movement();
 
     //weapon cooldown timer
-    if (is_weapon_Cooldown)
-    {
-        weapon_Cooldown(deltatime);
-    }
+    weapon_Cooldown(deltatime);
 
+    //weapon updating
     current_Weapon->update(deltatime);
 
     //attack
     player_Attack();
     weapon_Transformation_Cooldown(deltatime);
     
+    //collision
     wall_Collision();
     enemy_Collision(deltatime);
-
 }
 
 void Player::render(sf::RenderTarget& target)
 {
+    //render
     target.draw(player_Sprite);
 
-    //only current weapon is rendered
     current_Weapon->render(*game_Window);
-
-
 }
+#pragma endregion
 
-//checks keyboard inputs and normalises the input vector
+#pragma region Movement
+
 void Player::player_Movement(float deltatime)
 {
+    //Inputs
     sf::Vector2f keyboard_Input = {0,0};
     sf::Vector2f player_Velocity;
 
@@ -124,8 +138,6 @@ void Player::player_Movement(float deltatime)
     {
         keyboard_Input.y += 1.0f;
     }
-
-   
     
     //when two keys from different axis are pressed simultenously
     //calculate the magnitude and divide the input vector with its magnitude to get a unit vector
@@ -139,6 +151,7 @@ void Player::player_Movement(float deltatime)
     {
         player_Velocity = keyboard_Input * player_Speed * deltatime;
     }
+
     //sprite move function
     player_Sprite.move(player_Velocity);
 }
@@ -151,6 +164,7 @@ void Player::weapon_Movement()
     //moves to player position
     current_Weapon->weapon_Position(player_Sprite.getPosition());
 
+    //flip player when weapon rotates
     float angle = current_Weapon->weapon_RotationAngle;
 
     if (angle >= 90.f && angle <= 270.f)
@@ -163,39 +177,74 @@ void Player::weapon_Movement()
         // player face right when when faces right
         player_Sprite.setScale({ 1.f, 1.f });
     }
-
 }
+
+#pragma endregion
+
+#pragma region Attack
 void Player::player_Attack()
 {
+    //attack inputs
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
     {
-        if (can_Attack)
+        Attack();
+    }
+}
+
+void Player::Attack()
+{
+    if (can_Attack)
+    {
+        current_Weapon->Attack();
+        current_weapon_Ammo--;
+
+        can_Attack = false;
+        is_weapon_Cooldown = true;
+
+        if (current_weapon_Ammo <= 0)
         {
-            current_Weapon->Attack();
-            current_weapon_Ammo--;
-
-            if (current_weapon_Ammo <= 0)
-            {
-                //start Transformation
-                is_weapon_Transforming = true;
-            }
-            is_weapon_Cooldown = true;
-
+            //start Transformation
+            is_weapon_Transforming = true;
         }
     }
 }
+#pragma endregion
+
+# pragma region Weapon
+
 void Player::weapon_Cooldown(float deltatime)
 {
-    can_Attack = false;
-    if (weapon_cooldown_Timer<current_weapon_Cooldown)
+    //weapon cooldown
+    if (is_weapon_Cooldown)
     {
-        weapon_cooldown_Timer += deltatime;
-    }
-    else
+        if (weapon_cooldown_Timer < current_weapon_Cooldown)
+        {
+            weapon_cooldown_Timer += deltatime;
+        }
+        else
+        {
+            weapon_cooldown_Timer = 0;
+            //weapon cooldown over
+            can_Attack = true;
+            is_weapon_Cooldown = false;
+        }
+    }    
+}
+void Player::weapon_Transformation_Cooldown(float deltatime)
+{
+    //weapon transformation start
+    if (is_weapon_Transforming)
     {
-        weapon_cooldown_Timer = 0;
-        can_Attack = true;
-        is_weapon_Cooldown = false;
+        can_Attack = false;
+
+        weapon_Transform_Timer += deltatime;
+        if (weapon_Transform_Timer > weapon_Transfrom_Time)
+        {
+            //complete tranformation
+            is_weapon_Transforming = false;
+            weapon_Transform_Timer = 0;
+            transform_Weapon();
+        }
     }
 }
 
@@ -208,6 +257,7 @@ void Player::transform_Weapon()
 
         std::uniform_int_distribution<int> random_weapon(0, 2);
 
+        //random number
         int random_Number = random_weapon(gen);
 
         switch (random_Number)
@@ -226,25 +276,10 @@ void Player::transform_Weapon()
 
             break;
         }
+
+        // set weapon position to player
         current_Weapon->weapon_Position(player_Sprite.getPosition());
         can_Attack = true;
-}
-
-void Player::weapon_Transformation_Cooldown(float deltatime)
-{
-    if (is_weapon_Transforming)
-    {
-        can_Attack = false;
-
-        weapon_Transform_Timer += deltatime;
-        if (weapon_Transform_Timer > weapon_Transfrom_Time)
-        {
-            //complete tranformation
-            is_weapon_Transforming = false;
-            weapon_Transform_Timer = 0;
-            transform_Weapon();
-        }
-    }
 }
 
 void Player::weapon_Assigner(Weapon* weapon)
@@ -253,6 +288,10 @@ void Player::weapon_Assigner(Weapon* weapon)
     current_weapon_Ammo = weapon->_Ammo;
     current_weapon_Cooldown = weapon->cooldown_Timer;
 }
+
+#pragma endregion
+
+#pragma region Getters
 
 sf::Vector2f Player::get_Position()
 {
@@ -289,13 +328,17 @@ bool Player::get_CoolDown_Bool(int i)
 
 float Player::get_Health()
 {
-    return player_Health;
+    return current_player_Health;
 }
 
 int Player::get_Ammo()
 {
     return current_weapon_Ammo;
 }
+
+#pragma endregion
+
+#pragma region Collision
 
 void Player::wall_Collision()
 {
@@ -320,9 +363,21 @@ void Player::wall_Collision()
     {
         player_Sprite.setPosition({ position_X,0 +sprite_Offset_Y });
     }
+    //BOTTOM WALL COLLISION
     else if (position_Y + sprite_Offset_Y > screen_Height)
     {
         player_Sprite.setPosition({ position_X,screen_Height - sprite_Offset_Y });
+    }
+}
+void Player::player_Health(float _Damage)
+{
+    current_player_Health -= _Damage;
+
+    current_player_Health = std::clamp(current_player_Health, 0.f, max_player_Health);
+
+    if (current_player_Health <= 0)
+    {
+        //death
     }
 }
 
@@ -330,44 +385,46 @@ void Player::enemy_Collision(float deltatime)
 {
     if (can_Damage)
     {
-        auto& enemies = GameEngine::get_Instance()->get_Enemies();
+        auto& enemies = _EnemySpawner->get_Enemies();
+
         for (auto& e : enemies)
         {
             if (player_Sprite.getGlobalBounds().findIntersection(e->get_GlobalBounds()))
             {
-                player_Health--;
-
-                player_Health = std::clamp(player_Health, 0.f, max_player_Health);
-
-                if (player_Health <= 0)
-                {
-                    //death
-                }
+                player_Health(e->get_Damage());
+                
                 can_Damage = false;
             }
         }
     }
     else
     {
-        invincibility_Timer += deltatime;
-
-        if (invincibility_Timer > invincibility_Time)
-        {
-            can_Damage = true;
-
-            player_Sprite.setColor(sf::Color::White);
-            current_Weapon->weapon_Colour(sf::Color::White);
-
-            invincibility_Timer = 0;
-        }
-        else
-        {
-            player_Sprite.setColor(sf::Color::Color(255, 255, 255, 55));
-            current_Weapon->weapon_Colour(sf::Color::Color(255, 255, 255, 55));
-        }
+        player_Invincibility(deltatime);
     }   
-
 }
+
+void Player::player_Invincibility(float deltatime)
+{
+    //invincibilty for time when player gets hurt
+
+    invincibility_Timer += deltatime;
+
+    if (invincibility_Timer > invincibility_Time)
+    {
+        can_Damage = true;
+
+        player_Sprite.setColor(sf::Color::White);
+        current_Weapon->weapon_Colour(sf::Color::White);
+
+        invincibility_Timer = 0;
+    }
+    else
+    {
+        player_Sprite.setColor(sf::Color::Color(255, 255, 255, 55));
+        current_Weapon->weapon_Colour(sf::Color::Color(255, 255, 255, 55));
+    }
+}
+#pragma endregion
 
 
 

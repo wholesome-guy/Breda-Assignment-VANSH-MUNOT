@@ -20,5 +20,6 @@ private:
 	void init_Sprite(sf::Vector2f position, sf::Angle rotation) override;
 	void init_Variables(float _Damage, float _Range) override;
 	void collision() override;
+
 };
 
