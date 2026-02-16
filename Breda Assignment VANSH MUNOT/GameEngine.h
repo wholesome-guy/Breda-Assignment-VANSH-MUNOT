@@ -40,10 +40,6 @@ public:
 		return _Player;
 	}
 
-	sf::Vector2u get_Window_Size()
-	{
-		return _Window_Size;
-	}
 
 	EnemySpawner* get_EnemySpawner()
 	{

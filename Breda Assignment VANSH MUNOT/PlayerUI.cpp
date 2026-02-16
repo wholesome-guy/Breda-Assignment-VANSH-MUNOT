@@ -1,4 +1,4 @@
-#include "PlayerUI.h"
+﻿#include "PlayerUI.h"
 
 PlayerUI::PlayerUI(): 
 	ammo_Text(game_Font, "x/x"),
@@ -32,64 +32,42 @@ void PlayerUI::render(sf::RenderTarget& target)
 
 void PlayerUI::init_UI()
 {
+    // Load and configure font
     if (game_Font.openFromFile("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/SpecialElite-Regular.ttf"))
     {
         std::cout << "got the font" << "\n";
     }
     game_Font.setSmooth(false);
 
-    ammo_Text.setString(std::to_string(_Player->get_Ammo()));
-    ammo_Text.setCharacterSize(40);
-    ammo_Text.setStyle(sf::Text::Bold);
-    ammo_Text.setFillColor(sf::Color::White);
-    ammo_Text.setPosition({ 55.f, 65.f });
-    ammo_Text.setScale({ 1.f,1.f });
+    // Initialize ammo UI
+    setup_Text(ammo_Text, std::to_string(_Player->get_Ammo()), 40,
+        sf::Color::White, { 55.f, 65.f });
 
-    ammo_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Ammo_UI_PNG.png"));
-    ammo_Sprite.setTexture(ammo_Texture, true);
-    ammo_Sprite.setScale({ 0.08f, 0.08f });
-    ammo_Sprite.setPosition({ 25.f, 88.f });
-    ammo_Sprite.setOrigin({ static_cast<float>(ammo_Texture.getSize().x / 2),static_cast<float>(ammo_Texture.getSize().y / 2) });
+    setup_Sprite(ammo_Sprite, ammo_Texture,
+        "C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Ammo_UI_PNG.png",
+        { 0.08f, 0.08f }, { 25.f, 88.f });
 
+    // Initialize health UI
+    setup_Text(health_Text, std::to_string(static_cast<int>(_Player->get_Health())), 40,
+        sf::Color::Red, { 56.f, 5.f });
 
-    health_Text.setString(std::to_string(static_cast<int>(_Player->get_Health())));
+    setup_Sprite(health_Sprite, health_Texture,
+        "C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Heart_UI_PNG.png",
+        { 0.08f, 0.08f }, { 27.f, 31.f }, sf::Color::Red);
 
-    health_Text.setCharacterSize(40);
-    health_Text.setStyle(sf::Text::Bold);
-    health_Text.setFillColor(sf::Color::Red);
-    health_Text.setPosition({ 56.f, 5.f });
-    health_Text.setScale({ 1.f,1.f });
-
-
-    health_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Heart_UI_PNG.png"));
-    health_Sprite.setTexture(health_Texture, true);
-    health_Sprite.setScale({ 0.08f, 0.08f });
-    health_Sprite.setPosition({ 27.f,31.f });
-    health_Sprite.setOrigin({ static_cast<float>(health_Texture.getSize().x / 2),static_cast<float>(health_Texture.getSize().y / 2) });
-    health_Sprite.setColor(sf::Color::Red);
-
+    // Initialize cooldown bar
     cooldown_Bar.setFillColor(sf::Color::White);
 
-    kill_Text.setString(std::to_string(_EnemySpawner->get_Kill_Count()));
+    // Initialize kill counter UI
+    setup_Text(kill_Text, std::to_string(_EnemySpawner->get_Kill_Count()), 40,
+        sf::Color::White, { 1200.f, 5.f });
 
-    kill_Text.setCharacterSize(40);
-    kill_Text.setStyle(sf::Text::Bold);
-    kill_Text.setFillColor(sf::Color::White);
-    kill_Text.setPosition({ 1200.f, 5.f });
-    kill_Text.setScale({ 1.f,1.f });
+    setup_Sprite(kill_Sprite, kill_Texture,
+        "C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Skull_UI_PNG.png",
+        { 0.08f, 0.08f }, { 1163.f, 31.f });
 
-    kill_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Skull_UI_PNG.png"));
-    kill_Sprite.setTexture(kill_Texture, true);
-    kill_Sprite.setScale({ 0.08f, 0.08f });
-    kill_Sprite.setPosition({ 1163.f, 31.f });
-    kill_Sprite.setOrigin({ static_cast<float>(kill_Texture.getSize().x / 2),static_cast<float>(kill_Texture.getSize().y / 2) });
-
-    FPS_Text.setString("0");
-    FPS_Text.setCharacterSize(30);
-    FPS_Text.setStyle(sf::Text::Bold);
-    FPS_Text.setFillColor(sf::Color::White);
-    FPS_Text.setPosition({ 600.f, 0.f });
-    FPS_Text.setScale({ 0.5f,0.5f });
+    // Initialize FPS counter
+    setup_Text(FPS_Text, "0", 30, sf::Color::White, { 1226.f, 688.f }, { 0.5f, 0.5f });
 }
 
 void PlayerUI::cooldown_Bar_Update()
@@ -148,7 +126,7 @@ void PlayerUI::update_UI()
 
     kill_Text.setString(std::to_string(_EnemySpawner->get_Kill_Count()));
 
-   // UI_Mover(health_Text);
+    UI_Mover(FPS_Text);
 }
 
 void PlayerUI::FPS_Counter(float deltatime)
@@ -181,6 +159,32 @@ void PlayerUI::FPS_Counter(float deltatime)
     }
 }
 
+// Helper function to setup text elements
+void PlayerUI::setup_Text(sf::Text& text, const std::string& content, unsigned int size,
+    const sf::Color& color, const sf::Vector2f& position,
+    const sf::Vector2f& scale)
+{
+    text.setString(content);
+    text.setCharacterSize(size);
+    text.setStyle(sf::Text::Bold);
+    text.setFillColor(color);
+    text.setPosition(position);
+    text.setScale(scale);
+}
+
+// Helper function to setup sprite elements
+void PlayerUI::setup_Sprite(sf::Sprite& sprite, sf::Texture& texture, const std::string& filepath,
+    const sf::Vector2f& scale, const sf::Vector2f& position,
+    const sf::Color& color)
+{
+    texture = sf::Texture(sf::Image(filepath));
+    sprite.setTexture(texture, true);
+    sprite.setScale(scale);
+    sprite.setPosition(position);
+    sprite.setOrigin({ static_cast<float>(texture.getSize().x / 2),
+                      static_cast<float>(texture.getSize().y / 2) });
+    sprite.setColor(color);
+}
 
 void PlayerUI::UI_Mover(sf::Transformable& transform)
 {
@@ -192,7 +196,7 @@ void PlayerUI::UI_Mover(sf::Transformable& transform)
         transform.move({ 1, 0 });
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
         transform.move({ -1, 0 });
-    // Print position on spacebar
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
         std::cout << "Position: " << transform.getPosition().x << ", "
         << transform.getPosition().y << std::endl;

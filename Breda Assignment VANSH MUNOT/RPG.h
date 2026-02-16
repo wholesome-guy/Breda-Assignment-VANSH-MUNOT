@@ -24,6 +24,7 @@ private:
 	void init_Variables();
 	void init_Sprite();
 
+	//missiles array
 	std::vector<std::unique_ptr<Missile>> Missiles;
 
 

@@ -13,8 +13,10 @@ Sword::Sword() : Weapon()
 
 void Sword::init_Variables()
 {
+    //properties
     _Ammo = 15;
     _Damage = 25.f;
+    //actual distance in pixels
     _Range = 150.f;
     cooldown_Timer = 0.5f;
 
@@ -40,6 +42,7 @@ void Sword::attack_Animation_Intialiser()
     is_Swinging = true;
 
     swing_Timer = 0.f;
+    // swing is larger than 120 for looks, looks better
     swing_Start_Angle = weapon_RotationAngle - 60.f;
     swing_End_Angle = weapon_RotationAngle + 30.f;
 
@@ -102,7 +105,7 @@ void Sword::attack_Enemy_Collision()
             float angle_Difference = std::abs(angle_To_Enemy - weapon_RotationAngle);
 
             //check both sides of the vector, 45 + 45 = 90
-            if (angle_Difference < 45.f) // 90 cone
+            if (angle_Difference < 60.f) // 120 cone
             {
                 e->take_Damage(_Damage);
             }
@@ -122,12 +125,9 @@ void Sword::render(sf::RenderTarget& target)
 
 void Sword::Attack()
 {
-    std::cout << "sword attack" << "\n";
-
     attack_Animation_Intialiser();
 
     attack_Enemy_Collision();
-
     
 }
 

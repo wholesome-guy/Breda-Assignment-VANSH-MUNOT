@@ -45,7 +45,7 @@ void Player::init_Variables()
     sprite_Offset_Y = static_cast<float>(player_Texture.getSize().y / 2);
 
     //Screen Size
-    sf::Vector2u screen_Size = GameEngine::get_Instance()->get_Window_Size();
+    sf::Vector2u screen_Size = game_Window->getSize();
     screen_Width = static_cast<float>(screen_Size.x);
     screen_Height = static_cast<float>(screen_Size.y);
 

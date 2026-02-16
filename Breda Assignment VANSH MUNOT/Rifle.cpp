@@ -9,8 +9,10 @@ Rifle::Rifle() : Weapon()
 
 void Rifle::init_Variables()
 {
+    //properties
     _Ammo = 30;
     _Damage = 50.f;
+    //despawn time for bullet
     _Range = 4.f;
     cooldown_Timer = 0.1f;
 
@@ -18,6 +20,7 @@ void Rifle::init_Variables()
 
 void Rifle::init_Sprite()
 {
+    //sprite
     weapon_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Rifle_PNG.png"));
     weapon_Sprite.setTexture(weapon_Texture, true);
     weapon_Sprite.setOrigin({ 9,9 });
@@ -49,23 +52,23 @@ void Rifle::render(sf::RenderTarget& target)
 
 void Rifle::Attack()
 {
-    std::cout << "Rifle attack" << std::endl;
-
     sf::Vector2f Position = weapon_Sprite.getPosition();
     sf::Angle Rotation = weapon_Sprite.getRotation();
     //cos = horizontal component, sin = vertical component
     sf::Vector2f shoot_Direction(std::cos(Rotation.asRadians()), std::sin(Rotation.asRadians()));
 
+    //make new bullet
     Bullets.push_back(std::make_unique<Bullet>(Position, Rotation, shoot_Direction,_Damage,_Range));
 
 }
 
 void Rifle::weapon_Rotate(sf::RenderWindow& game_Window)
 {
+    //rotate to alwasy point at mouse
     sf::Vector2f weapon_Position = weapon_Sprite.getPosition();
     sf::Vector2f mouse_Position = game_Window.mapPixelToCoords(sf::Mouse::getPosition());
 
-    const float Radians_To_Degrees = 180 / 3.14f;
+    Radians_To_Degrees = 180 / 3.14f;
 
     float dy_Weaponouse = mouse_Position.y - weapon_Position.y;
     float dx_Weaponouse = mouse_Position.x - weapon_Position.x;
@@ -79,6 +82,7 @@ void Rifle::weapon_Rotate(sf::RenderWindow& game_Window)
     sf::Angle rotation_Angle = sf::degrees(weapon_RotationAngle);    
     weapon_Sprite.setRotation(rotation_Angle);
 
+    //flip weapon to make it turn
     if (weapon_RotationAngle >= 90.f && weapon_RotationAngle <= 270.f)
     {
         //  player face left

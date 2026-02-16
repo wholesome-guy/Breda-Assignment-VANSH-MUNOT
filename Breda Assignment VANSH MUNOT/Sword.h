@@ -23,7 +23,6 @@ private:
 	void init_Variables();
 	void init_Sprite();
 
-	const float Radians_To_Degrees = 180 / 3.14f;
 	
 	bool is_Swinging;
 	float swing_Timer;

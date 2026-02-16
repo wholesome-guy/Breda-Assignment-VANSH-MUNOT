@@ -27,6 +27,7 @@ private:
 	void init_Variables();
 	void init_Sprite();
 
+	//all bullets
 	std::vector<std::unique_ptr<Bullet>> Bullets;
 
 };

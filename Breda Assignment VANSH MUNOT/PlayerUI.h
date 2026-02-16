@@ -38,6 +38,7 @@ private:
 	bool is_Bar_Visible = false;
 	float bar_Size_Offset;
 
+	sf::RenderWindow* game_Window;
 
 	//FPS 
 	float updateInterval = 0.5f; // How often to update the FPS display
@@ -54,6 +55,14 @@ private:
 	void update_UI();
 
 	void FPS_Counter(float deltatime);
+
+	void setup_Text(sf::Text& text, const std::string& content, unsigned int size,
+		const sf::Color& color, const sf::Vector2f& position,
+		const sf::Vector2f& scale = { 1.f, 1.f });
+
+	void setup_Sprite(sf::Sprite& sprite, sf::Texture& texture, const std::string& filepath,
+		const sf::Vector2f& scale, const sf::Vector2f& position,
+		const sf::Color& color = sf::Color::White);
 
 
 	void UI_Mover(sf::Transformable& transform);

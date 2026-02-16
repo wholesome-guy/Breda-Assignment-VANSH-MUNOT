@@ -29,6 +29,8 @@ protected:
 	float _Damage;
 	float _Range;
 
+	float Radians_To_Degrees = 180 / 3.14f;
+
 	sf::Texture weapon_Texture;
 	sf::Sprite weapon_Sprite;
 
