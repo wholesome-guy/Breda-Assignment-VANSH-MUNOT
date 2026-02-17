@@ -27,7 +27,11 @@ public:
 	bool get_can_Damage();
 	float get_Health();
 	int get_Ammo();
-	
+	bool get_Can_Interact_Square();
+
+
+	//setters
+	void set_Can_Interact_Sqaure(bool);
 
 
 private:
@@ -67,6 +71,9 @@ private:
 	float weapon_Transfrom_Time;
 	float weapon_Transform_Timer;
 	bool is_weapon_Transforming = false;
+
+	bool can_Interact_Square;
+	bool can_Interact_Machine;
 
 	//functions
 	void init_playerSprite();

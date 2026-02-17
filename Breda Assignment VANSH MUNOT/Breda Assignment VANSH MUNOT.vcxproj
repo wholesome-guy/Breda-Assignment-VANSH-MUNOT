@@ -145,6 +145,7 @@
     <ClCompile Include="PlayerUI.cpp" />
     <ClCompile Include="Rifle.cpp" />
     <ClCompile Include="RPG.cpp" />
+    <ClCompile Include="Shape.cpp" />
     <ClCompile Include="Sword.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +161,7 @@
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="Rifle.h" />
     <ClInclude Include="RPG.h" />
+    <ClInclude Include="Shape.h" />
     <ClInclude Include="Sword.h" />
     <ClInclude Include="Weapon.h" />
   </ItemGroup>

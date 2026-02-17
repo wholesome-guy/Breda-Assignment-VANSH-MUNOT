@@ -337,6 +337,14 @@ int Player::get_Ammo()
 {
     return current_weapon_Ammo;
 }
+bool Player::get_Can_Interact_Square()
+{
+    return can_Interact_Square;
+}
+void Player::set_Can_Interact_Sqaure(bool interact)
+{
+    can_Interact_Square = interact;
+}
 bool Player::get_can_Damage()
 {
     return can_Damage;

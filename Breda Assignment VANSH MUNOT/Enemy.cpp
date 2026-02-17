@@ -41,6 +41,10 @@ void Enemy::init_Variables()
 
     contact_Time = 1.f;
     contact_Timer = 0;
+
+    Despawning = false;
+    despawn_Time = 0.25f;
+    despawn_Timer = 0;
 }
 void Enemy::init_Sprite()
 {
@@ -109,6 +113,8 @@ void Enemy::update(float deltatime)
 
     //health bar
     health_Bar_Update();
+
+    despawning_Enemy(deltatime);
 }
 
 void Enemy::render(sf::RenderTarget& target)
@@ -263,7 +269,7 @@ void Enemy::take_Damage(float _Damage)
 
     if (enemy_Health <= 0)
     {
-        is_Dead = true;
+        Despawning = true;
     }
 }
 void Enemy::enemy_Flashing(float deltatime)
@@ -297,6 +303,20 @@ void Enemy::health_Bar_Update()
     background_Bar.setPosition(enemy_Sprite.getPosition() + offset);
 
     health_Bar.setSize({ enemy_Health * 0.5f,5 });
+}
+void Enemy::despawning_Enemy(float deltatime)
+{
+    if (!Despawning)
+    {
+        return;
+    }
+
+    despawn_Timer += deltatime;
+    if (despawn_Timer > despawn_Time)
+    {
+        is_Dead = true;
+    }
+
 }
 #pragma endregion
 

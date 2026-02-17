@@ -38,11 +38,14 @@ private:
 	float max_enemy_Health;
 	float enemy_Damage;
 	bool is_Dead = false;
+	bool Despawning = false;
 	sf::Vector2f movement_Direction;
 	sf::FloatRect next_X_Bounds;
 	sf::FloatRect next_Y_Bounds;
 
 
+	float despawn_Time;
+	float despawn_Timer;
 	//sprite
 	sf::Texture enemy_Texture;
 	sf::Sprite enemy_Sprite;
@@ -86,6 +89,7 @@ private:
 	void enemy_Flashing(float deltatime);
 
 	void health_Bar_Update();
+	void despawning_Enemy(float deltatime);
 
 
 

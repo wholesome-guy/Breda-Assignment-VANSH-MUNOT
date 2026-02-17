@@ -35,6 +35,8 @@ private:
 
 	sf::Text FPS_Text;
 
+	sf::Text interact_Text;
+
 	bool is_Bar_Visible = false;
 	float bar_Size_Offset;
 

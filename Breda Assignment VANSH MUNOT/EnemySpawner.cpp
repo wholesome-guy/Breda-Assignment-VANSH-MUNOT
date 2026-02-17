@@ -1,18 +1,22 @@
 #include "EnemySpawner.h"
 #include "GameEngine.h"
-#include <random>
 
-EnemySpawner::EnemySpawner()
+#include "Shape.h"
+
+EnemySpawner::EnemySpawner():random_Generator(seed())
 {
 	init_Variables();
 }
 void EnemySpawner::init_Variables()
 {
 	spawn_Interval = 2.f;
-	max_Enemies = 100;
+	max_Enemies = 1;
 	spawn_Timer = 0;
-	spawn_Area_Min = { -1280,-720 };
-	spawn_Area_Max = { 2560,1440 };
+
+	sf::Vector2u window_Size = GameEngine::get_Instance()->get_Window()->getSize();
+
+	spawn_Area_Min = { -1.0f * static_cast<float>(window_Size.x) ,-1.0f * static_cast<float>(window_Size.y) };
+	spawn_Area_Max = { 2.f * static_cast<float>(window_Size.x) ,2.f * static_cast<float>(window_Size.y) };
 }
 void EnemySpawner::update(float deltatime)
 {
@@ -30,12 +34,22 @@ void EnemySpawner::update(float deltatime)
 
 		erase_Enemy(i);
 	}
+	for (int i = 0; i < _Squares.size(); i++)
+	{
+		_Squares[i]->update(deltatime);
+
+		 erase_Square(i);
+	}
 }
 void EnemySpawner::render(sf::RenderTarget& target)
 {
 	for (auto& e : _Enemies)
 	{
 		e->render(target);
+	}
+	for (auto& s : _Squares)
+	{
+		s->render(target);
 	}
 }
 void EnemySpawner::spawn_Enemy()
@@ -58,6 +72,8 @@ void EnemySpawner::erase_Enemy(int i)
 {
 	if (_Enemies[i]->get_Dead_Bool())
 	{
+		spawn_Square(i);
+
 		_Enemies.erase(_Enemies.begin() + i);
 		current_Enemy_Count--;
 		killed_Enemy_Count++;
@@ -65,17 +81,49 @@ void EnemySpawner::erase_Enemy(int i)
 }
 sf::Vector2f EnemySpawner::get_Random_Spawn_Position()
 {
-	//get seed
-	std::random_device rd;
-	//intialise  m twister
-	std::mt19937 gen(rd());
 
 	//uniform real distribution= random float values betweentwo values
 	std::uniform_real_distribution<float> distance_X(spawn_Area_Min.x, spawn_Area_Max.x);
 	std::uniform_real_distribution<float> distance_Y(spawn_Area_Min.y, spawn_Area_Max.y);
 
-	return { distance_X(gen),distance_Y(gen) };
+	return { distance_X(random_Generator),distance_Y(random_Generator) };
 
+}
+sf::Color EnemySpawner::get_Square_Color()
+{
+	sf::Color colour;
+
+	std::uniform_int_distribution<int> random(0, 3);
+
+	switch (random(random_Generator))
+	{
+	case 0: colour = sf::Color::Red;
+		break;
+	case 1: colour = sf::Color::Green;
+		break;
+	case 2: colour = sf::Color::Blue;
+		break;
+	case 3: colour = sf::Color::Yellow;
+		break;
+	}
+	return colour;
+
+}
+void EnemySpawner::spawn_Square(int i)
+{
+	std::uniform_int_distribution<int> random(0, 100);
+
+	if (random(random_Generator) < 100)//make it 30 later
+	{
+		_Squares.push_back(std::make_unique<Shape>(_Enemies[i]->get_Position(), get_Square_Color()));
+	}
+}
+void EnemySpawner::erase_Square(int i)
+{
+	if (_Squares[i]->get_Despawn())
+	{
+		_Squares.erase(_Squares.begin() + i);
+	}
 }
 std::vector<std::unique_ptr<Enemy>>& EnemySpawner::get_Enemies()
 {

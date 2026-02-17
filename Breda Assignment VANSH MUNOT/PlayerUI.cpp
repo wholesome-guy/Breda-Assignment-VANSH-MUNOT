@@ -7,7 +7,8 @@ PlayerUI::PlayerUI():
 	health_Sprite(health_Texture),
     kill_Text(game_Font, "0"),
     kill_Sprite(kill_Texture),
-    FPS_Text(game_Font,"0")
+    FPS_Text(game_Font,"0"),
+    interact_Text(game_Font,"press f")
 {
     _Player = GameEngine::get_Instance()->get_Player();
     _EnemySpawner = GameEngine::get_Instance()->get_EnemySpawner();
@@ -26,8 +27,6 @@ void PlayerUI::render(sf::RenderTarget& target)
 {
     render_UI(target);
     cooldown_Bar_Render(target);
-
-    target.draw(FPS_Text);
 }
 
 void PlayerUI::init_UI()
@@ -68,6 +67,9 @@ void PlayerUI::init_UI()
 
     // Initialize FPS counter
     setup_Text(FPS_Text, "0", 30, sf::Color::White, { 1226.f, 688.f }, { 0.5f, 0.5f });
+
+    setup_Text(interact_Text, "Press F", 40,
+        sf::Color::White, { 598.f, 635.f });
 }
 
 void PlayerUI::cooldown_Bar_Update()
@@ -117,6 +119,12 @@ void PlayerUI::render_UI(sf::RenderTarget& target)
 
     target.draw(kill_Text);
     target.draw(kill_Sprite);
+
+    target.draw(FPS_Text);
+    if (_Player->get_Can_Interact_Square())
+    {
+        target.draw(interact_Text);
+    }
 }
 
 void PlayerUI::update_UI()
@@ -126,7 +134,7 @@ void PlayerUI::update_UI()
 
     kill_Text.setString(std::to_string(_EnemySpawner->get_Kill_Count()));
 
-    UI_Mover(FPS_Text);
+    //UI_Mover(interact_Text);
 }
 
 void PlayerUI::FPS_Counter(float deltatime)
