@@ -1,8 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "TranformationMiniGame.h"
+#include "EventSystem.h"
 class Player;
-class Shape
+class Shape:public Subject
 {
 public:
 

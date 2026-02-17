@@ -91,5 +91,5 @@ struct player_Health_Change : Event
     float _Change;
 };
 
-
+struct minigame_Complete : Event{};
 

@@ -123,6 +123,13 @@ void Enemy::render(sf::RenderTarget& target)
     target.draw(background_Bar);
     target.draw(health_Bar);
 }
+void Enemy::on_Event(const Event& event)
+{
+    if (dynamic_cast<const minigame_Complete*>(&event))
+    {
+        enemy_KnockBack();
+    }
+}
 #pragma endregion
 
 #pragma region Movement
@@ -169,7 +176,10 @@ void Enemy::enemy_player_Collision(float deltatime)
     // only damage on the frame contact
     if (contact_Now && !is_InContact_Player && _Player->get_can_Damage())
     {
-        _Player->player_Health(enemy_Damage);
+        //damage player
+        player_Health_Change event;
+        event._Change = enemy_Damage;
+        notify_Observers(event);
     }
 
     is_InContact_Player = contact_Now;
@@ -320,6 +330,7 @@ void Enemy::despawning_Enemy(float deltatime)
     if (despawn_Timer > despawn_Time)
     {
         is_Dead = true;
+
     }
 
 }
@@ -343,12 +354,12 @@ sf::FloatRect Enemy::get_GlobalBounds()
 {
     return enemy_Sprite.getGlobalBounds();
 }
-bool Enemy::get_Dead_Bool()
-{
-    return is_Dead;
-}
 float Enemy::get_Damage()
 {
     return enemy_Damage;
+}
+bool Enemy::get_Dead_Bool()
+{
+    return is_Dead;
 }
 #pragma endregion

@@ -1,13 +1,13 @@
 #pragma once
 #include "EntityBase.h"
+#include "EventSystem.h"
 
 //forward declaration when i only need a pointer or reference
 class Player;
 class EnemySpawner;
 
-class Enemy
+class Enemy: public Subject,public Observer
 {
-
 public:
 
 	Enemy();
@@ -17,6 +17,8 @@ public:
 	void update(float deltatime);
 	void render(sf::RenderTarget& target);
 
+	void on_Event(const Event& event) override;
+
 	void take_Damage(float _Damage);
 	void enemy_KnockBack();
 
@@ -25,8 +27,8 @@ public:
 	void set_Color(sf::Color colour);
 
 	//getters
-	bool get_Dead_Bool();
 	float get_Damage();
+	bool get_Dead_Bool();
 	sf::Vector2f get_Position();
 	sf::FloatRect get_GlobalBounds();
 
@@ -39,8 +41,8 @@ private:
 	float enemy_Health;
 	float max_enemy_Health;
 	float enemy_Damage;
-	bool is_Dead = false;
 	bool Despawning = false;
+	bool is_Dead = false;
 	sf::Vector2f movement_Direction;
 	sf::FloatRect next_X_Bounds;
 	sf::FloatRect next_Y_Bounds;

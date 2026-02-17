@@ -34,27 +34,13 @@ void EnemySpawner::update(float deltatime)
 		{
 			update_Enemy(i, deltatime);
 
-			if (knockback)
-			{
-				_Enemies[i]->enemy_KnockBack();
-				knockback = false;
-			}
-
 			erase_Enemy(i);
 		}
-
-		
 	}
-	else
-	{
-		knockback = true;
-	}
-	
-	for (int i = 0; i < _Squares.size(); i++)
+	for (int i=0;i<_Squares.size();i++)
 	{
 		_Squares[i]->update(deltatime);
-
-		 erase_Square(i);
+		erase_Square(i);
 	}
 }
 void EnemySpawner::render(sf::RenderTarget& target)
@@ -68,18 +54,23 @@ void EnemySpawner::render(sf::RenderTarget& target)
 		s->render(target);
 	}
 }
+
 void EnemySpawner::spawn_Enemy()
 {
 	auto new_Enemy = std::make_unique<Enemy>();
 
 	new_Enemy->set_Position(get_Random_Spawn_Position());
 
+	//adding observer, player and enemyspawner are observers of enemy
+	new_Enemy->add_Observer(GameEngine::get_Instance()->get_Player());
+
+
 	_Enemies.push_back(std::move(new_Enemy));
 
 	current_Enemy_Count++;
 
 }
-void EnemySpawner::update_Enemy(int i,float deltatime)
+void EnemySpawner::update_Enemy(int i, float deltatime)
 {
 	_Enemies[i]->update(deltatime);
 }
@@ -89,6 +80,11 @@ void EnemySpawner::erase_Enemy(int i)
 	if (_Enemies[i]->get_Dead_Bool())
 	{
 		spawn_Square(i);
+
+		for (auto& s : _Squares)
+		{
+			s->remove_Observer(_Enemies[i].get());
+		}
 
 		_Enemies.erase(_Enemies.begin() + i);
 		current_Enemy_Count--;
@@ -136,15 +132,21 @@ void EnemySpawner::spawn_Square(int i)
 
 	if (random(random_Generator) < 100)//make it 30 later
 	{
-		_Squares.push_back(std::make_unique<Shape>(_Enemies[i]->get_Position(), get_Square_Color()));
+		auto new_Shape = std::make_unique<Shape>(_Enemies[i]->get_Position(), get_Square_Color());
+		for (auto& e : _Enemies)
+		{
+			new_Shape->add_Observer(e.get());
+		}
+		_Squares.push_back(std::move(new_Shape));
+
 	}
 }
 void EnemySpawner::erase_Square(int i)
 {
 	if (_Squares[i]->get_Despawn())
 	{
-		_Squares.erase(_Squares.begin() + i);
-	}
+		_Squares.erase(_Squares.begin() + i);				
+	}	
 }
 std::vector<std::unique_ptr<Enemy>>& EnemySpawner::get_Enemies()
 {

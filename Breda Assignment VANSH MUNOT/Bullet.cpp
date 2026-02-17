@@ -1,4 +1,4 @@
-#include "Bullet.h"
+﻿#include "Bullet.h"
 #include "GameEngine.h"
 Bullet::Bullet(sf::Vector2f position, sf::Angle rotation, sf::Vector2f direction,float _Damage, float _Range) : Projectile()
 {

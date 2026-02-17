@@ -50,6 +50,7 @@ void GameEngine::init_Entities()
 
 	Entities.push_back(std::make_unique<PlayerUI>());
 
+	//making player the observe of enemy_spawner
 	_EnemySpawner->add_Observer(_Player);
 }
 
@@ -88,7 +89,6 @@ void GameEngine::update(float deltatime)
 	{
 		e->update(deltatime);
 	}	
-
 }
 
 //render objects here

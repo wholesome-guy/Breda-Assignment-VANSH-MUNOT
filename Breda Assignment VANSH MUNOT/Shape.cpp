@@ -72,13 +72,17 @@ void Shape::collision()
     if (mini_Game.get_Is_Complete())
     {
         GameEngine::get_Instance()->set_Mini_Game_Active(mini_Game.get_Is_Active());
+
         _Player->set_Can_Interact_Sqaure(false);
 
         if (mini_Game.get_Is_Won())
         {
             std::cout << "Won" << "\n";
         }
-        is_Despawn = true;
+        notify_Observers(minigame_Complete{});
+
+        is_Despawn = true;  
+        return;
     }
 }
 

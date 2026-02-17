@@ -19,8 +19,6 @@ public:
     void update(float deltatime) override;
     void render(sf::RenderTarget& target) override;
 
-
-
     // Getters
     std::vector<std::unique_ptr<Enemy>>& get_Enemies();
     int get_Kill_Count();
@@ -53,7 +51,7 @@ private:
     void init_Variables();
 
     void spawn_Enemy();
-    void update_Enemy(int i,float deltatime);
+    void update_Enemy(int i, float deltatime);
     void erase_Enemy(int i);
     sf::Vector2f get_Random_Spawn_Position();
     sf::Color get_Square_Color();
