@@ -18,6 +18,7 @@ public:
 	void render(sf::RenderTarget& target);
 
 	void take_Damage(float _Damage);
+	void enemy_KnockBack();
 
 	//setters
 	void set_Position(sf::Vector2f position);
@@ -28,6 +29,7 @@ public:
 	float get_Damage();
 	sf::Vector2f get_Position();
 	sf::FloatRect get_GlobalBounds();
+
 
 private:
 

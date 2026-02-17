@@ -12,12 +12,14 @@ Shape::Shape(sf::Vector2f position, sf::Color colour):
 void Shape::render(sf::RenderTarget& target)
 {
 	target.draw(shape_Sprite);
+    mini_Game.render(target);
 }
 
 void Shape::update(float deltatime)
 {
     despawn(deltatime);
     collision();
+    mini_Game.update(deltatime);
 }
 
 bool Shape::get_Despawn()
@@ -39,6 +41,10 @@ void Shape::init_Sprite(sf::Vector2f position, sf::Color colour)
 
 void Shape::despawn(float deltatime)
 {
+    if (mini_Game.get_Is_Active())
+    {
+        return;
+    }
     despawn_Timer += deltatime;
     if (despawn_Timer > despawn_Time)
     {
@@ -52,14 +58,27 @@ void Shape::collision()
     if (shape_Sprite.getGlobalBounds().findIntersection(_Player->get_GlobalBounds()))
     {
         _Player->set_Can_Interact_Sqaure(true);
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right) && !mini_Game.get_Is_Active())
         {
-            std::cout << "interacted" << "\n";
+            mini_Game.start_Mini_Game();
+            GameEngine::get_Instance()->set_Mini_Game_Active(mini_Game.get_Is_Active());
         }  
     }
     else
     {
         _Player->set_Can_Interact_Sqaure(false);
+    }
+
+    if (mini_Game.get_Is_Complete())
+    {
+        GameEngine::get_Instance()->set_Mini_Game_Active(mini_Game.get_Is_Active());
+        _Player->set_Can_Interact_Sqaure(false);
+
+        if (mini_Game.get_Is_Won())
+        {
+            std::cout << "Won" << "\n";
+        }
+        is_Despawn = true;
     }
 }
 

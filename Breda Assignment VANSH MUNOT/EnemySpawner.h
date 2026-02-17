@@ -29,6 +29,7 @@ private:
     int current_Enemy_Count;
     int killed_Enemy_Count;
 
+    bool knockback = true;
     // Spawn area boundaries
     sf::Vector2f spawn_Area_Min;
     sf::Vector2f spawn_Area_Max;

@@ -22,11 +22,14 @@ public:
 	//getters
 	sf::Vector2f get_Position();
 	sf::FloatRect get_GlobalBounds();
+
 	float get_Cooldown(int i);
 	bool get_CoolDown_Bool(int i);
+
 	bool get_can_Damage();
 	float get_Health();
 	int get_Ammo();
+
 	bool get_Can_Interact_Square();
 
 
@@ -73,7 +76,6 @@ private:
 	bool is_weapon_Transforming = false;
 
 	bool can_Interact_Square;
-	bool can_Interact_Machine;
 
 	//functions
 	void init_playerSprite();

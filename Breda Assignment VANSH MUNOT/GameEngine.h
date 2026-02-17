@@ -45,6 +45,12 @@ public:
 	{
 		return _EnemySpawner;
 	}
+	//mini game
+	void set_Mini_Game_Active(bool);
+	bool get_Mini_Game_Active();
+
+
+
 
 private:
 	
@@ -60,6 +66,10 @@ private:
 
 	Player* _Player;
 	EnemySpawner* _EnemySpawner;
+
+	bool minigame_Active;
+
+
 	//basic functions
 	void update(float deltatime);
 	void render();

@@ -247,6 +247,15 @@ void Enemy::enemy_Movement(float deltatime)
         knockback_Applied = false;
     }
 }
+
+void Enemy::enemy_KnockBack()
+{
+    if (!knockback_Applied)
+    {
+        knockback_Velocity = -1.f * player_enemy_Direction * knockback_Force;
+        knockback_Applied = true;
+    }
+}
 #pragma endregion
 
 #pragma region Health
@@ -257,11 +266,7 @@ void Enemy::take_Damage(float _Damage)
     enemy_Health = std::clamp(enemy_Health, 0.f, max_enemy_Health);
 
     //knockback
-    if (!knockback_Applied)
-    {
-        knockback_Velocity = -1.f * player_enemy_Direction * knockback_Force;
-        knockback_Applied = true;
-    }
+    enemy_KnockBack();
 
     //flash
     set_Color(sf::Color::Red);

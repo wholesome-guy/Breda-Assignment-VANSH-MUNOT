@@ -104,3 +104,13 @@ void GameEngine::render()
 
 	game_Window->display();
 }
+
+bool GameEngine::get_Mini_Game_Active()
+{
+	return minigame_Active;
+}
+void GameEngine::set_Mini_Game_Active(bool active)
+{
+	minigame_Active = active;
+}
+

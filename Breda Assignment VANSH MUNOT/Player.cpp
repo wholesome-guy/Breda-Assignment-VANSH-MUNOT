@@ -11,8 +11,8 @@ Player::Player():
     //intialiser list for things with no default constructors
 	player_Sprite(player_Texture)
 {
-    init_playerSprite();
     init_Variables();
+    init_playerSprite();
     init_Weapons();
 
 }
@@ -26,7 +26,7 @@ void Player::init_playerSprite()
     
     //setting sprite properties
     player_Sprite.setTexture(player_Texture, true);
-    player_Sprite.setPosition({ 100.f, 100.f });
+    player_Sprite.setPosition({ screen_Width/2, screen_Height/2 });
     player_Sprite.setScale({ 1.5f, 1.5f });
     player_Sprite.setOrigin({ static_cast<float>(player_Texture.getSize().x / 2),static_cast<float>(player_Texture.getSize().y / 2) });
 }
@@ -341,10 +341,12 @@ bool Player::get_Can_Interact_Square()
 {
     return can_Interact_Square;
 }
+
 void Player::set_Can_Interact_Sqaure(bool interact)
 {
     can_Interact_Square = interact;
 }
+
 bool Player::get_can_Damage()
 {
     return can_Damage;

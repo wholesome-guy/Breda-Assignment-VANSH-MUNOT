@@ -10,7 +10,7 @@ EnemySpawner::EnemySpawner():random_Generator(seed())
 void EnemySpawner::init_Variables()
 {
 	spawn_Interval = 2.f;
-	max_Enemies = 1;
+	max_Enemies = 10;
 	spawn_Timer = 0;
 
 	sf::Vector2u window_Size = GameEngine::get_Instance()->get_Window()->getSize();
@@ -20,20 +20,36 @@ void EnemySpawner::init_Variables()
 }
 void EnemySpawner::update(float deltatime)
 {
-	spawn_Timer += deltatime;
-
-	if (spawn_Timer >= spawn_Interval && current_Enemy_Count < max_Enemies)
+	if (!GameEngine::get_Instance()->get_Mini_Game_Active())
 	{
-		spawn_Enemy();
-		spawn_Timer = 0.0f; // Reset timer
-	}
+		spawn_Timer += deltatime;
 
-	for (int i = 0; i < _Enemies.size(); i++)
+		if (spawn_Timer >= spawn_Interval && current_Enemy_Count < max_Enemies)
+		{
+			spawn_Enemy();
+			spawn_Timer = 0.0f; // Reset timer
+		}
+
+		for (int i = 0; i < _Enemies.size(); i++)
+		{
+			update_Enemy(i, deltatime);
+
+			if (knockback)
+			{
+				_Enemies[i]->enemy_KnockBack();
+				knockback = false;
+			}
+
+			erase_Enemy(i);
+		}
+
+		
+	}
+	else
 	{
-		update_Enemy(i, deltatime);
-
-		erase_Enemy(i);
+		knockback = true;
 	}
+	
 	for (int i = 0; i < _Squares.size(); i++)
 	{
 		_Squares[i]->update(deltatime);

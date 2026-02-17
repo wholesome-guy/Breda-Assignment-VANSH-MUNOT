@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "TranformationMiniGame.h"
 class Player;
 class Shape
 {
@@ -22,10 +23,10 @@ private:
 	float despawn_Timer = 0;
 	float despawn_Time = 5.f;
 
-	//bool is_InContact;
 	bool is_Despawn = false;
 
 	Player* _Player;
+	TranformationMiniGame mini_Game;
 
 	void init_Sprite(sf::Vector2f position, sf::Color);
 	void despawn(float deltatime);
