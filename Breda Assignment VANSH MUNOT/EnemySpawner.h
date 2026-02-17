@@ -4,10 +4,11 @@
 #include <vector>
 #include <memory>
 #include <random>
+#include "EventSystem.h"
 class Shape;
-class Player;
 
-class EnemySpawner:public EntityBase
+
+class EnemySpawner:public EntityBase,public Subject
 {
 public:
     EnemySpawner();
@@ -17,6 +18,8 @@ public:
 
     void update(float deltatime) override;
     void render(sf::RenderTarget& target) override;
+
+
 
     // Getters
     std::vector<std::unique_ptr<Enemy>>& get_Enemies();

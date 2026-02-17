@@ -146,6 +146,7 @@
     <ClCompile Include="Rifle.cpp" />
     <ClCompile Include="RPG.cpp" />
     <ClCompile Include="Shape.cpp" />
+    <ClCompile Include="Subject.cpp" />
     <ClCompile Include="Sword.cpp" />
     <ClCompile Include="TranformationMiniGame.cpp" />
   </ItemGroup>
@@ -157,12 +158,14 @@
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="MathFunctions.h" />
     <ClInclude Include="Missile.h" />
+    <ClInclude Include="EventSystem.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerUI.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="Rifle.h" />
     <ClInclude Include="RPG.h" />
     <ClInclude Include="Shape.h" />
+    <ClInclude Include="Subject.h" />
     <ClInclude Include="Sword.h" />
     <ClInclude Include="TranformationMiniGame.h" />
     <ClInclude Include="Weapon.h" />

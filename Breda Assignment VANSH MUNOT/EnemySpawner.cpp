@@ -1,7 +1,7 @@
 #include "EnemySpawner.h"
 #include "GameEngine.h"
-#include "Player.h"
 #include "Shape.h"
+
 
 EnemySpawner::EnemySpawner():random_Generator(seed())
 {
@@ -93,6 +93,11 @@ void EnemySpawner::erase_Enemy(int i)
 		_Enemies.erase(_Enemies.begin() + i);
 		current_Enemy_Count--;
 		killed_Enemy_Count++;
+
+		//heal player on kill
+		player_Health_Change event;
+		event._Change = -2.f;
+		notify_Observers(event);
 	}
 }
 sf::Vector2f EnemySpawner::get_Random_Spawn_Position()

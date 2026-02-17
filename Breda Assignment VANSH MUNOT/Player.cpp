@@ -106,6 +106,13 @@ void Player::render(sf::RenderTarget& target)
 
     current_Weapon->render(*game_Window);
 }
+void Player::on_Event(const Event& event)
+{
+    if (auto* data = dynamic_cast<const player_Health_Change*>(&event))
+    {
+        player_Health(data->_Change);
+    }
+}
 #pragma endregion
 
 #pragma region Movement

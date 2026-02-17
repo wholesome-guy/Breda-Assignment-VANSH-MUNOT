@@ -1,12 +1,12 @@
 #pragma once
-
+#include "EventSystem.h"
 #include "EntityBase.h"
 #include "Weapon.h"
 #include <cmath>
 
 class EnemySpawner;
 
-class Player: public EntityBase
+class Player: public EntityBase,public Observer
 {
 public:
 	//constructor
@@ -18,6 +18,7 @@ public:
 
 	void player_Health(float _Damage);
 
+	void on_Event(const Event& event) override;
 
 	//getters
 	sf::Vector2f get_Position();

@@ -42,16 +42,15 @@ void GameEngine::init_Entities()
 	auto player = std::make_unique<Player>();
 	//pass for reference raw pointer
 	_Player = player.get();
+
 	//transfer ownership by using move? smart pointer owns the object, transfer of ownership = move
 	Entities.push_back(std::move(player));
 
-
-
-	
 	Entities.push_back(std::move(enemy_list));
 
 	Entities.push_back(std::make_unique<PlayerUI>());
 
+	_EnemySpawner->add_Observer(_Player);
 }
 
 void GameEngine::run()
