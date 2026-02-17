@@ -3,6 +3,7 @@
 
 //forward declaration when i only need a pointer or reference
 class Player;
+class EnemySpawner;
 
 class Enemy
 {
@@ -37,6 +38,10 @@ private:
 	float max_enemy_Health;
 	float enemy_Damage;
 	bool is_Dead = false;
+	sf::Vector2f movement_Direction;
+	sf::FloatRect next_X_Bounds;
+	sf::FloatRect next_Y_Bounds;
+
 
 	//sprite
 	sf::Texture enemy_Texture;
@@ -45,6 +50,12 @@ private:
 	//player reference
 	Player* _Player;
 	sf::Vector2f player_enemy_Direction;
+
+	EnemySpawner* _EnemySpawner = nullptr;
+
+	bool is_InContact_Player;
+	float contact_Timer =0;
+	float contact_Time;
 
 	//flash effect
 	bool start_Flash = false;
@@ -57,8 +68,9 @@ private:
 
 	//knockback
 	sf::Vector2f knockback_Velocity;
-	float knockback_Force =10000;
+	float knockback_Force =1000;
 	float knockback_Decay = 0.9f;
+	bool knockback_Applied = false;
 
 	//functions
 	void init_Variables();
@@ -66,7 +78,10 @@ private:
 	void random_Enemy_Type();
 
 	void direction_Calculate();
+	void collision_Data_Calculate(float deltatime);
 	void enemy_Movement(float deltatime);
+	void enemy_player_Collision(float deltatime);
+	void enemy_enemy_Collision(float deltatime);
 
 	void enemy_Flashing(float deltatime);
 

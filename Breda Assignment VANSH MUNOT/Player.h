@@ -16,12 +16,15 @@ public:
 	void update(float deltatime) override;
 	void render(sf::RenderTarget& target) override;
 
+	void player_Health(float _Damage);
+
+
 	//getters
 	sf::Vector2f get_Position();
-
+	sf::FloatRect get_GlobalBounds();
 	float get_Cooldown(int i);
 	bool get_CoolDown_Bool(int i);
-
+	bool get_can_Damage();
 	float get_Health();
 	int get_Ammo();
 	
@@ -40,6 +43,7 @@ private:
 	float screen_Height;
 
 	float player_Speed;
+	sf::Vector2f player_Velocity;
 	float max_player_Health;
 	float current_player_Health;
 
@@ -79,7 +83,6 @@ private:
 	void player_Attack();
 	void Attack();
 
-	void player_Health(float _Damage);
 	void player_Invincibility(float deltatime);
 
 	void weapon_Cooldown(float deltatime);

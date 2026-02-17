@@ -4,6 +4,7 @@
 #include <random>
 //full declare in cpp file to avoid circualar dependency
 #include "Player.h" 
+#include "EnemySpawner.h"
 
 Enemy::Enemy() :enemy_Sprite(enemy_Texture)
 {
@@ -33,9 +34,13 @@ void Enemy::init_Variables()
     enemy_Health = max_enemy_Health;
 
     _Player = GameEngine::get_Instance()->get_Player();
+    _EnemySpawner = GameEngine::get_Instance()->get_EnemySpawner();
 
     flash_Time = 0.2f;
     flash_Timer = 0;
+
+    contact_Time = 1.f;
+    contact_Timer = 0;
 }
 void Enemy::init_Sprite()
 {
@@ -94,7 +99,8 @@ void Enemy::update(float deltatime)
 {
     //player to enemy direction
     direction_Calculate();
-
+    //collision data
+    collision_Data_Calculate(deltatime);
     //movement
     enemy_Movement(deltatime);
 
@@ -128,11 +134,92 @@ void Enemy::direction_Calculate()
     {
         player_enemy_Direction = player_enemy_Direction / _magnitude; // normalize
     }
+
+
+}
+void Enemy::collision_Data_Calculate(float deltatime)
+{
+    sf::FloatRect current_Bounds = enemy_Sprite.getGlobalBounds();
+
+    next_X_Bounds = current_Bounds;
+    next_X_Bounds.position.x += (player_enemy_Direction.x * enemy_Speed * deltatime)
+        + (knockback_Velocity.x * deltatime);
+
+    next_Y_Bounds = current_Bounds;
+    next_Y_Bounds.position.y += (player_enemy_Direction.y * enemy_Speed * deltatime)
+        + (knockback_Velocity.y * deltatime);
+}
+void Enemy::enemy_player_Collision(float deltatime)
+{
+    //collision
+    sf::FloatRect player_Bounds = _Player->get_GlobalBounds();
+
+    movement_Direction = player_enemy_Direction;
+
+    bool contact_X = next_X_Bounds.findIntersection(player_Bounds).has_value();
+    bool contact_Y = next_Y_Bounds.findIntersection(player_Bounds).has_value();
+    bool contact_Now = contact_X || contact_Y;
+
+    // only damage on the frame contact
+    if (contact_Now && !is_InContact_Player && _Player->get_can_Damage())
+    {
+        _Player->player_Health(enemy_Damage);
+    }
+
+    is_InContact_Player = contact_Now;
+
+    if (contact_X)
+        movement_Direction.x = 0;
+
+    if (contact_Y)
+        movement_Direction.y = 0;
+
+    if (is_InContact_Player)
+    {
+        contact_Timer += deltatime;
+        if (contact_Timer > contact_Time)
+        {
+            is_InContact_Player = false;
+            contact_Timer = 0;
+        }
+    }
+    
+}
+
+void Enemy::enemy_enemy_Collision(float deltatime)
+{
+    auto& enemies = _EnemySpawner->get_Enemies();
+    for (auto& e : enemies)
+    {
+        sf::FloatRect enemy_Bounds = e->get_GlobalBounds();
+
+        if (e.get() == this)
+            continue;
+        //intersections
+        bool contact_X = next_X_Bounds.findIntersection(enemy_Bounds).has_value();
+        bool contact_Y = next_Y_Bounds.findIntersection(enemy_Bounds).has_value();
+
+
+        if (contact_X)
+        {
+            movement_Direction.x = 0;
+            knockback_Velocity.x = 0;
+        }
+
+        if (contact_Y)
+        {
+            movement_Direction.y = 0;
+            knockback_Velocity.y = 0;
+        }
+    }
 }
 
 void Enemy::enemy_Movement(float deltatime)
 {
-    enemy_Sprite.move(player_enemy_Direction * enemy_Speed * deltatime);
+    enemy_player_Collision(deltatime);
+    enemy_enemy_Collision(deltatime);
+
+    enemy_Sprite.move(movement_Direction * enemy_Speed * deltatime);
 
     //flip to look at player
     if (player_enemy_Direction.x < 0)
@@ -146,7 +233,13 @@ void Enemy::enemy_Movement(float deltatime)
 
     //knockback
     enemy_Sprite.move(knockback_Velocity * deltatime);
-    knockback_Velocity *= knockback_Decay;
+    knockback_Velocity *= std::pow(knockback_Decay, deltatime * 60.f);
+
+    float magnitude_Knockback = sqrtf(knockback_Velocity.x * knockback_Velocity.x + knockback_Velocity.y * knockback_Velocity.y);
+    if (magnitude_Knockback < 10)
+    {
+        knockback_Applied = false;
+    }
 }
 #pragma endregion
 
@@ -158,7 +251,11 @@ void Enemy::take_Damage(float _Damage)
     enemy_Health = std::clamp(enemy_Health, 0.f, max_enemy_Health);
 
     //knockback
-    knockback_Velocity = -1.f * player_enemy_Direction * knockback_Force;
+    if (!knockback_Applied)
+    {
+        knockback_Velocity = -1.f * player_enemy_Direction * knockback_Force;
+        knockback_Applied = true;
+    }
 
     //flash
     set_Color(sf::Color::Red);

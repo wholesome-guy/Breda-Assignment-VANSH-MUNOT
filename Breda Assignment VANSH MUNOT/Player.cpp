@@ -49,11 +49,6 @@ void Player::init_Variables()
     screen_Width = static_cast<float>(screen_Size.x);
     screen_Height = static_cast<float>(screen_Size.y);
 
-    if (_EnemySpawner == nullptr)
-    {
-        // This will tell you if GameEngine hasn't created it yet
-        std::cout << "ERROR: EnemySpawner is null!" << std::endl;
-    }
     _EnemySpawner = GameEngine::get_Instance()->get_EnemySpawner();
 
     //Timers
@@ -84,6 +79,7 @@ void Player::init_Weapons()
 
 void Player::update(float deltatime)
 {
+
     //movement
     player_Movement(deltatime);
     weapon_Movement();
@@ -100,7 +96,7 @@ void Player::update(float deltatime)
     
     //collision
     wall_Collision();
-    enemy_Collision(deltatime);
+    player_Invincibility(deltatime);
 }
 
 void Player::render(sf::RenderTarget& target)
@@ -118,7 +114,7 @@ void Player::player_Movement(float deltatime)
 {
     //Inputs
     sf::Vector2f keyboard_Input = {0,0};
-    sf::Vector2f player_Velocity;
+    
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
     {
@@ -151,9 +147,11 @@ void Player::player_Movement(float deltatime)
     {
         player_Velocity = keyboard_Input * player_Speed * deltatime;
     }
-
-    //sprite move function
+    
+    enemy_Collision(deltatime);
+    // move after collision done
     player_Sprite.move(player_Velocity);
+
 }
 
 void Player::weapon_Movement()
@@ -297,6 +295,10 @@ sf::Vector2f Player::get_Position()
 {
     return player_Sprite.getPosition();
 }
+sf::FloatRect Player::get_GlobalBounds()
+{
+    return player_Sprite.getGlobalBounds();
+}
 
 float Player::get_Cooldown(int i)
 {
@@ -335,6 +337,10 @@ int Player::get_Ammo()
 {
     return current_weapon_Ammo;
 }
+bool Player::get_can_Damage()
+{
+    return can_Damage;
+}
 
 #pragma endregion
 
@@ -371,7 +377,10 @@ void Player::wall_Collision()
 }
 void Player::player_Health(float _Damage)
 {
+
     current_player_Health -= _Damage;
+    can_Damage = false;
+
 
     current_player_Health = std::clamp(current_player_Health, 0.f, max_player_Health);
 
@@ -383,29 +392,49 @@ void Player::player_Health(float _Damage)
 
 void Player::enemy_Collision(float deltatime)
 {
-    if (can_Damage)
-    {
-        auto& enemies = _EnemySpawner->get_Enemies();
+    sf::FloatRect current_Bounds = player_Sprite.getGlobalBounds();
 
-        for (auto& e : enemies)
+    //calculate next position of global bounds
+    sf::FloatRect next_Bounds = current_Bounds;
+    next_Bounds.position.x += player_Velocity.x;
+    next_Bounds.position.y += player_Velocity.y;
+
+    auto& enemies = _EnemySpawner->get_Enemies();
+    for (auto& e : enemies)
+    {
+        sf::FloatRect enemy_Bounds = e->get_GlobalBounds();
+
+        //intersections
+        bool touching_X = next_Bounds.findIntersection(enemy_Bounds).has_value();
+        bool touching_Y = next_Bounds.findIntersection(enemy_Bounds).has_value();
+
+
+        if (touching_X)
         {
-            if (player_Sprite.getGlobalBounds().findIntersection(e->get_GlobalBounds()))
-            {
-                player_Health(e->get_Damage());
-                
-                can_Damage = false;
-            }
+            player_Velocity.x = 0;
+        }
+
+        if (touching_Y)
+        {
+            player_Velocity.y = 0;
+        }
+
+        if (can_Damage && (touching_X || touching_Y))
+        {
+            player_Health(e->get_Damage());
         }
     }
-    else
-    {
-        player_Invincibility(deltatime);
-    }   
+     
+
 }
 
 void Player::player_Invincibility(float deltatime)
 {
-    //invincibilty for time when player gets hurt
+    if (can_Damage) 
+    {
+        return;
+    }
+        //invincibilty for time when player gets hurt
 
     invincibility_Timer += deltatime;
 
