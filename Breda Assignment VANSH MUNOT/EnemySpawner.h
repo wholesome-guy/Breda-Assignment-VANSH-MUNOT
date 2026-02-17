@@ -5,6 +5,7 @@
 #include <memory>
 #include <random>
 class Shape;
+class Player;
 
 class EnemySpawner:public EntityBase
 {

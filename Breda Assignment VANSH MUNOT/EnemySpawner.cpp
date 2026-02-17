@@ -1,6 +1,6 @@
 #include "EnemySpawner.h"
 #include "GameEngine.h"
-
+#include "Player.h"
 #include "Shape.h"
 
 EnemySpawner::EnemySpawner():random_Generator(seed())
