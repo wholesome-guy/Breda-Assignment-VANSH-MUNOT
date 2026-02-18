@@ -22,7 +22,6 @@ private:
 	sf::Sprite shape_Sprite;
 
 	bool is_MiniGame_Active = false;
-	//minigame_Active_State minigame_Active_Event;
 
 	interaction_State minigame_Interaction_State;
 
@@ -34,7 +33,6 @@ private:
 	bool is_Despawn = false;
 
 	Player* _Player;
-	//TranformationMiniGame mini_Game;
 
 	void init_Sprite(sf::Vector2f position, sf::Color);
 	void despawn(float deltatime);

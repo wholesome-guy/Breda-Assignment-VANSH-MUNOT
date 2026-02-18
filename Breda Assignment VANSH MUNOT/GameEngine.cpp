@@ -25,8 +25,9 @@ GameEngine::~GameEngine()
 //intialise the game window
 void GameEngine::init_gameWindow()
 {
-	_Window_Size = { 1280,720 };
+	_Window_Size = { 640,360 };
 	game_Window = new sf::RenderWindow(sf::VideoMode(_Window_Size), "Game");
+	mini_Game.init_UI();
 	//game_Window->setFramerateLimit(60);
 }
 

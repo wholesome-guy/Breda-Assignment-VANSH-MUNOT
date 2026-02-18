@@ -17,6 +17,7 @@ public:
 	void render(sf::RenderTarget& target) override;
 
 	void player_Health(float _Damage);
+	bool get_can_Damage();
 
 	void on_Event(const Event& event) override;
 

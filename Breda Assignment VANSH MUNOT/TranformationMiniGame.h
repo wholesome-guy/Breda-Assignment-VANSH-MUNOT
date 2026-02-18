@@ -12,6 +12,7 @@ public:
     bool get_Is_Active();
     bool get_Is_Won();
     bool get_Is_Complete();  
+    void init_UI();
 
 private:
     
@@ -68,7 +69,6 @@ private:
 
     //functions
     void init_Variables();
-    void init_UI();
 
     void white_bar_Rotation(float deltatime);
     void result_Display(float deltatime);

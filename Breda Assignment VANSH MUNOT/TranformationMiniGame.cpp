@@ -1,5 +1,5 @@
 #include "TranformationMiniGame.h"
-
+#include "GameEngine.h"
 #include <cmath>
 #include <iostream>
 
@@ -9,7 +9,7 @@ TranformationMiniGame::TranformationMiniGame():
     result_Text(game_font,"1")
 {
     init_Variables();
-    init_UI();
+    //init_UI();
 }
 
 void TranformationMiniGame::init_Variables()
@@ -18,54 +18,57 @@ void TranformationMiniGame::init_Variables()
     std::random_device rd;
     gen = std::mt19937(rd());
 
-    // screen centre - adjust to your resolution
-    _Centre = { 640.f, 360.f };
 }
 void TranformationMiniGame::init_UI()
 {
-    
-    overlay.setSize({ 1280.f, 720.f });
+    sf::Vector2u window_Size = GameEngine::get_Instance()->get_Window()->getSize();
+    float scale_X = static_cast<float>(window_Size.x) / 1280.f;
+    float scale_Y = static_cast<float>(window_Size.y) / 720.f;
+    float scale = std::min(scale_X, scale_Y); // uniform scale for circular/symmetric elements
+
+    _Centre = { window_Size.x / 2.f, window_Size.y / 2.f };
+    ring_Radius = 120.f * scale;
+
+    float panel_Size = 400.f * scale;
+    float panel_Half = panel_Size / 2.f;
+
+    overlay.setSize({ static_cast<float>(window_Size.x), static_cast<float>(window_Size.y) });
     overlay.setFillColor(sf::Color(0, 0, 0, 180));
 
-    
-    background_Panel.setSize({ 400.f, 400.f });
-    background_Panel.setOrigin({ 200.f, 200.f });
+    background_Panel.setSize({ panel_Size, panel_Size });
+    background_Panel.setOrigin({ panel_Half, panel_Half });
     background_Panel.setPosition(_Centre);
     background_Panel.setFillColor(sf::Color(30, 30, 30, 220));
     background_Panel.setOutlineColor(sf::Color::White);
-    background_Panel.setOutlineThickness(2.f);
+    background_Panel.setOutlineThickness(2.f * scale);
 
-    
     _Ring.setRadius(ring_Radius);
     _Ring.setOrigin({ ring_Radius, ring_Radius });
     _Ring.setPosition(_Centre);
     _Ring.setFillColor(sf::Color::Transparent);
     _Ring.setOutlineColor(sf::Color(100, 100, 100));
-    _Ring.setOutlineThickness(8.f);
+    _Ring.setOutlineThickness(8.f * scale);
 
-    
-    white_Bar.setSize({ 12.f, 30.f });
-    white_Bar.setOrigin({ 6.f, 15.f });
+    white_Bar.setSize({ 12.f * scale, 30.f * scale });
+    white_Bar.setOrigin({ 6.f * scale, 15.f * scale });
     white_Bar.setFillColor(sf::Color::White);
 
-    
     if (game_font.openFromFile("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/SpecialElite-Regular.ttf"))
-    {
-        std::cout << "got the font" << "\n";
-    }
+        std::cout << "got the font\n";
+    game_font.setSmooth(false);
 
-    
-    letter_Text = sf::Text(game_font, "", 80);
+    letter_Text = sf::Text(game_font, "", static_cast<unsigned int>(160 * scale));
     letter_Text.setFillColor(sf::Color::White);
     letter_Text.setStyle(sf::Text::Bold);
+    letter_Text.setScale({ 0.5f,0.5f });
 
-    
-    result_Text = sf::Text(game_font, "", 40);
+    result_Text = sf::Text(game_font, "", static_cast<unsigned int>(80 * scale));
+    result_Text.setScale({ 0.5f,0.5f });
 
-    
-    round_Text = sf::Text(game_font, "", 24);
+    round_Text = sf::Text(game_font, "", static_cast<unsigned int>(48 * scale));
+    round_Text.setScale({ 0.5f,0.5f });
     round_Text.setFillColor(sf::Color::Yellow);
-    round_Text.setPosition({ _Centre.x - 180.f, _Centre.y - 180.f });
+    round_Text.setPosition({ _Centre.x - 180.f * scale, _Centre.y - 180.f * scale });
 }
 void TranformationMiniGame::start_Mini_Game()
 {

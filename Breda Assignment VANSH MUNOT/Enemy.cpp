@@ -63,7 +63,7 @@ void Enemy::init_Sprite()
     //setting sprite properties
     enemy_Sprite.setTexture(enemy_Texture, true);
     enemy_Sprite.setPosition({ 100.f, 100.f });
-    enemy_Sprite.setScale({ 0.5f, 0.5f });
+    enemy_Sprite.setScale({ 0.25f, 0.25f });
     enemy_Sprite.setOrigin({ static_cast<float>(enemy_Texture.getSize().x / 2),static_cast<float>(enemy_Texture.getSize().y / 2) });
 
     //health bar sprite
@@ -174,7 +174,7 @@ void Enemy::enemy_player_Collision(float deltatime)
     bool contact_Now = contact_X || contact_Y;
 
     // only damage on the frame contact
-    if (contact_Now && !is_InContact_Player)
+    if (contact_Now && !is_InContact_Player && _Player->get_can_Damage())
     {
         //damage player EVENT
         player_Health_Change event;
@@ -240,11 +240,11 @@ void Enemy::enemy_Movement(float deltatime)
     //flip to look at player
     if (player_enemy_Direction.x < 0)
     {
-        enemy_Sprite.setScale({ -1, 1 });
+        enemy_Sprite.setScale({ -0.75, 0.75 });
     }
     else
     {
-        enemy_Sprite.setScale({ 1, 1 });
+        enemy_Sprite.setScale({ 0.75, 0.75 });
     }
 
     //knockback

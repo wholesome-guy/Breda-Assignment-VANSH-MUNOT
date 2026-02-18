@@ -10,7 +10,7 @@ EnemySpawner::EnemySpawner():random_Generator(seed())
 void EnemySpawner::init_Variables()
 {
 	spawn_Interval = 2.f;
-	max_Enemies = 10;
+	max_Enemies = 5;
 	spawn_Timer = 0;
 
 	sf::Vector2u window_Size = GameEngine::get_Instance()->get_Window()->getSize();

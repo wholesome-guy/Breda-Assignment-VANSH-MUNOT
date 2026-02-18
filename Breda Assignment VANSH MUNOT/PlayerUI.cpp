@@ -66,45 +66,34 @@ void PlayerUI::on_Event(const Event& event)
 
 void PlayerUI::init_UI()
 {
-    // Load and configure font
+    sf::Vector2u window_Size = GameEngine::get_Instance()->get_Window()->getSize();
+    float scale_X = static_cast<float>(window_Size.x) / 1280.f;
+    float scale_Y = static_cast<float>(window_Size.y) / 720.f;
+
+    auto scale_Pos = [&](sf::Vector2f pos) -> sf::Vector2f {
+        return { pos.x * scale_X, pos.y * scale_Y };
+        };
+
+    unsigned int base_Size_Large = static_cast<unsigned int>(80 * scale_Y);
+    unsigned int base_Size_Small = static_cast<unsigned int>(60 * scale_Y);
+
     if (game_Font.openFromFile("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/SpecialElite-Regular.ttf"))
-    {
-        std::cout << "got the font" << "\n";
-    }
+        std::cout << "got the font\n";
     game_Font.setSmooth(false);
 
-    // Initialize ammo UI
-    setup_Text(ammo_Text, std::to_string(15), 40,
-        sf::Color::White, { 55.f, 65.f });
+    setup_Text(ammo_Text, std::to_string(15), base_Size_Large, sf::Color::White, scale_Pos({ 55.f,   65.f }), { 0.5f,0.5f });
+    setup_Sprite(ammo_Sprite, ammo_Texture, "C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Ammo_UI_PNG.png", { 0.08f * scale_X, 0.08f * scale_Y }, scale_Pos({ 25.f, 88.f }));
 
-    setup_Sprite(ammo_Sprite, ammo_Texture,
-        "C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Ammo_UI_PNG.png",
-        { 0.08f, 0.08f }, { 25.f, 88.f });
+    setup_Text(health_Text, std::to_string(100), base_Size_Large, sf::Color::Red, scale_Pos({ 56.f,   5.f }), { 0.5f,0.5f });
+    setup_Sprite(health_Sprite, health_Texture, "C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Heart_UI_PNG.png", { 0.08f * scale_X, 0.08f * scale_Y }, scale_Pos({ 27.f, 31.f }), sf::Color::Red);
 
-    // Initialize health UI
-    setup_Text(health_Text, std::to_string(100), 40,
-        sf::Color::Red, { 56.f, 5.f });
+    setup_Text(kill_Text, std::to_string(0), base_Size_Large, sf::Color::White, scale_Pos({ 1200.f, 5.f }), { 0.5f,0.5f });
+    setup_Sprite(kill_Sprite, kill_Texture, "C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Skull_UI_PNG.png", { 0.08f * scale_X, 0.08f * scale_Y }, scale_Pos({ 1163.f, 31.f }));
 
-    setup_Sprite(health_Sprite, health_Texture,
-        "C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Heart_UI_PNG.png",
-        { 0.08f, 0.08f }, { 27.f, 31.f }, sf::Color::Red);
+    setup_Text(FPS_Text, "0", base_Size_Small, sf::Color::White, scale_Pos({ 1226.f, 688.f }), { 0.5f, 0.5f });
+    setup_Text(interact_Text, "Right Click", base_Size_Large, sf::Color::White, scale_Pos({ 510.f,  635.f }), { 0.5f,0.5f });
 
-    // Initialize cooldown bar
     cooldown_Bar.setFillColor(sf::Color::White);
-
-    // Initialize kill counter UI
-    setup_Text(kill_Text, std::to_string(0), 40,
-        sf::Color::White, { 1200.f, 5.f });
-
-    setup_Sprite(kill_Sprite, kill_Texture,
-        "C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Skull_UI_PNG.png",
-        { 0.08f, 0.08f }, { 1163.f, 31.f });
-
-    // Initialize FPS counter
-    setup_Text(FPS_Text, "0", 30, sf::Color::White, { 1226.f, 688.f }, { 0.5f, 0.5f });
-
-    setup_Text(interact_Text, "Right Click", 40,
-        sf::Color::White, { 510.f, 635.f });
 }
 
 void PlayerUI::cooldown_Bar_Update(float value, float mulitplier, sf::Color colour)

@@ -27,7 +27,7 @@ void Player::init_playerSprite()
     //setting sprite properties
     player_Sprite.setTexture(player_Texture, true);
     player_Sprite.setPosition({ screen_Width/2, screen_Height/2 });
-    player_Sprite.setScale({ 1.5f, 1.5f });
+    player_Sprite.setScale({ 1.0f, 1.0f });
     player_Sprite.setOrigin({ static_cast<float>(player_Texture.getSize().x / 2),static_cast<float>(player_Texture.getSize().y / 2) });
 }
 void Player::init_Variables()
@@ -344,6 +344,10 @@ sf::FloatRect Player::get_GlobalBounds()
 {
     return player_Sprite.getGlobalBounds();
 }
+bool Player::get_can_Damage()
+{
+    return can_Damage;
+}
 
 #pragma endregion
 
@@ -394,6 +398,8 @@ void Player::player_Health(float _Damage)
         //death
     }
 }
+
+
 
 void Player::enemy_Collision(float deltatime)
 {
