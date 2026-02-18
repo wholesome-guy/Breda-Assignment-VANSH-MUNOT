@@ -3,6 +3,12 @@
 #include "Sword.h"
 #include "Rifle.h"
 #include "RPG.h"
+#include "Mace.h"
+#include "WarAxe.h"
+#include "LMG.h"
+#include "Pistol.h"
+#include "Shotgun.h"
+#include "GrenadeLauncher.h"
 #include <sstream>
 
 #include "EnemySpawner.h"
@@ -64,6 +70,12 @@ void Player::init_Weapons()
     _Sword = new Sword();  
     _Rifle = new Rifle();
     _RPG = new RPG();
+    _Mace = new Mace();
+    _WarAxe = new WarAxe();
+    _LMG = new LMG();
+    _Pistol = new Pistol();
+    _Shotgun = new Shotgun();
+    _Grenade_Launcher = new GrenadeLauncher();
 
     //first weapon on start
     current_Weapon = _Sword;
@@ -330,6 +342,11 @@ void Player::transform_Weapon()
 
         //random number
         int random = random_weapon(rng);
+        while (random == last_Weapon)
+        {
+            random = random_weapon(rng);
+        }
+
         switch (current_Character)
         {
         case 0:
@@ -355,16 +372,16 @@ void Player::transform_Weapon()
             switch (random)
             {
             case 0:
-                weapon_Assigner(_Sword);
+                weapon_Assigner(_Mace);
                 break;
 
             case 1:
-                weapon_Assigner(_Rifle);
+                weapon_Assigner(_Pistol);
 
                 break;
 
             case 2:
-                weapon_Assigner(_RPG);
+                weapon_Assigner(_LMG);
 
                 break;
             }
@@ -375,16 +392,16 @@ void Player::transform_Weapon()
             switch (random)
             {
             case 0:
-                weapon_Assigner(_Sword);
+                weapon_Assigner(_WarAxe);
                 break;
 
             case 1:
-                weapon_Assigner(_Rifle);
+                weapon_Assigner(_Shotgun);
 
                 break;
 
             case 2:
-                weapon_Assigner(_RPG);
+                weapon_Assigner(_Grenade_Launcher);
 
                 break;
             }
@@ -392,7 +409,7 @@ void Player::transform_Weapon()
             break;
         }
         
-
+        last_Weapon = random;
         // set weapon position to player
         current_Weapon->weapon_Position(player_Sprite.getPosition());
         can_Attack = true;
@@ -416,22 +433,45 @@ void Player::character_Transform()
     //random number
     int random = random_character(rng);
 
+    while (last_Character == random)
+    {
+        random = random_character(rng);
+    }
+
     switch (random)
     {
     case 0:
         character_Assigner(Penguin, last_Position);
+
+        game_Difficulty_Event.damage_Multiplier = 1;
+        game_Difficulty_Event.Health_Multiplier = 1;
+        game_Difficulty_Event.max_Enemies = 10;
+        game_Difficulty_Event.spawn_Time = 2;
+        notify_Observers(game_Difficulty_Event);
         break;
 
     case 1:
         character_Assigner(Crocodile, last_Position);
+        game_Difficulty_Event.damage_Multiplier = 2;
+        game_Difficulty_Event.Health_Multiplier = 2;
+        game_Difficulty_Event.max_Enemies = 50;
+        game_Difficulty_Event.spawn_Time = 1;
+        notify_Observers(game_Difficulty_Event);
 
         break;
 
     case 2:
         character_Assigner(Peacock, last_Position);
+        game_Difficulty_Event.damage_Multiplier = 0.75;
+        game_Difficulty_Event.Health_Multiplier = 1.5;
+        game_Difficulty_Event.max_Enemies = 25;
+        game_Difficulty_Event.spawn_Time = 3;
+        notify_Observers(game_Difficulty_Event);
 
         break;
     }
+    last_Character = random;
+    transform_Weapon();
 }
 
 void Player::character_Assigner(character_Values character, sf::Vector2f position)

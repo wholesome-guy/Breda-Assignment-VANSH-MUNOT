@@ -1,5 +1,6 @@
 #include "EnemySpawner.h"
 #include "GameEngine.h"
+#include "Player.h"
 #include "Shape.h"
 
 
@@ -10,7 +11,7 @@ EnemySpawner::EnemySpawner():random_Generator(seed())
 void EnemySpawner::init_Variables()
 {
 	spawn_Interval = 2.f;
-	max_Enemies = 1;
+	max_Enemies = 10;
 	spawn_Timer = 0;
 
 	sf::Vector2u window_Size = GameEngine::get_Instance()->get_Window()->getSize();
@@ -63,17 +64,27 @@ void EnemySpawner::on_Event(const Event& event)
 	{
 		is_MiniGame_Active = data->active;
 	}
+	else if (auto* data = dynamic_cast<const game_Difficulty*>(&event))
+	{
+		spawn_Timer = data->spawn_Time;
+		max_Enemies = data->max_Enemies;
+
+	}
 }
 
 void EnemySpawner::spawn_Enemy()
 {
+	Player* player = GameEngine::get_Instance()->get_Player();
+
 	auto new_Enemy = std::make_unique<Enemy>();
 
 	new_Enemy->set_Position(get_Random_Spawn_Position());
 
 	//adding observer, player and enemyspawner are observers of enemy
-	new_Enemy->add_Observer(GameEngine::get_Instance()->get_Player());
+	new_Enemy->add_Observer(player);
 
+	//player's observer is enemy
+	player->add_Observer(new_Enemy.get());
 	_GameEngine->add_Observer(new_Enemy.get());
 
 	_Enemies.push_back(std::move(new_Enemy));
@@ -93,6 +104,10 @@ void EnemySpawner::erase_Enemy(int i)
 		spawn_Square(i);
 
 		_GameEngine->remove_Observer(_Enemies[i].get());
+
+		Player* player = GameEngine::get_Instance()->get_Player();
+		player->remove_Observer(_Enemies[i].get());
+
 		_Enemies.erase(_Enemies.begin() + i);
 		current_Enemy_Count--;
 		kill_Enemy_Count++;
@@ -118,39 +133,22 @@ sf::Vector2f EnemySpawner::get_Random_Spawn_Position()
 	return { distance_X(random_Generator),distance_Y(random_Generator) };
 
 }
-sf::Color EnemySpawner::get_Square_Color()
-{
-	sf::Color colour;
 
-	std::uniform_int_distribution<int> random(0, 3);
-
-	switch (random(random_Generator))
-	{
-	case 0: colour = sf::Color::Red;
-		break;
-	case 1: colour = sf::Color::Green;
-		break;
-	case 2: colour = sf::Color::Blue;
-		break;
-	case 3: colour = sf::Color::Yellow;
-		break;
-	}
-	return colour;
-
-}
 void EnemySpawner::spawn_Square(int i)
 {
 	std::uniform_int_distribution<int> random(0, 100);
 
-	if (random(random_Generator) < 100)//make it 30 later
+	if (random(random_Generator) < 10)//make it 30 later
 	{
-		auto new_Shape = std::make_unique<Shape>(_Enemies[i]->get_Position(), get_Square_Color());
+		auto new_Shape = std::make_unique<Shape>(_Enemies[i]->get_Position());
 		
+		//player ui and enemyspawner are observer of shape
 		new_Shape->add_Observer(GameEngine::get_Instance()->get_UI());
 		new_Shape->add_Observer(this);
 		//game engine is observer of shape so shape can invoke mini game
 		new_Shape->add_Observer(_GameEngine);
 
+		//shape is oberserve of gameengine
 		_GameEngine->add_Observer(new_Shape.get());
 
 		_Squares.push_back(std::move(new_Shape));
@@ -161,6 +159,7 @@ void EnemySpawner::erase_Square(int i)
 {
 	if (_Squares[i]->get_Despawn())
 	{
+		//clean up observer list
 		_GameEngine->remove_Observer(_Squares[i].get());
 		_Squares.erase(_Squares.begin() + i);				
 	}	

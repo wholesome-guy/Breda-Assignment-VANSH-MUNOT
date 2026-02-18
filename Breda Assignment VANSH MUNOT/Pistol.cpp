@@ -1,71 +1,73 @@
-#include "RPG.h"
-RPG::RPG() : Weapon()
+#include "Pistol.h"
+
+Pistol::Pistol() : Weapon()
 {
     init_Variables();
     init_Sprite();
 }
 
-void RPG::init_Variables()
+void Pistol::init_Variables()
 {
     //properties
-    _Ammo = 4;
-    _Damage = 100.f;
-    //despawn time for missle
-    _Range = 1.5f;
-    cooldown_Timer = 2.f;
+    _Ammo = 6;
+    _Damage = 150.f;
+    //despawn time for bullet
+    _Range = 4.f;
+    cooldown_Timer = 0.5f;
 
 }
 
-void RPG::init_Sprite()
+void Pistol::init_Sprite()
 {
-    //sprrite
-    weapon_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/RPG_PNG.png"));
+    //sprite
+    weapon_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Pistol_PNG.png"));
     weapon_Sprite.setTexture(weapon_Texture, true);
-    weapon_Sprite.setOrigin({15,13});
+    weapon_Sprite.setOrigin({ 10,17 });
     weapon_Sprite.setPosition({ 100,100 });
 }
 
-void RPG::update(float deltatime)
+void Pistol::update(float deltatime)
 {
-    for (int i = 0; i < Missiles.size(); i++)
+    for (int i = 0; i < Bullets.size(); i++)
     {
-        Missiles[i]->update(deltatime);
+        Bullets[i]->update(deltatime);
 
-        if (Missiles[i]->shouldDespawn())
+        if (Bullets[i]->shouldDespawn())
         {
-            Missiles.erase(Missiles.begin() + i);
+            Bullets.erase(Bullets.begin() + i);
         }
     }
 }
 
-void RPG::render(sf::RenderTarget& target)
+void Pistol::render(sf::RenderTarget& target)
 {
     target.draw(weapon_Sprite);
-    for (auto& m : Missiles)
+
+    for (auto& b : Bullets)
     {
-        m->render(target);
+        b->render(target);
     }
 }
 
-void RPG::Attack()
+void Pistol::Attack()
 {
     sf::Vector2f Position = weapon_Sprite.getPosition();
     sf::Angle Rotation = weapon_Sprite.getRotation();
     //cos = horizontal component, sin = vertical component
     sf::Vector2f shoot_Direction(std::cos(Rotation.asRadians()), std::sin(Rotation.asRadians()));
 
-    //make new missile
-    Missiles.push_back(std::make_unique<Missile>(Position, Rotation, shoot_Direction, _Damage, _Range));
+    //make new bullet
+    Bullets.push_back(std::make_unique<Bullet>(Position, Rotation, shoot_Direction, _Damage, _Range));
+
 }
 
-void RPG::weapon_Rotate(sf::RenderWindow& game_Window)
+void Pistol::weapon_Rotate(sf::RenderWindow& game_Window)
 {
-    //point at mouse
+    //rotate to alwasy point at mouse
     sf::Vector2f weapon_Position = weapon_Sprite.getPosition();
-    //screen space to world space
     sf::Vector2f mouse_Position = game_Window.mapPixelToCoords(sf::Mouse::getPosition());
 
-    const float Radians_To_Degrees = 180 / 3.14f;
+    Radians_To_Degrees = 180 / 3.14f;
 
     float dy_Weaponouse = mouse_Position.y - weapon_Position.y;
     float dx_Weaponouse = mouse_Position.x - weapon_Position.x;
@@ -76,29 +78,30 @@ void RPG::weapon_Rotate(sf::RenderWindow& game_Window)
         weapon_RotationAngle += 360;
     }
 
-    sf::Angle rotation_Angle = sf::degrees(weapon_RotationAngle);    
+    sf::Angle rotation_Angle = sf::degrees(weapon_RotationAngle);
     weapon_Sprite.setRotation(rotation_Angle);
 
+    //flip weapon to make it turn
     if (weapon_RotationAngle >= 90.f && weapon_RotationAngle <= 270.f)
     {
         //  player face left
-        weapon_Scale({ 1,-1 });
+        weapon_Scale({ 2,-2 });
     }
     else
     {
         // player face right
-        weapon_Scale({ 1,1 });
+        weapon_Scale({ 2,2 });
 
     }
 }
 
-void RPG::weapon_Position(sf::Vector2f player_position)
+void Pistol::weapon_Position(sf::Vector2f player_position)
 {
     sf::Vector2f offset = { 0,10 };
     weapon_Sprite.setPosition(player_position + offset);
 }
-void RPG::weapon_Scale(sf::Vector2f _Scale)
+
+void Pistol::weapon_Scale(sf::Vector2f _Scale)
 {
     weapon_Sprite.setScale(_Scale);
 }
-

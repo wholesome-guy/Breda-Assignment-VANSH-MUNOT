@@ -139,17 +139,23 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemySpawner.cpp" />
     <ClCompile Include="GameEngine.cpp" />
+    <ClCompile Include="Grenade.cpp" />
+    <ClCompile Include="GrenadeLauncher.cpp" />
+    <ClCompile Include="LMG.cpp" />
+    <ClCompile Include="Mace.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Missile.cpp" />
+    <ClCompile Include="Pistol.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerUI.cpp" />
     <ClCompile Include="Rifle.cpp" />
     <ClCompile Include="RPG.cpp" />
     <ClCompile Include="Shape.cpp" />
-    <ClCompile Include="Subject.cpp" />
+    <ClCompile Include="Shotgun.cpp" />
     <ClCompile Include="Sword.cpp" />
     <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="TranformationMiniGame.cpp" />
+    <ClCompile Include="WarAxe.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bullet.h" />
@@ -157,19 +163,26 @@
     <ClInclude Include="EnemySpawner.h" />
     <ClInclude Include="EntityBase.h" />
     <ClInclude Include="GameEngine.h" />
+    <ClInclude Include="Grenade.h" />
+    <ClInclude Include="GrenadeLauncher.h" />
+    <ClInclude Include="LMG.h" />
+    <ClInclude Include="Mace.h" />
     <ClInclude Include="MathFunctions.h" />
     <ClInclude Include="Missile.h" />
     <ClInclude Include="EventSystem.h" />
+    <ClInclude Include="Pistol.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerUI.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="Rifle.h" />
     <ClInclude Include="RPG.h" />
     <ClInclude Include="Shape.h" />
+    <ClInclude Include="Shotgun.h" />
     <ClInclude Include="Subject.h" />
     <ClInclude Include="Sword.h" />
     <ClInclude Include="TileMap.h" />
     <ClInclude Include="TranformationMiniGame.h" />
+    <ClInclude Include="WarAxe.h" />
     <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

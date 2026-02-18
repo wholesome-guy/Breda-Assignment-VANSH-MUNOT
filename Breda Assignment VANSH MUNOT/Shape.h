@@ -8,7 +8,7 @@ class Shape:public Subject,public Observer
 {
 public:
 
-	Shape(sf::Vector2f position,sf::Color);
+	Shape(sf::Vector2f position);
 	virtual ~Shape();
 
 	void render(sf::RenderTarget& target);
@@ -34,7 +34,7 @@ private:
 
 	Player* _Player;
 
-	void init_Sprite(sf::Vector2f position, sf::Color);
+	void init_Sprite(sf::Vector2f position);
 	void despawn(float deltatime);
 	void collision();
 };

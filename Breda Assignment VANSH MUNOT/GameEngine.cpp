@@ -8,7 +8,7 @@
 GameEngine* GameEngine::instance = nullptr;
 
 //constructor -- unity start method
-GameEngine::GameEngine() 
+GameEngine::GameEngine() :cursor_Sprite(cursor_Texture)
 {
 	//instance is assigned
 	instance = this;
@@ -30,6 +30,11 @@ void GameEngine::init_gameWindow()
 	game_Window = new sf::RenderWindow(sf::VideoMode(_Window_Size), "Game");
 	mini_Game.init_UI();
 	//game_Window->setFramerateLimit(60);
+
+	game_Window->setMouseCursorVisible(false);
+	cursor_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Cursor_PNG.png"));
+	cursor_Sprite.setTexture(cursor_Texture,true);
+	cursor_Sprite.setOrigin({ cursor_Texture.getSize().x / 2.f,cursor_Texture.getSize().y / 2.f });
 }
 
 
@@ -76,6 +81,7 @@ void GameEngine::init_Entities()
 	//Player Ui is the observer for Player
 	_Player->add_Observer(_PlayerUI);
 	_Player->add_Observer(_TileMap);
+	_Player->add_Observer(_EnemySpawner);
 	
 	_TileMap->add_Observer(_PlayerUI);
 }
@@ -91,6 +97,7 @@ void GameEngine::run()
 		float deltatime = clock.restart().asSeconds();
 		//loops
 		update(deltatime);
+
 		render();
 	}
 }
@@ -125,7 +132,28 @@ void GameEngine::update(float deltatime)
 	}	
 
 	miniGame_Update(deltatime);
+	cursor();
 }
+
+
+
+//render objects here
+void GameEngine::render()
+{
+	game_Window->clear();
+
+	for (auto& e : Entities)
+	{
+		e->render(*game_Window);
+	}
+	mini_Game.render(*game_Window);
+	
+	game_Window->draw(cursor_Sprite);
+
+
+	game_Window->display();
+}
+
 void GameEngine::miniGame_Update(float deltatime)
 {
 	mini_Game.update(deltatime);
@@ -153,19 +181,11 @@ void GameEngine::miniGame_Update(float deltatime)
 	}
 }
 
-
-//render objects here
-void GameEngine::render()
+void GameEngine::cursor()
 {
-	game_Window->clear();
-
-	for (auto& e : Entities)
-	{
-		e->render(*game_Window);
-	}
-	mini_Game.render(*game_Window);
-
-	game_Window->display();
+	sf::Vector2i mousePos = sf::Mouse::getPosition(*game_Window);
+	sf::Vector2f worldPos = game_Window->mapPixelToCoords(mousePos);
+	cursor_Sprite.setPosition(worldPos);
 }
 
 

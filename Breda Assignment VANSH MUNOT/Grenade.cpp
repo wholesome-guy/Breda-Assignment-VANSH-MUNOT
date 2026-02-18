@@ -1,7 +1,7 @@
-#include "Missile.h"
+#include "Grenade.h"
 #include "GameEngine.h"
 
-Missile::Missile(sf::Vector2f position, sf::Angle rotation, sf::Vector2f direction, float _Damage, float _Range) : Projectile(),
+Grenade::Grenade(sf::Vector2f position, sf::Angle rotation, sf::Vector2f direction, float _Damage, float _Range) : Projectile(),
 explosion_Sprite(explosion_Texture)
 {
 	init_Sprite(position, rotation);
@@ -15,10 +15,10 @@ explosion_Sprite(explosion_Texture)
 
 }
 
-void Missile::init_Variables(float damage, float range)
+void Grenade::init_Variables(float damage, float range)
 {
 	//properties
-	_Speed = 400.f;
+	_Speed = 200.f;
 	_Damage = damage;
 	despawn_Time = range;
 	despawn_Timer = 0.f;
@@ -26,7 +26,7 @@ void Missile::init_Variables(float damage, float range)
 	should_Despawn = false;
 	is_Moving = true;
 	//explosion
-	explosion_Radius = 200;
+	explosion_Radius = 250;
 	explosion_Timer = 0;
 	explosion_Time = 2;
 
@@ -34,10 +34,10 @@ void Missile::init_Variables(float damage, float range)
 
 }
 
-void Missile::init_Sprite(sf::Vector2f position, sf::Angle rotation)
+void Grenade::init_Sprite(sf::Vector2f position, sf::Angle rotation)
 {
-	projectile_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Missile_PNG.png"));
-	projectile_Sprite.setTexture(projectile_Texture,true);
+	projectile_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Grenade_PNG.png"));
+	projectile_Sprite.setTexture(projectile_Texture, true);
 	projectile_Sprite.setScale({ 1,1 });
 	projectile_Sprite.setOrigin({ static_cast<float>(projectile_Texture.getSize().x / 2),static_cast<float>(projectile_Texture.getSize().y / 2) });
 
@@ -47,12 +47,12 @@ void Missile::init_Sprite(sf::Vector2f position, sf::Angle rotation)
 
 
 	explosion_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Explosion_PNG.png"));
-	explosion_Sprite.setTexture(explosion_Texture,true);
+	explosion_Sprite.setTexture(explosion_Texture, true);
 	explosion_Sprite.setScale({ 5,5 });
-	explosion_Sprite.setOrigin({ static_cast<float>(explosion_Texture.getSize().x / 2),static_cast<float>(explosion_Texture.getSize().y / 2)});
+	explosion_Sprite.setOrigin({ static_cast<float>(explosion_Texture.getSize().x / 2),static_cast<float>(explosion_Texture.getSize().y / 2) });
 
 }
-void Missile::update(float deltatime)
+void Grenade::update(float deltatime)
 {
 	//moving function
 	if (is_Moving)
@@ -84,7 +84,7 @@ void Missile::update(float deltatime)
 	}
 
 }
-void Missile::render(sf::RenderTarget& target)
+void Grenade::render(sf::RenderTarget& target)
 {
 	target.draw(projectile_Sprite);
 
@@ -94,12 +94,12 @@ void Missile::render(sf::RenderTarget& target)
 	}
 }
 
-bool Missile::shouldDespawn() const
+bool Grenade::shouldDespawn() const
 {
 	return should_Despawn;
 }
 
-void Missile::collision()
+void Grenade::collision()
 {
 	auto& enemies = _EnemySpawner->get_Enemies();
 
@@ -113,15 +113,15 @@ void Missile::collision()
 
 }
 
-void Missile::explosion()
+void Grenade::explosion()
 {
 	if (can_Damage)
 	{
 		is_Moving = false;
 
-		sf::Vector2f missile_Position = projectile_Sprite.getPosition();
+		sf::Vector2f Grenade_Position = projectile_Sprite.getPosition();
 
-		explosion_Sprite.setPosition(missile_Position);
+		explosion_Sprite.setPosition(Grenade_Position);
 		is_Exploding = true;
 
 		auto& enemies = _EnemySpawner->get_Enemies();
@@ -130,7 +130,7 @@ void Missile::explosion()
 		{
 			sf::Vector2f enemy_Position = e->get_Position();
 
-			sf::Vector2f difference = missile_Position - enemy_Position;
+			sf::Vector2f difference = Grenade_Position - enemy_Position;
 
 			float magnitude = std::sqrtf(difference.x * difference.x + difference.y * difference.y);
 
@@ -142,7 +142,7 @@ void Missile::explosion()
 		}
 		can_Damage = false;
 
-		
+
 	}
 	if (end_Explosion)
 	{
@@ -151,3 +151,4 @@ void Missile::explosion()
 	}
 
 }
+

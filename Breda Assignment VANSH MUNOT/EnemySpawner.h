@@ -7,7 +7,7 @@
 #include "EventSystem.h"
 class Shape;
 class GameEngine;
-
+class Player;
 class EnemySpawner:public EntityBase,public Subject,public Observer
 {
 public:
@@ -53,7 +53,6 @@ private:
     kill_reduction_Terraforming_Time_Event reduce_Terraforming_Event;
 
     GameEngine* _GameEngine;
-
     //functions
     void init_Variables();
 
@@ -61,7 +60,6 @@ private:
     void update_Enemy(int i, float deltatime);
     void erase_Enemy(int i);
     sf::Vector2f get_Random_Spawn_Position();
-    sf::Color get_Square_Color();
     void spawn_Square(int i);
     void erase_Square(int i);
     

@@ -13,7 +13,7 @@ Bullet::Bullet(sf::Vector2f position, sf::Angle rotation, sf::Vector2f direction
 void Bullet::init_Variables(float damage, float range)
 {
 	//Bullet Properties
-	_Speed = 500.f;
+	_Speed = 800.f;
 	_Damage = damage;
 	despawn_Time = range;
 	despawn_Timer = 0.f;

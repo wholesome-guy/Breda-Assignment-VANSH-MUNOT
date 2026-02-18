@@ -2,10 +2,11 @@
 #include "Player.h"
 #include "GameEngine.h"
 
-Shape::Shape(sf::Vector2f position, sf::Color colour):
+//enemy heart, name is shape because of previous mechahic(scraped)
+Shape::Shape(sf::Vector2f position):
 	shape_Sprite(square_Texture)
 {
-    init_Sprite(position, colour);
+    init_Sprite(position);
     _Player = GameEngine::get_Instance()->get_Player();
     _GameEngine = GameEngine::get_Instance();
 }
@@ -46,15 +47,14 @@ bool Shape::get_Despawn()
     return is_Despawn;
 }
 
-void Shape::init_Sprite(sf::Vector2f position, sf::Color colour)
+void Shape::init_Sprite(sf::Vector2f position)
 {
     square_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Square_PNG.png"));
 
     //setting sprite properties
     shape_Sprite.setTexture(square_Texture, true);
     shape_Sprite.setPosition(position);
-    shape_Sprite.setColor(colour);
-    shape_Sprite.setScale({ 3.f, 3.f });
+    shape_Sprite.setScale({ 1.f, 1.f });
     shape_Sprite.setOrigin({ static_cast<float>(square_Texture.getSize().x / 2),static_cast<float>(square_Texture.getSize().y / 2) });
 }
 

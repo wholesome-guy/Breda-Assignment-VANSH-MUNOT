@@ -79,12 +79,16 @@ private:
 	minigame_Active_State minigame_Active_Event;
 	minigame_Win miniGame_Win_Event;
 
+	sf::Texture cursor_Texture;
+	sf::Sprite cursor_Sprite;
+
 	bool minigame_Completed_Handled = false;
 	bool pending_MiniGame_Start = false;
+
 	//basic functions
 	void update(float deltatime);
 	void render();
-
+	void cursor();
 	// intialises Entities
 	void init_Entities();
 

@@ -41,6 +41,10 @@ private:
 	float enemy_Health;
 	float max_enemy_Health;
 	float enemy_Damage;
+
+	float damage_Multiplier = 1;
+	float health_Multiplier = 1;
+
 	bool Despawning = false;
 	bool is_Dead = false;
 	sf::Vector2f movement_Direction;

@@ -22,13 +22,13 @@ void Enemy::init_Variables()
     {
     case 0:
         enemy_Speed = 150.0f;
-        max_enemy_Health = 100.f;
-        enemy_Damage = 10;
+        max_enemy_Health = 100.f * health_Multiplier;
+        enemy_Damage = 10 * damage_Multiplier;
         break;
     case 1:
         enemy_Speed = 75.0f;
-        max_enemy_Health = 200.f;
-        enemy_Damage = 30;
+        max_enemy_Health = 200.f * health_Multiplier;
+        enemy_Damage = 30 * damage_Multiplier;
         break;
     }
     enemy_Health = max_enemy_Health;
@@ -128,6 +128,24 @@ void Enemy::on_Event(const Event& event)
     if (dynamic_cast<const minigame_Complete*>(&event))
     {
         enemy_KnockBack();
+    }
+    else if (auto* data = dynamic_cast<const game_Difficulty*>(&event))
+    {
+        damage_Multiplier = data->damage_Multiplier;
+        health_Multiplier = data->Health_Multiplier;
+
+        switch (type)
+        {
+        case 0:
+            max_enemy_Health = 100.f * health_Multiplier;
+            enemy_Damage = 10 * damage_Multiplier;
+            break;
+        case 1:
+            max_enemy_Health = 200.f * health_Multiplier;
+            enemy_Damage = 30 * damage_Multiplier;
+            break;
+        }
+        enemy_Health = max_enemy_Health;
     }
 }
 #pragma endregion

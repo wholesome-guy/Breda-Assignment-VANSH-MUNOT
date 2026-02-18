@@ -137,8 +137,18 @@ struct player_terraforming_Factor_Event :Event
     int Terraforming_Factor;
 };
 struct kill_reduction_Terraforming_Time_Event :Event{};
+
 struct terraforming_Percentage_Event :Event 
 {
     int percent;
+};
+struct game_Difficulty :Event 
+{
+    float damage_Multiplier;
+    float Health_Multiplier;
+
+    int max_Enemies;
+    float spawn_Time;
+
 };
 
