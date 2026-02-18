@@ -132,3 +132,13 @@ struct minigame_Complete : Event {};
 
 struct minigame_Win : Event {};
 
+struct player_terraforming_Factor_Event :Event 
+{
+    int Terraforming_Factor;
+};
+struct kill_reduction_Terraforming_Time_Event :Event{};
+struct terraforming_Percentage_Event :Event 
+{
+    int percent;
+};
+

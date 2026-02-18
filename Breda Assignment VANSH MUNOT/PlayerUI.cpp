@@ -8,7 +8,8 @@ PlayerUI::PlayerUI():
     kill_Text(game_Font, "0"),
     kill_Sprite(kill_Texture),
     FPS_Text(game_Font,"0"),
-    interact_Text(game_Font,"press f")
+    interact_Text(game_Font,"press f"),
+    terraforming_Percentage_Text(game_Font,"0")
 {
     _Player = GameEngine::get_Instance()->get_Player();
 	init_UI();
@@ -16,8 +17,8 @@ PlayerUI::PlayerUI():
 
 void PlayerUI::update(float deltatime)
 {
-    UI_Mover(interact_Text);
-    FPS_Counter(deltatime);
+    //UI_Mover(kill_Sprite);
+    //FPS_Counter(deltatime);
 
 }
 
@@ -61,6 +62,24 @@ void PlayerUI::on_Event(const Event& event)
         int kills = data->kill_Count;
         kill_Text.setString(std::to_string(kills));
     }
+    else if (auto* data = dynamic_cast<const terraforming_Percentage_Event*>(&event))
+    {
+        int percentage = data->percent;
+        terraforming_Percentage_Text.setString(std::to_string(percentage) + "%");
+
+        if (percentage < 20)
+        {
+            terraforming_Percentage_Text.setFillColor(sf::Color::Red);
+        }
+        else if (percentage > 20 && percentage < 80)
+        {
+            terraforming_Percentage_Text.setFillColor(sf::Color::Yellow);
+        }
+        else
+        {
+            terraforming_Percentage_Text.setFillColor(sf::Color::Green);
+        }
+    }
 
 }
 
@@ -87,11 +106,13 @@ void PlayerUI::init_UI()
     setup_Text(health_Text, std::to_string(100), base_Size_Large, sf::Color::Red, scale_Pos({ 56.f,   5.f }), { 0.5f,0.5f });
     setup_Sprite(health_Sprite, health_Texture, "C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Heart_UI_PNG.png", { 0.08f * scale_X, 0.08f * scale_Y }, scale_Pos({ 27.f, 31.f }), sf::Color::Red);
 
-    setup_Text(kill_Text, std::to_string(0), base_Size_Large, sf::Color::White, scale_Pos({ 1200.f, 5.f }), { 0.5f,0.5f });
-    setup_Sprite(kill_Sprite, kill_Texture, "C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Skull_UI_PNG.png", { 0.08f * scale_X, 0.08f * scale_Y }, scale_Pos({ 1163.f, 31.f }));
+    setup_Text(kill_Text, std::to_string(0), base_Size_Large, sf::Color::White, { 102.f, 15.f }, { 0.5f,0.5f });
+    setup_Sprite(kill_Sprite, kill_Texture, "C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Skull_UI_PNG.png", { 0.08f * scale_X, 0.08f * scale_Y }, { 84.f, 28.f });
 
     setup_Text(FPS_Text, "0", base_Size_Small, sf::Color::White, scale_Pos({ 1226.f, 688.f }), { 0.5f, 0.5f });
     setup_Text(interact_Text, "Right Click", base_Size_Large, sf::Color::White, scale_Pos({ 510.f,  635.f }), { 0.5f,0.5f });
+
+    setup_Text(terraforming_Percentage_Text, "0", base_Size_Large, sf::Color::White, { 304.f, 10.f }, { 0.5f, 0.5f });
 
     cooldown_Bar.setFillColor(sf::Color::White);
 }
@@ -121,8 +142,9 @@ void PlayerUI::render_UI(sf::RenderTarget& target)
 
     target.draw(kill_Text);
     target.draw(kill_Sprite);
+    target.draw(terraforming_Percentage_Text);
 
-    target.draw(FPS_Text);
+    //target.draw(FPS_Text);
 
     if (is_Bar_Visible)
     {

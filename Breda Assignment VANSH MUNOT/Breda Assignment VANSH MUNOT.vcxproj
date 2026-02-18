@@ -148,6 +148,7 @@
     <ClCompile Include="Shape.cpp" />
     <ClCompile Include="Subject.cpp" />
     <ClCompile Include="Sword.cpp" />
+    <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="TranformationMiniGame.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -167,6 +168,7 @@
     <ClInclude Include="Shape.h" />
     <ClInclude Include="Subject.h" />
     <ClInclude Include="Sword.h" />
+    <ClInclude Include="TileMap.h" />
     <ClInclude Include="TranformationMiniGame.h" />
     <ClInclude Include="Weapon.h" />
   </ItemGroup>

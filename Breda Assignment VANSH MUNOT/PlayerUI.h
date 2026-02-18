@@ -36,6 +36,7 @@ private:
 	sf::Sprite kill_Sprite;
 
 	sf::Text FPS_Text;
+	sf::Text terraforming_Percentage_Text;
 
 	sf::Text interact_Text;
 

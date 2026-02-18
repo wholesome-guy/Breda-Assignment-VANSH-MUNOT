@@ -1,6 +1,7 @@
 #include "GameEngine.h"
 #include "Player.h"
 #include "PlayerUI.h"
+#include "TileMap.h"
 
 //singleton method 
 //a pointer of instance is set to null
@@ -32,6 +33,7 @@ void GameEngine::init_gameWindow()
 }
 
 
+
 void GameEngine::init_Entities()
 {
 	//make enemyspawner
@@ -48,6 +50,12 @@ void GameEngine::init_Entities()
 
 	_PlayerUI = player_UI.get();
 
+	auto tilemap = std::make_unique<TileMap>();
+
+	_TileMap = tilemap.get();
+
+	Entities.push_back(std::move(tilemap));
+
 	//transfer ownership by using move? smart pointer owns the object, transfer of ownership = move
 	Entities.push_back(std::move(player));
 
@@ -55,15 +63,21 @@ void GameEngine::init_Entities()
 
 	Entities.push_back(std::move(player_UI));
 
+
 	//making player the observe of enemy_spawner
 	_EnemySpawner->add_Observer(_Player);
 	_EnemySpawner->add_Observer(_PlayerUI);
+	_EnemySpawner->add_Observer(_TileMap);
 
 	//enemyspawner is an observer of gameengine
 	this->add_Observer(_EnemySpawner);
+	this->add_Observer(_Player);
 
 	//Player Ui is the observer for Player
 	_Player->add_Observer(_PlayerUI);
+	_Player->add_Observer(_TileMap);
+	
+	_TileMap->add_Observer(_PlayerUI);
 }
 
 void GameEngine::run()
@@ -110,6 +124,10 @@ void GameEngine::update(float deltatime)
 		e->update(deltatime);
 	}	
 
+	miniGame_Update(deltatime);
+}
+void GameEngine::miniGame_Update(float deltatime)
+{
 	mini_Game.update(deltatime);
 
 	if (pending_MiniGame_Start)
@@ -119,7 +137,7 @@ void GameEngine::update(float deltatime)
 
 		mini_Game.start_Mini_Game();
 		minigame_Active_Event.active = true;
-		notify_Observers(minigame_Active_Event); 
+		notify_Observers(minigame_Active_Event);
 	}
 
 	if (mini_Game.get_Is_Complete() && !minigame_Completed_Handled)
@@ -129,11 +147,12 @@ void GameEngine::update(float deltatime)
 		notify_Observers(minigame_Active_Event);
 		if (mini_Game.get_Is_Won())
 		{
-			std::cout << "Won" << "\n";
+			notify_Observers(miniGame_Win_Event);
 		}
 		notify_Observers(minigame_Complete{});
 	}
 }
+
 
 //render objects here
 void GameEngine::render()

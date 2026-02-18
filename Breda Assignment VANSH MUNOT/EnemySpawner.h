@@ -50,6 +50,7 @@ private:
     //events
     kill_Count_Event kill_count;
     player_Health_Change player_Health_Event;
+    kill_reduction_Terraforming_Time_Event reduce_Terraforming_Event;
 
     GameEngine* _GameEngine;
 

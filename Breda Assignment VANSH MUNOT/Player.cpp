@@ -4,13 +4,14 @@
 #include "Rifle.h"
 #include "RPG.h"
 #include <sstream>
-#include <random>
+
 #include "EnemySpawner.h"
 //constructor unity start
 Player::Player():
     //intialiser list for things with no default constructors
-	player_Sprite(player_Texture)
+	player_Sprite(player_Texture),rng(rd())
 {
+    init_Character();
     init_Variables();
     init_playerSprite();
     init_Weapons();
@@ -21,9 +22,7 @@ Player::Player():
 
 void Player::init_playerSprite()
 {
-    //loadind from memory - new texture which is an image
-    player_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Player_PNG.png"));
-    
+
     //setting sprite properties
     player_Sprite.setTexture(player_Texture, true);
     player_Sprite.setPosition({ screen_Width/2, screen_Height/2 });
@@ -32,9 +31,6 @@ void Player::init_playerSprite()
 }
 void Player::init_Variables()
 {
-    //Player Properties 
-    player_Speed = 250.0f;
-    max_player_Health = 100;
     current_player_Health = max_player_Health;
 
     //singleton access
@@ -73,6 +69,37 @@ void Player::init_Weapons()
     current_Weapon = _Sword;
     current_weapon_Ammo = _Sword->_Ammo;
     current_weapon_Cooldown = _Sword->cooldown_Timer;
+
+    
+}
+
+void Player::init_Character()
+{
+    Penguin.character_Speed = 250.f;
+    Penguin.max_character_Health = 150;
+    Penguin.character_Terraforming_Factor = 2;
+    Penguin.character_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Penguin_PNG.png"));
+    Penguin.character_Index = 0;
+
+    Crocodile.character_Speed = 150.f;
+    Crocodile.max_character_Health = 300;
+    Crocodile.character_Terraforming_Factor = 1;
+    Crocodile.character_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Crocodile_PNG.png"));
+    Crocodile.character_Index = 1;
+
+
+    Peacock.character_Speed = 350.f;
+    Peacock.max_character_Health = 50;
+    Peacock.character_Terraforming_Factor = 5;
+    Peacock.character_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Peacock_PNG.png"));
+    Peacock.character_Index = 2;
+
+
+    player_Speed = Penguin.character_Speed;
+    max_player_Health = Penguin.max_character_Health;
+    terraforming_Factor = Penguin.character_Terraforming_Factor;
+    player_Texture = Penguin.character_Texture;
+    current_Character = Penguin.character_Index;
 
 }
 
@@ -114,6 +141,10 @@ void Player::on_Event(const Event& event)
     if (auto* data = dynamic_cast<const player_Health_Change*>(&event))
     {
         player_Health(data->_Change);
+    }
+    else if (dynamic_cast<const minigame_Win*>(&event))
+    {
+        character_Transform();
     }
 }
 #pragma endregion
@@ -291,31 +322,76 @@ void Player::weapon_Transformation_Cooldown(float deltatime)
 void Player::transform_Weapon()
 {
         //get seed
-        std::random_device rd;
+        //std::random_device rd;
         //intialise  m twister
-        std::mt19937 gen(rd());
+        //std::mt19937 gen(rd());
 
         std::uniform_int_distribution<int> random_weapon(0, 2);
 
         //random number
-        int random_Number = random_weapon(gen);
-
-        switch (random_Number)
+        int random = random_weapon(rng);
+        switch (current_Character)
         {
         case 0:
-            weapon_Assigner(_Sword);
+            switch (random)
+            {
+            case 0:
+                weapon_Assigner(_Sword);
+                break;
+
+            case 1:
+                weapon_Assigner(_Rifle);
+
+                break;
+
+            case 2:
+                weapon_Assigner(_RPG);
+
+                break;
+            }
             break;
 
         case 1:
-            weapon_Assigner(_Rifle);
+            switch (random)
+            {
+            case 0:
+                weapon_Assigner(_Sword);
+                break;
+
+            case 1:
+                weapon_Assigner(_Rifle);
+
+                break;
+
+            case 2:
+                weapon_Assigner(_RPG);
+
+                break;
+            }
 
             break;
 
         case 2:
-            weapon_Assigner(_RPG);
+            switch (random)
+            {
+            case 0:
+                weapon_Assigner(_Sword);
+                break;
+
+            case 1:
+                weapon_Assigner(_Rifle);
+
+                break;
+
+            case 2:
+                weapon_Assigner(_RPG);
+
+                break;
+            }
 
             break;
         }
+        
 
         // set weapon position to player
         current_Weapon->weapon_Position(player_Sprite.getPosition());
@@ -330,6 +406,54 @@ void Player::weapon_Assigner(Weapon* weapon)
     current_Weapon = weapon;
     current_weapon_Ammo = weapon->_Ammo;
     current_weapon_Cooldown = weapon->cooldown_Timer;
+}
+
+void Player::character_Transform()
+{
+    sf::Vector2f last_Position = player_Sprite.getPosition();
+    std::uniform_int_distribution<int> random_character(0, 2);
+
+    //random number
+    int random = random_character(rng);
+
+    switch (random)
+    {
+    case 0:
+        character_Assigner(Penguin, last_Position);
+        break;
+
+    case 1:
+        character_Assigner(Crocodile, last_Position);
+
+        break;
+
+    case 2:
+        character_Assigner(Peacock, last_Position);
+
+        break;
+    }
+}
+
+void Player::character_Assigner(character_Values character, sf::Vector2f position)
+{
+    player_Speed = character.character_Speed;
+    max_player_Health = character.max_character_Health;
+    terraforming_Factor = character.character_Terraforming_Factor;
+    player_Texture = character.character_Texture;
+    current_player_Health = max_player_Health;
+    current_Character = character.character_Index;
+
+    player_Sprite.setTexture(player_Texture, true);
+    player_Sprite.setPosition(position);
+    player_Sprite.setScale({ 1.0f, 1.0f });
+    player_Sprite.setOrigin({ static_cast<float>(player_Texture.getSize().x / 2),static_cast<float>(player_Texture.getSize().y / 2) });
+
+    //move to on tranform player
+    terraforming_Factor_Event.Terraforming_Factor = terraforming_Factor;
+    notify_Observers(terraforming_Factor_Event);
+
+    health_Event.health = current_player_Health;
+    notify_Observers(health_Event);
 }
 
 #pragma endregion

@@ -14,6 +14,7 @@
 #include "EventSystem.h"
 class PlayerUI;
 class Observer;
+class TileMap;
 class GameEngine:public Observer, public Subject
 {
 public:
@@ -71,10 +72,13 @@ private:
 	Player* _Player;
 	EnemySpawner* _EnemySpawner;
 	Observer* _PlayerUI;
+	TileMap* _TileMap;
 
 	TranformationMiniGame mini_Game;
 	//events
 	minigame_Active_State minigame_Active_Event;
+	minigame_Win miniGame_Win_Event;
+
 	bool minigame_Completed_Handled = false;
 	bool pending_MiniGame_Start = false;
 	//basic functions
@@ -88,6 +92,8 @@ private:
 	void poll_Event();
 	//intialise window
 	void init_gameWindow();
+
+	void miniGame_Update(float deltatime);
 
 };
 

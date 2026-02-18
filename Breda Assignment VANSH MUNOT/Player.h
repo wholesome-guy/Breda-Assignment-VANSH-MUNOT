@@ -3,8 +3,18 @@
 #include "EntityBase.h"
 #include "Weapon.h"
 #include <cmath>
+#include <random>
 
 class EnemySpawner;
+
+struct character_Values 
+{
+	float character_Speed;
+	int character_Terraforming_Factor;
+	float max_character_Health;
+	sf::Texture character_Texture;
+	int character_Index;
+};
 
 class Player: public EntityBase,public Observer,public Subject
 {
@@ -39,8 +49,14 @@ private:
 
 	float player_Speed;
 	sf::Vector2f player_Velocity;
+	int terraforming_Factor;
 	float max_player_Health;
 	float current_player_Health;
+
+	character_Values Penguin;
+	character_Values Crocodile;
+	character_Values Peacock;
+	int current_Character;
 
 	float invincibility_Time;
 	float invincibility_Timer;
@@ -65,17 +81,22 @@ private:
 
 	bool can_Interact_Square;
 
+	std::mt19937 rng;
+	std::random_device rd ;
+
 	//events
 	player_Ammo_Event ammo_Event;
 	player_Health_Event health_Event;
 	weapon_Reload_Cooldown reload_Weapon;
 	weapon_Transform_Cooldown transform_Weapon_Event;
 	weapon_State weapon_State_Event;
+	player_terraforming_Factor_Event terraforming_Factor_Event;
 
 	//functions
 	void init_playerSprite();
 	void init_Variables();
 	void init_Weapons();
+	void init_Character();
 
 
 	void player_Movement(float deltatime);
@@ -93,5 +114,8 @@ private:
 	void transform_Weapon();
 	void weapon_Transformation_Cooldown(float deltatime);
 	void weapon_Assigner(Weapon* weapon);
+
+	void character_Transform();
+	void character_Assigner(character_Values,sf::Vector2f);
 };
 

@@ -10,7 +10,7 @@ EnemySpawner::EnemySpawner():random_Generator(seed())
 void EnemySpawner::init_Variables()
 {
 	spawn_Interval = 2.f;
-	max_Enemies = 5;
+	max_Enemies = 1;
 	spawn_Timer = 0;
 
 	sf::Vector2u window_Size = GameEngine::get_Instance()->get_Window()->getSize();
@@ -104,6 +104,8 @@ void EnemySpawner::erase_Enemy(int i)
 		//heal player on kill Event
 		player_Health_Event._Change = -5.f;
 		notify_Observers(player_Health_Event);
+
+		notify_Observers(reduce_Terraforming_Event);
 	}
 }
 sf::Vector2f EnemySpawner::get_Random_Spawn_Position()
