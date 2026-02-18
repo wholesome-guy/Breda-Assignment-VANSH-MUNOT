@@ -43,20 +43,24 @@ void GameEngine::init_Entities()
 	//pass for reference raw pointer
 	_Player = player.get();
 
-	auto player_UI_sptr = std::make_unique<PlayerUI>();
+	auto player_UI = std::make_unique<PlayerUI>();
 
-	//Player Ui is the observer for Player
-	_Player->add_Observer(player_UI_sptr.get());
+	_PlayerUI = player_UI.get();
 
 	//transfer ownership by using move? smart pointer owns the object, transfer of ownership = move
 	Entities.push_back(std::move(player));
 
 	Entities.push_back(std::move(enemy_list));
 
-	Entities.push_back(std::move(player_UI_sptr));
+	Entities.push_back(std::move(player_UI));
 
 	//making player the observe of enemy_spawner
 	_EnemySpawner->add_Observer(_Player);
+	_EnemySpawner->add_Observer(_PlayerUI);
+
+
+	//Player Ui is the observer for Player
+	_Player->add_Observer(_PlayerUI);
 }
 
 void GameEngine::run()
@@ -109,12 +113,4 @@ void GameEngine::render()
 	game_Window->display();
 }
 
-bool GameEngine::get_Mini_Game_Active()
-{
-	return minigame_Active;
-}
-void GameEngine::set_Mini_Game_Active(bool active)
-{
-	minigame_Active = active;
-}
 

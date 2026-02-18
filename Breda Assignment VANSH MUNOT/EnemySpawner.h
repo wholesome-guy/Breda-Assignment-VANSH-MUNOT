@@ -8,7 +8,7 @@
 class Shape;
 
 
-class EnemySpawner:public EntityBase,public Subject
+class EnemySpawner:public EntityBase,public Subject,public Observer
 {
 public:
     EnemySpawner();
@@ -18,10 +18,10 @@ public:
 
     void update(float deltatime) override;
     void render(sf::RenderTarget& target) override;
+    void on_Event(const Event& event) override;
 
     // Getters
     std::vector<std::unique_ptr<Enemy>>& get_Enemies();
-    int get_Kill_Count();
 
 private:
     // Spawner properties
@@ -29,9 +29,9 @@ private:
     float spawn_Interval;
     int max_Enemies;
     int current_Enemy_Count;
-    int killed_Enemy_Count;
+    int kill_Enemy_Count;
 
-    bool knockback = true;
+    bool is_MiniGame_Active = false;
     // Spawn area boundaries
     sf::Vector2f spawn_Area_Min;
     sf::Vector2f spawn_Area_Max;
@@ -46,6 +46,10 @@ private:
     // Container for spawned enemies
     std::vector<std::unique_ptr<Enemy>> _Enemies;
     std::vector<std::unique_ptr<Shape>> _Squares;
+    //events
+    kill_Count_Event kill_count;
+
+    player_Health_Change player_Health_Event;
 
     //functions
     void init_Variables();

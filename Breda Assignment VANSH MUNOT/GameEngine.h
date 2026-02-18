@@ -11,6 +11,8 @@
 #include "Enemy.h"
 #include "EnemySpawner.h"
 
+class PlayerUI;
+class Observer;
 class GameEngine
 {
 public:
@@ -45,11 +47,11 @@ public:
 	{
 		return _EnemySpawner;
 	}
-	//mini game
-	void set_Mini_Game_Active(bool);
-	bool get_Mini_Game_Active();
 
-
+	Observer* get_UI()
+	{
+		return _PlayerUI;
+	}
 
 
 private:
@@ -66,8 +68,7 @@ private:
 
 	Player* _Player;
 	EnemySpawner* _EnemySpawner;
-
-	bool minigame_Active;
+	Observer* _PlayerUI;
 
 
 	//basic functions

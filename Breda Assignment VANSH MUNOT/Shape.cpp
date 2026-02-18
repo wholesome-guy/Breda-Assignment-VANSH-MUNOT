@@ -41,7 +41,7 @@ void Shape::init_Sprite(sf::Vector2f position, sf::Color colour)
 
 void Shape::despawn(float deltatime)
 {
-    if (mini_Game.get_Is_Active())
+    if (is_MiniGame_Active)
     {
         return;
     }
@@ -57,23 +57,33 @@ void Shape::collision()
 {
     if (shape_Sprite.getGlobalBounds().findIntersection(_Player->get_GlobalBounds()))
     {
-        _Player->set_Can_Interact_Sqaure(true);
+        minigame_Interaction_State.state = true;
+        notify_Observers(minigame_Interaction_State);
+
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right) && !mini_Game.get_Is_Active())
         {
             mini_Game.start_Mini_Game();
-            GameEngine::get_Instance()->set_Mini_Game_Active(mini_Game.get_Is_Active());
+
+            is_MiniGame_Active = true;
+            minigame_Active_Event.active = true;
+            notify_Observers(minigame_Active_Event);
         }  
     }
     else
     {
-        _Player->set_Can_Interact_Sqaure(false);
+        minigame_Interaction_State.state = false;
+        notify_Observers(minigame_Interaction_State);
     }
 
     if (mini_Game.get_Is_Complete())
     {
-        GameEngine::get_Instance()->set_Mini_Game_Active(mini_Game.get_Is_Active());
 
-        _Player->set_Can_Interact_Sqaure(false);
+        is_MiniGame_Active = false;
+        minigame_Active_Event.active = false;
+        notify_Observers(minigame_Active_Event);
+
+        minigame_Interaction_State.state = false;
+        notify_Observers(minigame_Interaction_State);
 
         if (mini_Game.get_Is_Won())
         {

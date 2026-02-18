@@ -20,7 +20,7 @@ void EnemySpawner::init_Variables()
 }
 void EnemySpawner::update(float deltatime)
 {
-	if (!GameEngine::get_Instance()->get_Mini_Game_Active())
+	if (!is_MiniGame_Active)
 	{
 		spawn_Timer += deltatime;
 
@@ -52,6 +52,14 @@ void EnemySpawner::render(sf::RenderTarget& target)
 	for (auto& s : _Squares)
 	{
 		s->render(target);
+	}
+}
+
+void EnemySpawner::on_Event(const Event& event)
+{
+	if (auto* data = dynamic_cast<const minigame_Active_State*>(&event))
+	{
+		is_MiniGame_Active = data->active;
 	}
 }
 
@@ -88,12 +96,15 @@ void EnemySpawner::erase_Enemy(int i)
 
 		_Enemies.erase(_Enemies.begin() + i);
 		current_Enemy_Count--;
-		killed_Enemy_Count++;
+		kill_Enemy_Count++;
+
+		//ui update
+		kill_count.kill_Count = kill_Enemy_Count;
+		notify_Observers(kill_count);
 
 		//heal player on kill Event
-		player_Health_Change event;
-		event._Change = -2.f;
-		notify_Observers(event);
+		player_Health_Event._Change = -5.f;
+		notify_Observers(player_Health_Event);
 	}
 }
 sf::Vector2f EnemySpawner::get_Random_Spawn_Position()
@@ -137,6 +148,8 @@ void EnemySpawner::spawn_Square(int i)
 		{
 			new_Shape->add_Observer(e.get());
 		}
+		new_Shape->add_Observer(GameEngine::get_Instance()->get_UI());
+		new_Shape->add_Observer(this);
 		_Squares.push_back(std::move(new_Shape));
 
 	}
@@ -152,8 +165,5 @@ std::vector<std::unique_ptr<Enemy>>& EnemySpawner::get_Enemies()
 {
 	return _Enemies;
 }
-int EnemySpawner::get_Kill_Count()
-{
-	return killed_Enemy_Count;
-}
+
 

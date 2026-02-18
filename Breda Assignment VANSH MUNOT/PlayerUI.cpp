@@ -11,13 +11,12 @@ PlayerUI::PlayerUI():
     interact_Text(game_Font,"press f")
 {
     _Player = GameEngine::get_Instance()->get_Player();
-    _EnemySpawner = GameEngine::get_Instance()->get_EnemySpawner();
 	init_UI();
 }
 
 void PlayerUI::update(float deltatime)
 {
-    update_UI();
+    UI_Mover(interact_Text);
     FPS_Counter(deltatime);
 
 }
@@ -25,7 +24,6 @@ void PlayerUI::update(float deltatime)
 void PlayerUI::render(sf::RenderTarget& target)
 {
     render_UI(target);
-    cooldown_Bar_Render(target);
 }
 
 void PlayerUI::on_Event(const Event& event)
@@ -53,6 +51,15 @@ void PlayerUI::on_Event(const Event& event)
     else if (auto* data = dynamic_cast<const weapon_State*>(&event))
     {
         is_Bar_Visible = data->state;
+    }
+    else if (auto* data = dynamic_cast<const interaction_State*>(&event))
+    {
+        is_InContact_Interactable = data->state;
+    }
+    else if (auto* data = dynamic_cast<const kill_Count_Event*>(&event))
+    {
+        int kills = data->kill_Count;
+        kill_Text.setString(std::to_string(kills));
     }
 
 }
@@ -86,7 +93,7 @@ void PlayerUI::init_UI()
     cooldown_Bar.setFillColor(sf::Color::White);
 
     // Initialize kill counter UI
-    setup_Text(kill_Text, std::to_string(_EnemySpawner->get_Kill_Count()), 40,
+    setup_Text(kill_Text, std::to_string(0), 40,
         sf::Color::White, { 1200.f, 5.f });
 
     setup_Sprite(kill_Sprite, kill_Texture,
@@ -97,7 +104,7 @@ void PlayerUI::init_UI()
     setup_Text(FPS_Text, "0", 30, sf::Color::White, { 1226.f, 688.f }, { 0.5f, 0.5f });
 
     setup_Text(interact_Text, "Right Click", 40,
-        sf::Color::White, { 598.f, 635.f });
+        sf::Color::White, { 510.f, 635.f });
 }
 
 void PlayerUI::cooldown_Bar_Update(float value, float mulitplier, sf::Color colour)
@@ -113,14 +120,7 @@ void PlayerUI::cooldown_Bar_Update(float value, float mulitplier, sf::Color colo
 
 }
 
-void PlayerUI::cooldown_Bar_Render(sf::RenderTarget& target)
-{
-    if (is_Bar_Visible)
-    {
-        target.draw(cooldown_Bar);
-    }
 
-}
 
 void PlayerUI::render_UI(sf::RenderTarget& target)
 {
@@ -135,21 +135,17 @@ void PlayerUI::render_UI(sf::RenderTarget& target)
 
     target.draw(FPS_Text);
 
-    if (_Player->get_Can_Interact_Square())
+    if (is_Bar_Visible)
+    {
+        target.draw(cooldown_Bar);
+    }
+
+    if (is_InContact_Interactable)
     {
         target.draw(interact_Text);
     }
 }
 
-void PlayerUI::update_UI()
-{
-    //ammo_Text.setString(std::to_string(_Player->get_Ammo()));
-   // health_Text.setString(std::to_string(static_cast<int>(_Player->get_Health())));
-
-    kill_Text.setString(std::to_string(_EnemySpawner->get_Kill_Count()));
-
-    //UI_Mover(interact_Text);
-}
 
 void PlayerUI::FPS_Counter(float deltatime)
 {

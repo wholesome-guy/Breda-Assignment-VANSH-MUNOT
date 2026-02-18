@@ -21,6 +21,12 @@ private:
 	sf::Sprite shape_Sprite;
 
 	bool is_MiniGame_Active = false;
+	minigame_Active_State minigame_Active_Event;
+
+	interaction_State minigame_Interaction_State;
+
+
+
 	float despawn_Timer = 0;
 	float despawn_Time = 5.f;
 

@@ -55,10 +55,8 @@ private:
 	//functions
 
 	void cooldown_Bar_Update(float,float,sf::Color);
-	void cooldown_Bar_Render(sf::RenderTarget& target);
 
 	void render_UI(sf::RenderTarget& target);
-	void update_UI();
 
 	void FPS_Counter(float deltatime);
 
@@ -73,6 +71,5 @@ private:
 
 	void UI_Mover(sf::Transformable& transform);
 	Player* _Player;
-	EnemySpawner* _EnemySpawner;
 };
 

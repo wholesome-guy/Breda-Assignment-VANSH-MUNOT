@@ -84,7 +84,7 @@ protected:
 //  event.data = some data;
 //  notify_Observers(event);
 
-//stuct here please
+//stucts here please
 
 struct player_Health_Change : Event
 {
@@ -115,10 +115,17 @@ struct interaction_State :Event
 {
     bool state;
 };
+struct kill_Count_Event :Event 
+{
+    int kill_Count;
+};
 
 struct minigame_Complete : Event{};
 
-struct minigame_Start : Event {};
+struct minigame_Active_State : Event 
+{
+    bool active;
+};
 
 struct minigame_Win : Event {};
 

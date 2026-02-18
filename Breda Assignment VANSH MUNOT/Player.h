@@ -24,15 +24,6 @@ public:
 	sf::Vector2f get_Position();
 	sf::FloatRect get_GlobalBounds();
 
-	bool get_can_Damage();
-
-	bool get_Can_Interact_Square();
-
-
-	//setters
-	void set_Can_Interact_Sqaure(bool);
-
-
 private:
 
 	sf::Texture player_Texture;
