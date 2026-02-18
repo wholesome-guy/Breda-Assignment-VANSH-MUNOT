@@ -42,7 +42,7 @@ void PlayerUI::on_Event(const Event& event)
     else if (auto* data = dynamic_cast<const weapon_Reload_Cooldown*>(&event))
     {
         float Value = data->value;
-        cooldown_Bar_Update(Value, 100, sf::Color::White);
+        cooldown_Bar_Update(Value, 100, sf::Color::Color(242,212,85));
     }
     else if (auto* data = dynamic_cast<const weapon_Transform_Cooldown*>(&event))
     {
@@ -100,21 +100,21 @@ void PlayerUI::init_UI()
         std::cout << "got the font\n";
     game_Font.setSmooth(false);
 
-    setup_Text(ammo_Text, std::to_string(15), base_Size_Large, sf::Color::White, scale_Pos({ 55.f,   65.f }), { 0.5f,0.5f });
-    setup_Sprite(ammo_Sprite, ammo_Texture, "C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Ammo_UI_PNG.png", { 0.08f * scale_X, 0.08f * scale_Y }, scale_Pos({ 25.f, 88.f }));
+    setup_Text(ammo_Text, std::to_string(15), base_Size_Large, sf::Color::Color(242, 212, 85), scale_Pos({ 55.f,   65.f }), { 0.5f,0.5f });
+    setup_Sprite(ammo_Sprite, ammo_Texture, "C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Ammo_UI_PNG.png", { 0.08f * scale_X, 0.08f * scale_Y }, scale_Pos({ 25.f, 88.f }),sf::Color::Color(242, 212, 85));
 
-    setup_Text(health_Text, std::to_string(100), base_Size_Large, sf::Color::Red, scale_Pos({ 56.f,   5.f }), { 0.5f,0.5f });
+    setup_Text(health_Text, std::to_string(150), base_Size_Large, sf::Color::Red, scale_Pos({ 56.f,   5.f }), { 0.5f,0.5f });
     setup_Sprite(health_Sprite, health_Texture, "C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Heart_UI_PNG.png", { 0.08f * scale_X, 0.08f * scale_Y }, scale_Pos({ 27.f, 31.f }), sf::Color::Red);
 
-    setup_Text(kill_Text, std::to_string(0), base_Size_Large, sf::Color::White, { 102.f, 15.f }, { 0.5f,0.5f });
-    setup_Sprite(kill_Sprite, kill_Texture, "C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Skull_UI_PNG.png", { 0.08f * scale_X, 0.08f * scale_Y }, { 84.f, 28.f });
+    setup_Text(kill_Text, std::to_string(0), base_Size_Large, sf::Color::Color(170,17,217), {102.f, 15.f}, {0.5f,0.5f});
+    setup_Sprite(kill_Sprite, kill_Texture, "C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Skull_UI_PNG.png", { 0.08f * scale_X, 0.08f * scale_Y }, { 84.f, 28.f }, sf::Color::Color(170, 17, 217));
 
     setup_Text(FPS_Text, "0", base_Size_Small, sf::Color::White, scale_Pos({ 1226.f, 688.f }), { 0.5f, 0.5f });
-    setup_Text(interact_Text, "Right Click", base_Size_Large, sf::Color::White, scale_Pos({ 510.f,  635.f }), { 0.5f,0.5f });
+    setup_Text(interact_Text, "Right Click", base_Size_Large, sf::Color::Color(170, 17, 217), scale_Pos({ 510.f,  635.f }), { 0.5f,0.5f });
 
-    setup_Text(terraforming_Percentage_Text, "0", base_Size_Large, sf::Color::White, { 304.f, 10.f }, { 0.5f, 0.5f });
+    setup_Text(terraforming_Percentage_Text, "0%", base_Size_Large, sf::Color::Red, { 304.f, 10.f }, { 0.5f, 0.5f });
 
-    cooldown_Bar.setFillColor(sf::Color::White);
+    cooldown_Bar.setFillColor(sf::Color::Color(242, 212, 85));
 }
 
 void PlayerUI::cooldown_Bar_Update(float value, float mulitplier, sf::Color colour)

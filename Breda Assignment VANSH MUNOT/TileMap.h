@@ -60,6 +60,5 @@ private:
     void change_Random_Tiles(int count);
     void trigger_Terraform(int terraforming_Factor);
     void on_Kill();
-    bool get_Is_Won();
 };
 

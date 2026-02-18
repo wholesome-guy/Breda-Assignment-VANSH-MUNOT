@@ -82,8 +82,16 @@ private:
 	sf::Texture cursor_Texture;
 	sf::Sprite cursor_Sprite;
 
+	sf::Font game_Font;
+	sf::Text start_Text;
+	sf::Text end_Text;
+
 	bool minigame_Completed_Handled = false;
 	bool pending_MiniGame_Start = false;
+
+	bool is_Game_Start = false;
+	bool is_Game_Over = false;
+	int game_End_State;
 
 	//basic functions
 	void update(float deltatime);

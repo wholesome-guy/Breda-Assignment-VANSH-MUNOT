@@ -8,7 +8,8 @@
 GameEngine* GameEngine::instance = nullptr;
 
 //constructor -- unity start method
-GameEngine::GameEngine() :cursor_Sprite(cursor_Texture)
+GameEngine::GameEngine() :cursor_Sprite(cursor_Texture),
+end_Text(game_Font,""),start_Text(game_Font,"")
 {
 	//instance is assigned
 	instance = this;
@@ -35,6 +36,28 @@ void GameEngine::init_gameWindow()
 	cursor_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Cursor_PNG.png"));
 	cursor_Sprite.setTexture(cursor_Texture,true);
 	cursor_Sprite.setOrigin({ cursor_Texture.getSize().x / 2.f,cursor_Texture.getSize().y / 2.f });
+
+	if (game_Font.openFromFile("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/SpecialElite-Regular.ttf"))
+	{
+		std::cout << "got the font\n";
+	}
+	game_Font.setSmooth(false);
+
+	end_Text = sf::Text(game_Font, "", 100);
+	end_Text.setStyle(sf::Text::Bold);
+	end_Text.setScale({ 0.5f,0.5f });
+
+	start_Text = sf::Text(game_Font, "", 60);
+	start_Text.setString("Press Enter to Start");
+	start_Text.setFillColor(sf::Color::White);
+	start_Text.setOutlineColor(sf::Color::Black);
+	start_Text.setOutlineThickness(5.f);
+	start_Text.setStyle(sf::Text::Bold);
+	start_Text.setScale({ 0.5f,0.5f });
+	sf::FloatRect bounds = start_Text.getLocalBounds();
+	start_Text.setOrigin({ bounds.size.x / 2.f, bounds.size.y / 2.f });
+	start_Text.setPosition({ _Window_Size.x / 2.f, 300 });
+	
 }
 
 
@@ -82,8 +105,10 @@ void GameEngine::init_Entities()
 	_Player->add_Observer(_PlayerUI);
 	_Player->add_Observer(_TileMap);
 	_Player->add_Observer(_EnemySpawner);
+	_Player->add_Observer(this);
 	
 	_TileMap->add_Observer(_PlayerUI);
+	_TileMap->add_Observer(this);
 }
 
 void GameEngine::run()
@@ -112,6 +137,13 @@ void GameEngine::poll_Event()
 		{
 			game_Window->close();
 		}
+		if (event->is<sf::Event::KeyPressed>())
+		{
+			if (event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::Enter)
+			{
+				is_Game_Start = true;
+			}
+		}
 	}
 }
 
@@ -121,18 +153,32 @@ void GameEngine::on_Event(const Event& event)
 	{
 		pending_MiniGame_Start = true;
 	}
+	else if (auto* data = dynamic_cast<const game_Over*>(&event))
+	{
+		is_Game_Over = true;
+		game_End_State = data->state;
+	}
 }
 
 //unity update
 void GameEngine::update(float deltatime)
 {
-	for (auto& e : Entities)
-	{
-		e->update(deltatime);
-	}	
-
-	miniGame_Update(deltatime);
 	cursor();
+
+	if (is_Game_Over)
+	{
+		return;
+	}
+	if (is_Game_Start)
+	{
+		for (auto& e : Entities)
+		{
+			e->update(deltatime);
+		}
+
+		miniGame_Update(deltatime);
+	}
+
 }
 
 
@@ -147,12 +193,36 @@ void GameEngine::render()
 		e->render(*game_Window);
 	}
 	mini_Game.render(*game_Window);
+
+	if (is_Game_Over)
+	{
+		if (game_End_State == 0)
+		{
+			end_Text.setFillColor(sf::Color::Red);
+			end_Text.setString("You Died");
+		}
+		else
+		{
+			end_Text.setFillColor(sf::Color::Yellow);
+			end_Text.setString("Terraforming Complete");
+		}
+		sf::FloatRect bounds = end_Text.getLocalBounds();
+		end_Text.setOrigin({ bounds.size.x / 2.f, bounds.size.y / 2.f });
+		end_Text.setPosition({ _Window_Size.x / 2.f, _Window_Size.y / 2.f });
+		game_Window->draw(end_Text);
+
+	}
+	if (!is_Game_Start)
+	{
+		game_Window->draw(start_Text);
+	}
 	
 	game_Window->draw(cursor_Sprite);
 
 
 	game_Window->display();
 }
+
 
 void GameEngine::miniGame_Update(float deltatime)
 {

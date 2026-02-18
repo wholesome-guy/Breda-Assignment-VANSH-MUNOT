@@ -151,4 +151,8 @@ struct game_Difficulty :Event
     float spawn_Time;
 
 };
+struct game_Over :Event 
+{
+    int state;
+};
 

@@ -559,7 +559,9 @@ void Player::player_Health(float _Damage)
 
     if (current_player_Health <= 0)
     {
-        //death
+        game_Over event;
+        event.state = 0;
+        notify_Observers(event);
     }
 }
 

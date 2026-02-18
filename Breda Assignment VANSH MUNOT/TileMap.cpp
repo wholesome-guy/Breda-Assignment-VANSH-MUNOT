@@ -49,8 +49,6 @@ void TileMap::trigger_Terraform(int terraforming_Factor)
     if (is_Won) 
     {
         return;
-        std::cout << "Game Won" << "\n";
-
     } 
 
     change_Random_Tiles(terraforming_Factor);
@@ -63,6 +61,9 @@ void TileMap::trigger_Terraform(int terraforming_Factor)
     {
         is_Won = true;
 
+        game_Over event;
+        event.state = 1;
+        notify_Observers(event);
     }
 }
 
@@ -99,11 +100,6 @@ void TileMap::on_Kill()
     }
 }
 
-bool TileMap::get_Is_Won()
-{
-    return is_Won;
-}
-
 void TileMap::render(sf::RenderTarget& target)
 {
     for (auto& tile : _Tiles)
@@ -121,6 +117,5 @@ void TileMap::on_Event(const Event& event)
     else if (dynamic_cast<const kill_reduction_Terraforming_Time_Event*>(&event))
     {
         on_Kill();
-
     }
 }

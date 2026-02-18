@@ -33,7 +33,7 @@ void Sword::init_Sprite()
     weapon_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Sword_PNG.png"));
     weapon_Sprite.setTexture(weapon_Texture,true);
     weapon_Sprite.setOrigin({169,294});
-    weapon_Sprite.setPosition({ 100,100 });
+    weapon_Sprite.setPosition({ 320,190 });
     weapon_Scale({0.08f,0.08f});
 }
 
