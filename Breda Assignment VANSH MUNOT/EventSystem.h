@@ -91,5 +91,34 @@ struct player_Health_Change : Event
     float _Change;
 };
 
+struct player_Health_Event :Event 
+{
+    float health;
+};
+struct player_Ammo_Event :Event
+{
+    int ammo;
+};
+struct weapon_Reload_Cooldown :Event 
+{
+    float value;
+};
+struct weapon_Transform_Cooldown :Event 
+{ 
+    float value; 
+};
+struct weapon_State :Event 
+{
+    bool state;
+};
+struct interaction_State :Event
+{
+    bool state;
+};
+
 struct minigame_Complete : Event{};
+
+struct minigame_Start : Event {};
+
+struct minigame_Win : Event {};
 

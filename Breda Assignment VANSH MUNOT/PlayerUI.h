@@ -4,7 +4,8 @@
 #include "GameEngine.h"
 #include <sstream>
 #include "EnemySpawner.h"
-class PlayerUI:public EntityBase
+#include "EventSystem.h"
+class PlayerUI:public EntityBase,public Observer
 {
 public:
 
@@ -13,6 +14,7 @@ public:
 	void update(float deltatime) override;
 	void render(sf::RenderTarget& target) override;
 
+	void on_Event(const Event& event) override;
 
 private:
 	void init_UI();
@@ -40,6 +42,8 @@ private:
 	bool is_Bar_Visible = false;
 	float bar_Size_Offset;
 
+	bool is_InContact_Interactable = false;
+
 	sf::RenderWindow* game_Window;
 
 	//FPS 
@@ -50,7 +54,7 @@ private:
 
 	//functions
 
-	void cooldown_Bar_Update();
+	void cooldown_Bar_Update(float,float,sf::Color);
 	void cooldown_Bar_Render(sf::RenderTarget& target);
 
 	void render_UI(sf::RenderTarget& target);

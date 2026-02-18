@@ -176,7 +176,7 @@ void Enemy::enemy_player_Collision(float deltatime)
     // only damage on the frame contact
     if (contact_Now && !is_InContact_Player && _Player->get_can_Damage())
     {
-        //damage player
+        //damage player EVENT
         player_Health_Change event;
         event._Change = enemy_Damage;
         notify_Observers(event);

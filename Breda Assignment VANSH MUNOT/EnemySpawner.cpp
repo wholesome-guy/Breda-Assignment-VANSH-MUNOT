@@ -90,7 +90,7 @@ void EnemySpawner::erase_Enemy(int i)
 		current_Enemy_Count--;
 		killed_Enemy_Count++;
 
-		//heal player on kill
+		//heal player on kill Event
 		player_Health_Change event;
 		event._Change = -2.f;
 		notify_Observers(event);

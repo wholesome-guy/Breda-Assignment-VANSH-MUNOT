@@ -57,6 +57,8 @@ void Player::init_Variables()
 
     weapon_Transform_Timer = 0;
     weapon_Transfrom_Time = 3.f;
+
+
 }
 
 
@@ -71,6 +73,7 @@ void Player::init_Weapons()
     current_Weapon = _Sword;
     current_weapon_Ammo = _Sword->_Ammo;
     current_weapon_Cooldown = _Sword->cooldown_Timer;
+
 }
 
 #pragma endregion
@@ -203,13 +206,26 @@ void Player::Attack()
         current_Weapon->Attack();
         current_weapon_Ammo--;
 
+        //ui event
+        ammo_Event.ammo = current_weapon_Ammo;
+        notify_Observers(ammo_Event);
+
         can_Attack = false;
         is_weapon_Cooldown = true;
+
+        //turn on rendering of bar
+        weapon_State_Event.state = true;
+        notify_Observers(weapon_State_Event);
 
         if (current_weapon_Ammo <= 0)
         {
             //start Transformation
             is_weapon_Transforming = true;
+            is_weapon_Cooldown = false;
+
+            //turn on rendering of bar
+            weapon_State_Event.state = true;
+            notify_Observers(weapon_State_Event);
         }
     }
 }
@@ -225,11 +241,20 @@ void Player::weapon_Cooldown(float deltatime)
         if (weapon_cooldown_Timer < current_weapon_Cooldown)
         {
             weapon_cooldown_Timer += deltatime;
+
+            // reload event
+            reload_Weapon.value = current_weapon_Cooldown - weapon_cooldown_Timer;
+            notify_Observers(reload_Weapon);
         }
         else
         {
             weapon_cooldown_Timer = 0;
             //weapon cooldown over
+            
+            //turn off rendering of bar
+            weapon_State_Event.state = false;
+            notify_Observers(weapon_State_Event);
+
             can_Attack = true;
             is_weapon_Cooldown = false;
         }
@@ -243,12 +268,22 @@ void Player::weapon_Transformation_Cooldown(float deltatime)
         can_Attack = false;
 
         weapon_Transform_Timer += deltatime;
+
+        // transformation event
+        transform_Weapon_Event.value = weapon_Transfrom_Time - weapon_Transform_Timer;
+        notify_Observers(transform_Weapon_Event);
+
         if (weapon_Transform_Timer > weapon_Transfrom_Time)
         {
             //complete tranformation
             is_weapon_Transforming = false;
+            is_weapon_Cooldown = true;
+
             weapon_Transform_Timer = 0;
             transform_Weapon();
+            //turn off rendering of bar
+            weapon_State_Event.state = false;
+            notify_Observers(weapon_State_Event);
         }
     }
 }
@@ -285,6 +320,9 @@ void Player::transform_Weapon()
         // set weapon position to player
         current_Weapon->weapon_Position(player_Sprite.getPosition());
         can_Attack = true;
+        //ui event
+        ammo_Event.ammo = current_weapon_Ammo;
+        notify_Observers(ammo_Event);
 }
 
 void Player::weapon_Assigner(Weapon* weapon)
@@ -307,43 +345,6 @@ sf::FloatRect Player::get_GlobalBounds()
     return player_Sprite.getGlobalBounds();
 }
 
-float Player::get_Cooldown(int i)
-{
-    switch (i)
-    {
-    case 0:
-        return(current_weapon_Cooldown - weapon_cooldown_Timer);
-        break;
-
-    case 1:    
-        return(weapon_Transfrom_Time - weapon_Transform_Timer);
-        break;
-    }
-}
-
-bool Player::get_CoolDown_Bool(int i)
-{
-    switch (i)
-    {
-    case 0:
-        return is_weapon_Cooldown;
-        break;
-
-    case 1:
-        return is_weapon_Transforming;
-        break;
-    }
-}
-
-float Player::get_Health()
-{
-    return current_player_Health;
-}
-
-int Player::get_Ammo()
-{
-    return current_weapon_Ammo;
-}
 bool Player::get_Can_Interact_Square()
 {
     return can_Interact_Square;
@@ -398,8 +399,10 @@ void Player::player_Health(float _Damage)
     current_player_Health -= _Damage;
     can_Damage = false;
 
-
     current_player_Health = std::clamp(current_player_Health, 0.f, max_player_Health);
+
+    health_Event.health = current_player_Health;
+    notify_Observers(health_Event);
 
     if (current_player_Health <= 0)
     {

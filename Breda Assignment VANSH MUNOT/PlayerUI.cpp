@@ -18,7 +18,6 @@ PlayerUI::PlayerUI():
 void PlayerUI::update(float deltatime)
 {
     update_UI();
-    cooldown_Bar_Update();
     FPS_Counter(deltatime);
 
 }
@@ -27,6 +26,35 @@ void PlayerUI::render(sf::RenderTarget& target)
 {
     render_UI(target);
     cooldown_Bar_Render(target);
+}
+
+void PlayerUI::on_Event(const Event& event)
+{
+    if (auto* data = dynamic_cast<const player_Health_Event*>(&event))
+    {
+        float health = data->health;
+        health_Text.setString(std::to_string(static_cast<int>(health)));
+    }
+    else if(auto * data = dynamic_cast<const player_Ammo_Event*>(&event))
+    {
+        int ammo = data->ammo;
+        ammo_Text.setString(std::to_string(ammo));
+    }
+    else if (auto* data = dynamic_cast<const weapon_Reload_Cooldown*>(&event))
+    {
+        float Value = data->value;
+        cooldown_Bar_Update(Value, 100, sf::Color::White);
+    }
+    else if (auto* data = dynamic_cast<const weapon_Transform_Cooldown*>(&event))
+    {
+        float Value = data->value;
+        cooldown_Bar_Update(Value, 30, sf::Color::Magenta);
+    }
+    else if (auto* data = dynamic_cast<const weapon_State*>(&event))
+    {
+        is_Bar_Visible = data->state;
+    }
+
 }
 
 void PlayerUI::init_UI()
@@ -39,7 +67,7 @@ void PlayerUI::init_UI()
     game_Font.setSmooth(false);
 
     // Initialize ammo UI
-    setup_Text(ammo_Text, std::to_string(_Player->get_Ammo()), 40,
+    setup_Text(ammo_Text, std::to_string(15), 40,
         sf::Color::White, { 55.f, 65.f });
 
     setup_Sprite(ammo_Sprite, ammo_Texture,
@@ -47,7 +75,7 @@ void PlayerUI::init_UI()
         { 0.08f, 0.08f }, { 25.f, 88.f });
 
     // Initialize health UI
-    setup_Text(health_Text, std::to_string(static_cast<int>(_Player->get_Health())), 40,
+    setup_Text(health_Text, std::to_string(100), 40,
         sf::Color::Red, { 56.f, 5.f });
 
     setup_Sprite(health_Sprite, health_Texture,
@@ -68,41 +96,26 @@ void PlayerUI::init_UI()
     // Initialize FPS counter
     setup_Text(FPS_Text, "0", 30, sf::Color::White, { 1226.f, 688.f }, { 0.5f, 0.5f });
 
-    setup_Text(interact_Text, "Press F", 40,
+    setup_Text(interact_Text, "Right Click", 40,
         sf::Color::White, { 598.f, 635.f });
 }
 
-void PlayerUI::cooldown_Bar_Update()
+void PlayerUI::cooldown_Bar_Update(float value, float mulitplier, sf::Color colour)
 {
-    if (_Player->get_CoolDown_Bool(0))
-    {
+
         sf::Vector2f offset = { -20,-30 };
 
         cooldown_Bar.setPosition(_Player->get_Position() + offset);
 
+        cooldown_Bar.setSize({ value * mulitplier,5 });
 
-        cooldown_Bar.setSize({ _Player->get_Cooldown(0) * 100,5 });
+        cooldown_Bar.setFillColor(colour);
 
-        cooldown_Bar.setFillColor(sf::Color::White);
-
-    }
-
-    if (_Player->get_CoolDown_Bool(1))
-    {
-        sf::Vector2f offset = { -20,-30 };
-
-        cooldown_Bar.setPosition(_Player->get_Position() + offset);
-
-        cooldown_Bar.setSize({ _Player->get_Cooldown(1) * 30,5 });
-
-        cooldown_Bar.setFillColor(sf::Color::Magenta);
-
-    }
 }
 
 void PlayerUI::cooldown_Bar_Render(sf::RenderTarget& target)
 {
-    if (_Player->get_CoolDown_Bool(0) || _Player->get_CoolDown_Bool(1))
+    if (is_Bar_Visible)
     {
         target.draw(cooldown_Bar);
     }
@@ -121,6 +134,7 @@ void PlayerUI::render_UI(sf::RenderTarget& target)
     target.draw(kill_Sprite);
 
     target.draw(FPS_Text);
+
     if (_Player->get_Can_Interact_Square())
     {
         target.draw(interact_Text);
@@ -129,8 +143,8 @@ void PlayerUI::render_UI(sf::RenderTarget& target)
 
 void PlayerUI::update_UI()
 {
-    ammo_Text.setString(std::to_string(_Player->get_Ammo()));
-    health_Text.setString(std::to_string(static_cast<int>(_Player->get_Health())));
+    //ammo_Text.setString(std::to_string(_Player->get_Ammo()));
+   // health_Text.setString(std::to_string(static_cast<int>(_Player->get_Health())));
 
     kill_Text.setString(std::to_string(_EnemySpawner->get_Kill_Count()));
 

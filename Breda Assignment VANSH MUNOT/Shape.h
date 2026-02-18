@@ -20,7 +20,7 @@ private:
 	sf::Texture square_Texture;
 	sf::Sprite shape_Sprite;
 
-
+	bool is_MiniGame_Active = false;
 	float despawn_Timer = 0;
 	float despawn_Time = 5.f;
 
