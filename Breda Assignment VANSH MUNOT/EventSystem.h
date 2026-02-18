@@ -120,12 +120,15 @@ struct kill_Count_Event :Event
     int kill_Count;
 };
 
-struct minigame_Complete : Event{};
 
 struct minigame_Active_State : Event 
 {
     bool active;
 };
+
+struct minigame_Start: Event {};
+
+struct minigame_Complete : Event {};
 
 struct minigame_Win : Event {};
 

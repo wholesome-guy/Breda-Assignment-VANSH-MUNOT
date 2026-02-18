@@ -17,6 +17,8 @@ void EnemySpawner::init_Variables()
 
 	spawn_Area_Min = { -1.0f * static_cast<float>(window_Size.x) ,-1.0f * static_cast<float>(window_Size.y) };
 	spawn_Area_Max = { 2.f * static_cast<float>(window_Size.x) ,2.f * static_cast<float>(window_Size.y) };
+
+	_GameEngine = GameEngine::get_Instance();
 }
 void EnemySpawner::update(float deltatime)
 {
@@ -72,6 +74,7 @@ void EnemySpawner::spawn_Enemy()
 	//adding observer, player and enemyspawner are observers of enemy
 	new_Enemy->add_Observer(GameEngine::get_Instance()->get_Player());
 
+	_GameEngine->add_Observer(new_Enemy.get());
 
 	_Enemies.push_back(std::move(new_Enemy));
 
@@ -89,11 +92,7 @@ void EnemySpawner::erase_Enemy(int i)
 	{
 		spawn_Square(i);
 
-		for (auto& s : _Squares)
-		{
-			s->remove_Observer(_Enemies[i].get());
-		}
-
+		_GameEngine->remove_Observer(_Enemies[i].get());
 		_Enemies.erase(_Enemies.begin() + i);
 		current_Enemy_Count--;
 		kill_Enemy_Count++;
@@ -144,12 +143,14 @@ void EnemySpawner::spawn_Square(int i)
 	if (random(random_Generator) < 100)//make it 30 later
 	{
 		auto new_Shape = std::make_unique<Shape>(_Enemies[i]->get_Position(), get_Square_Color());
-		for (auto& e : _Enemies)
-		{
-			new_Shape->add_Observer(e.get());
-		}
+		
 		new_Shape->add_Observer(GameEngine::get_Instance()->get_UI());
 		new_Shape->add_Observer(this);
+		//game engine is observer of shape so shape can invoke mini game
+		new_Shape->add_Observer(_GameEngine);
+
+		_GameEngine->add_Observer(new_Shape.get());
+
 		_Squares.push_back(std::move(new_Shape));
 
 	}
@@ -158,6 +159,7 @@ void EnemySpawner::erase_Square(int i)
 {
 	if (_Squares[i]->get_Despawn())
 	{
+		_GameEngine->remove_Observer(_Squares[i].get());
 		_Squares.erase(_Squares.begin() + i);				
 	}	
 }

@@ -10,10 +10,11 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "EnemySpawner.h"
-
+#include "TranformationMiniGame.h"
+#include "EventSystem.h"
 class PlayerUI;
 class Observer;
-class GameEngine
+class GameEngine:public Observer, public Subject
 {
 public:
 
@@ -53,6 +54,7 @@ public:
 		return _PlayerUI;
 	}
 
+	void on_Event(const Event& event) override;
 
 private:
 	
@@ -70,7 +72,11 @@ private:
 	EnemySpawner* _EnemySpawner;
 	Observer* _PlayerUI;
 
-
+	TranformationMiniGame mini_Game;
+	//events
+	minigame_Active_State minigame_Active_Event;
+	bool minigame_Completed_Handled = false;
+	bool pending_MiniGame_Start = false;
 	//basic functions
 	void update(float deltatime);
 	void render();

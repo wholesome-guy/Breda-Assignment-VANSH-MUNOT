@@ -7,19 +7,38 @@ Shape::Shape(sf::Vector2f position, sf::Color colour):
 {
     init_Sprite(position, colour);
     _Player = GameEngine::get_Instance()->get_Player();
+    _GameEngine = GameEngine::get_Instance();
+}
+
+Shape::~Shape()
+{
+    _GameEngine->remove_Observer(this);
 }
 
 void Shape::render(sf::RenderTarget& target)
 {
 	target.draw(shape_Sprite);
-    mini_Game.render(target);
+    //mini_Game.render(target);
 }
 
 void Shape::update(float deltatime)
 {
     despawn(deltatime);
     collision();
-    mini_Game.update(deltatime);
+    //mini_Game.update(deltatime);
+}
+
+void Shape::on_Event(const Event& event)
+{
+    if (dynamic_cast<const minigame_Complete*>(&event))
+    {
+        is_MiniGame_Active = false;
+       
+        minigame_Interaction_State.state = false;
+        notify_Observers(minigame_Interaction_State);
+
+        is_Despawn = true;
+    }
 }
 
 bool Shape::get_Despawn()
@@ -60,39 +79,20 @@ void Shape::collision()
         minigame_Interaction_State.state = true;
         notify_Observers(minigame_Interaction_State);
 
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right) && !mini_Game.get_Is_Active())
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right) && !is_MiniGame_Active)
         {
-            mini_Game.start_Mini_Game();
 
             is_MiniGame_Active = true;
-            minigame_Active_Event.active = true;
-            notify_Observers(minigame_Active_Event);
+            notify_Observers(minigame_Start{});
+            minigame_Interaction_State.state = false;
+            notify_Observers(minigame_Interaction_State);
+
         }  
     }
     else
     {
         minigame_Interaction_State.state = false;
         notify_Observers(minigame_Interaction_State);
-    }
-
-    if (mini_Game.get_Is_Complete())
-    {
-
-        is_MiniGame_Active = false;
-        minigame_Active_Event.active = false;
-        notify_Observers(minigame_Active_Event);
-
-        minigame_Interaction_State.state = false;
-        notify_Observers(minigame_Interaction_State);
-
-        if (mini_Game.get_Is_Won())
-        {
-            std::cout << "Won" << "\n";
-        }
-        notify_Observers(minigame_Complete{});
-
-        is_Despawn = true;  
-        return;
     }
 }
 

@@ -58,6 +58,8 @@ void GameEngine::init_Entities()
 	_EnemySpawner->add_Observer(_Player);
 	_EnemySpawner->add_Observer(_PlayerUI);
 
+	//enemyspawner is an observer of gameengine
+	this->add_Observer(_EnemySpawner);
 
 	//Player Ui is the observer for Player
 	_Player->add_Observer(_PlayerUI);
@@ -91,6 +93,14 @@ void GameEngine::poll_Event()
 	}
 }
 
+void GameEngine::on_Event(const Event& event)
+{
+	if (dynamic_cast<const minigame_Start*>(&event))
+	{
+		pending_MiniGame_Start = true;
+	}
+}
+
 //unity update
 void GameEngine::update(float deltatime)
 {
@@ -98,6 +108,30 @@ void GameEngine::update(float deltatime)
 	{
 		e->update(deltatime);
 	}	
+
+	mini_Game.update(deltatime);
+
+	if (pending_MiniGame_Start)
+	{
+		pending_MiniGame_Start = false;
+		minigame_Completed_Handled = false;
+
+		mini_Game.start_Mini_Game();
+		minigame_Active_Event.active = true;
+		notify_Observers(minigame_Active_Event); 
+	}
+
+	if (mini_Game.get_Is_Complete() && !minigame_Completed_Handled)
+	{
+		minigame_Completed_Handled = true;
+		minigame_Active_Event.active = false;
+		notify_Observers(minigame_Active_Event);
+		if (mini_Game.get_Is_Won())
+		{
+			std::cout << "Won" << "\n";
+		}
+		notify_Observers(minigame_Complete{});
+	}
 }
 
 //render objects here
@@ -109,6 +143,7 @@ void GameEngine::render()
 	{
 		e->render(*game_Window);
 	}
+	mini_Game.render(*game_Window);
 
 	game_Window->display();
 }

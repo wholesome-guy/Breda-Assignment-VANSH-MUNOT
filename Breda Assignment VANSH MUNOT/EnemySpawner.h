@@ -6,7 +6,7 @@
 #include <random>
 #include "EventSystem.h"
 class Shape;
-
+class GameEngine;
 
 class EnemySpawner:public EntityBase,public Subject,public Observer
 {
@@ -46,10 +46,12 @@ private:
     // Container for spawned enemies
     std::vector<std::unique_ptr<Enemy>> _Enemies;
     std::vector<std::unique_ptr<Shape>> _Squares;
+
     //events
     kill_Count_Event kill_count;
-
     player_Health_Change player_Health_Event;
+
+    GameEngine* _GameEngine;
 
     //functions
     void init_Variables();
