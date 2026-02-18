@@ -105,7 +105,7 @@ void Sword::attack_Enemy_Collision()
             float angle_Difference = std::abs(angle_To_Enemy - weapon_RotationAngle);
 
             //check both sides of the vector, 45 + 45 = 90
-            if (angle_Difference < 60.f) // 120 cone
+            if (angle_Difference < 90.f) // 120 cone
             {
                 e->take_Damage(_Damage);
             }
