@@ -64,6 +64,9 @@ private:
     std::mt19937 rng
     { std::random_device{}()};
 
+    SFX_Event sfx_Event;
+    sf::SoundBuffer win;
+
     //events 
     terraforming_Percentage_Event terraforming_Percentage;
 

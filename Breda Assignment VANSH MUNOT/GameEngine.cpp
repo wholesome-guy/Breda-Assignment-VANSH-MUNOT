@@ -84,6 +84,8 @@ void GameEngine::init_Entities()
 	_EnemySpawner->add_Observer(_Player);
 	_EnemySpawner->add_Observer(_PlayerUI);
 	_EnemySpawner->add_Observer(_TileMap);
+	_EnemySpawner->add_Observer(this);
+
 
 	//enemyspawner is an observer of gameengine
 	this->add_Observer(_EnemySpawner);
@@ -97,6 +99,8 @@ void GameEngine::init_Entities()
 	
 	_TileMap->add_Observer(_PlayerUI);
 	_TileMap->add_Observer(this);
+
+	mini_Game.add_Observer(this);
 }
 
 void GameEngine::init_UI()
@@ -309,7 +313,7 @@ void GameEngine::game_Text_Render()
 		}
 		else
 		{
-			end_Text.setFillColor(sf::Color::Yellow);
+			end_Text.setFillColor(sf::Color::Green);
 			end_Text.setString("Terraforming Complete");
 		}
 		sf::FloatRect bounds = end_Text.getLocalBounds();

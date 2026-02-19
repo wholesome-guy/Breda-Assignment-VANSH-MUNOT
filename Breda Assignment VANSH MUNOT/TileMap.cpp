@@ -26,8 +26,10 @@ void TileMap::load_Textures()
         int y = (i / tileSet_1_Columns) * tile_Size;
         tile_1_Texture[i].loadFromFile("Assets/Player/Tile_1_PNG.png",false, sf::IntRect({ x, y }, { tile_Size, tile_Size }));
     }
-    //tile_0_Texture = sf::Texture(sf::Image("Assets/Player/Tile_0_PNG.png"));
-    //tile_1_Texture = sf::Texture(sf::Image("Assets/Player/Tile_1_PNG.png"));
+    
+
+    if (!win.loadFromFile("Assets/Sound/Win_MP3.mp3"))
+        std::cout << "Failed to load Dead\n";
 }
 
 void TileMap::init_Tiles()
@@ -93,9 +95,17 @@ void TileMap::trigger_Terraform(int terraforming_Factor)
     {
         is_Won = true;
 
+        sfx_Event.buffer = &win;
+        sfx_Event.volume = 100;
+        sfx_Event.pitch = 1;
+        sfx_Event.randomise_pitch = false;
+        notify_Observers(sfx_Event);
+
         game_Over event;
         event.state = 1;
         notify_Observers(event);
+
+        
     }
 }
 

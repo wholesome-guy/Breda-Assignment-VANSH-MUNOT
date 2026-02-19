@@ -75,6 +75,12 @@ void TranformationMiniGame::init_UI()
     round_Text.setPosition({ _Centre.x - 180.f * scale, _Centre.y - 180.f * scale });
     round_Text.setOutlineColor(sf::Color::Black);
     round_Text.setOutlineThickness(5.f);
+
+
+    if (!correct.loadFromFile("Assets/Sound/Correct_MP3.mp3"))
+        std::cout << "Failed to load correct\n";
+    if (!wrong.loadFromFile("Assets/Sound/Wrong_MP3.mp3"))
+        std::cout << "Failed to load wrong\n";
 }
 void TranformationMiniGame::start_Mini_Game()
 {
@@ -215,11 +221,27 @@ void TranformationMiniGame::on_Key_Pressed(bool in_Green_Zone)
     {
         successful_Presses++;
 
+
+        sfx_Event.buffer = &correct;
+        sfx_Event.volume = 100;
+        sfx_Event.pitch = 1;
+        sfx_Event.randomise_pitch = false;
+        notify_Observers(sfx_Event);
+
         result_Text.setString("GREAT!");
         result_Text.setFillColor(sf::Color::Green);
+
+        
+
+
     }
     else
     {
+        sfx_Event.buffer = &wrong;
+        sfx_Event.volume = 100;
+        sfx_Event.pitch = 1;
+        sfx_Event.randomise_pitch = false;
+        notify_Observers(sfx_Event);
 
         result_Text.setString("MISS!");
         result_Text.setFillColor(sf::Color::Red);

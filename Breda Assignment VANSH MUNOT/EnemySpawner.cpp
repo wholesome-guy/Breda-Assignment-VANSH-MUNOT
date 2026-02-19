@@ -20,6 +20,9 @@ void EnemySpawner::init_Variables()
 	spawn_Area_Max = { 2.f * static_cast<float>(window_Size.x) ,2.f * static_cast<float>(window_Size.y) };
 
 	_GameEngine = GameEngine::get_Instance();
+
+	if (!spawn.loadFromFile("Assets/Sound/Spawn_MP3.mp3"))
+		std::cout << "Failed to load Heal\n";
 }
 void EnemySpawner::update(float deltatime)
 {
@@ -152,6 +155,21 @@ void EnemySpawner::spawn_Square(int i)
 
 		//shape is oberserve of gameengine
 		_GameEngine->add_Observer(new_Shape.get());
+
+
+		sfx_Event.buffer = &spawn;
+		sfx_Event.volume = 100;
+		sfx_Event.pitch = 1;
+		sfx_Event.randomise_pitch = false;
+		notify_Observers(sfx_Event);
+
+		particle_System.position = _Enemies[i]->get_Position();
+		particle_System.count = 100;
+		particle_System.colour = sf::Color::Color(255, 101, 134);
+		particle_System.speed = 2000;
+		particle_System.lifetime = 5.f;
+		notify_Observers(particle_System);
+
 
 		_Squares.push_back(std::move(new_Shape));
 

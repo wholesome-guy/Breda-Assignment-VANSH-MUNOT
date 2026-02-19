@@ -54,8 +54,14 @@ private:
     kill_Count_Event kill_count;
     player_Health_Change player_Health_Event;
     kill_reduction_Terraforming_Time_Event reduce_Terraforming_Event;
+    SFX_Event sfx_Event;
+    particle_Emit_Event particle_System;
+
 
     GameEngine* _GameEngine;
+
+    sf::SoundBuffer spawn;
+
     //functions
     void init_Variables();
 

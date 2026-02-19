@@ -1,7 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <random>
-class TranformationMiniGame
+#include "EventSystem.h"
+#include<SFML/Audio.hpp>
+class TranformationMiniGame:public Subject
 {
 public:
     TranformationMiniGame();
@@ -65,6 +67,9 @@ private:
     sf::RectangleShape overlay;
     sf::RectangleShape background_Panel;
 
+    sf::SoundBuffer correct;
+    sf::SoundBuffer wrong;
+    SFX_Event sfx_Event;
 
 
     //functions
