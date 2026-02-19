@@ -35,7 +35,7 @@ void Shotgun::init_Sprite()
 
 void Shotgun::update(float deltatime)
 {
-    for (int i = 0; i < Bullets.size(); i++)
+    for (int i = 0; i < (int)Bullets.size(); i++)
     {
         Bullets[i]->update(deltatime);
 

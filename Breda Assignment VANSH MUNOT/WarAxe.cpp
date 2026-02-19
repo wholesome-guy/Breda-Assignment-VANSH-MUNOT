@@ -72,7 +72,7 @@ void WarAxe::attack_Animation_Update(float deltatime)
             float currentAngle = MathFunctions::Quint_Lerp(swing_Start_Angle, swing_End_Angle, t);
             weapon_Sprite.setRotation(sf::degrees(currentAngle));
 
-            float current_scale = MathFunctions::Lerp(0.2, 0.24, t);
+            float current_scale = MathFunctions::Lerp(0.2f, 0.24f, t);
             weapon_Scale({ current_scale,current_scale });
         }
         else

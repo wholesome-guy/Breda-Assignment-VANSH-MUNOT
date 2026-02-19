@@ -107,20 +107,20 @@ void Player::init_Character()
 {
     Penguin.character_Speed = 250.f;
     Penguin.max_character_Health = 150;
-    Penguin.character_Terraforming_Factor = 5;
+    Penguin.character_Terraforming_Factor = 25;
     Penguin.character_Texture = sf::Texture(sf::Image("Assets/Player/Penguin_PNG.png"));
     Penguin.character_Index = 0;
 
     Crocodile.character_Speed = 200.f;
     Crocodile.max_character_Health = 300;
-    Crocodile.character_Terraforming_Factor = 2;
+    Crocodile.character_Terraforming_Factor = 10;
     Crocodile.character_Texture = sf::Texture(sf::Image("Assets/Player/Crocodile_PNG.png"));
     Crocodile.character_Index = 1;
 
 
     Peacock.character_Speed = 350.f;
     Peacock.max_character_Health = 50;
-    Peacock.character_Terraforming_Factor = 10;
+    Peacock.character_Terraforming_Factor = 50;
     Peacock.character_Texture = sf::Texture(sf::Image("Assets/Player/Peacock_PNG.png"));
     Peacock.character_Index = 2;
 

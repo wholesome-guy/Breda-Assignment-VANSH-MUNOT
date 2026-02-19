@@ -32,7 +32,7 @@ void Pistol::init_Sprite()
 
 void Pistol::update(float deltatime)
 {
-    for (int i = 0; i < Bullets.size(); i++)
+    for (int i = 0; i < (int)Bullets.size(); i++)
     {
         Bullets[i]->update(deltatime);
 

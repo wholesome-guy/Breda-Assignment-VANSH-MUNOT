@@ -21,7 +21,7 @@ PlayerUI::PlayerUI():
 
 void PlayerUI::update(float deltatime)
 {
-    UI_Mover(ammo_Over_Text);
+    //UI_Mover(ammo_Over_Text);
     tranform_Text_Update(deltatime);
     interact_Text_Update(deltatime);
     //FPS_Counter(deltatime);
@@ -267,13 +267,13 @@ void PlayerUI::interact_Text_Update(float deltatime)
 void PlayerUI::UI_Mover(sf::Transformable& transform)
 {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
-        transform.move({ 0, -0.2 });
+        transform.move({ 0.f, -0.2f });
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
-        transform.move({ 0, 0.2 });
+        transform.move({ 0.f, 0.2f });
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
-        transform.move({ 0.2, 0 });
+        transform.move({ 0.2f, 0.f });
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
-        transform.move({ -0.2, 0 });
+        transform.move({ -0.2f, 0.f });
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
         std::cout << "Position: " << transform.getPosition().x << ", "

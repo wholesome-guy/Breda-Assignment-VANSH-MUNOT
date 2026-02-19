@@ -31,7 +31,7 @@ void GrenadeLauncher::init_Sprite()
 
 void GrenadeLauncher::update(float deltatime)
 {
-    for (int i = 0; i < Grenades.size(); i++)
+    for (int i = 0; i < (int)Grenades.size(); i++)
     {
         Grenades[i]->update(deltatime);
 

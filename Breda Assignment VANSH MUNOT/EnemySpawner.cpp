@@ -36,14 +36,14 @@ void EnemySpawner::update(float deltatime)
 			spawn_Timer = 0.0f; // Reset timer
 		}
 
-		for (int i = 0; i < _Enemies.size(); i++)
+		for (int i = 0; i < (int)_Enemies.size(); i++)
 		{
 			update_Enemy(i, deltatime);
 
 			erase_Enemy(i);
 		}
 	}
-	for (int i=0;i<_Squares.size();i++)
+	for (int i=0;i< (int)_Squares.size();i++)
 	{
 		_Squares[i]->update(deltatime);
 		erase_Square(i);

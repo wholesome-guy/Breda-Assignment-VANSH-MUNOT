@@ -31,7 +31,7 @@ void RPG::init_Sprite()
 
 void RPG::update(float deltatime)
 {
-    for (int i = 0; i < Missiles.size(); i++)
+    for (int i = 0; i < (int)Missiles.size(); i++)
     {
         Missiles[i]->update(deltatime);
 

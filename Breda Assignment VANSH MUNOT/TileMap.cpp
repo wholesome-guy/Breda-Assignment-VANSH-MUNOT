@@ -15,7 +15,8 @@ void TileMap::load_Textures()
     {
         int x = (i % tileSet_0_Columns) * tile_Size;
         int y = (i / tileSet_0_Columns) * tile_Size;
-        tile_0_Texture[i].loadFromFile("Assets/Player/Tile_0_PNG.png", false, sf::IntRect({ x, y }, { tile_Size, tile_Size }));
+        if (!tile_0_Texture[i].loadFromFile("Assets/Player/Tile_0_PNG.png", false, sf::IntRect({ x, y }, { tile_Size, tile_Size })))
+            std::cout << "Failed to load Tile_0 texture " << i << "\n";
     }
 
     // Load tileset 1
@@ -24,7 +25,8 @@ void TileMap::load_Textures()
     {
         int x = (i % tileSet_1_Columns) * tile_Size;
         int y = (i / tileSet_1_Columns) * tile_Size;
-        tile_1_Texture[i].loadFromFile("Assets/Player/Tile_1_PNG.png",false, sf::IntRect({ x, y }, { tile_Size, tile_Size }));
+        if (!tile_1_Texture[i].loadFromFile("Assets/Player/Tile_1_PNG.png", false, sf::IntRect({ x, y }, { tile_Size, tile_Size })))
+            std::cout << "Failed to load Tile_1 texture " << i << "\n";
     }
     
 
@@ -72,7 +74,7 @@ void TileMap::update(float deltatime)
     if (terraform_Timer >= terraform_Time)
     {
         terraform_Timer = 0.f;
-        trigger_Terraform(terraforming_Factor);
+        trigger_Terraform((int)terraforming_Factor);
 
     }
 
@@ -156,7 +158,7 @@ void TileMap::on_Event(const Event& event)
 {
     if (auto* data = dynamic_cast<const player_terraforming_Factor_Event*>(&event))
     {
-        terraforming_Factor = data->Terraforming_Factor;
+        terraforming_Factor = (float)data->Terraforming_Factor;
     }
     else if (dynamic_cast<const kill_reduction_Terraforming_Time_Event*>(&event))
     {

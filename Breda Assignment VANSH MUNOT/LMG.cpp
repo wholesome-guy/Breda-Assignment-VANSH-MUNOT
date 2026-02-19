@@ -32,7 +32,7 @@ void LMG::init_Sprite()
 
 void LMG::update(float deltatime)
 {
-    for (int i = 0; i < Bullets.size(); i++)
+    for (int i = 0; i < (int)Bullets.size(); i++)
     {
         Bullets[i]->update(deltatime);
 
