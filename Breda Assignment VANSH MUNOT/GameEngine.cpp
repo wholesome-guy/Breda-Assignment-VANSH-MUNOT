@@ -13,6 +13,7 @@ end_Text(game_Font,""), game_Text(game_Font,"")
 {
 	//instance is assigned
 	instance = this;
+
 	init_gameWindow();
 	init_Entities();
 }
@@ -20,44 +21,23 @@ end_Text(game_Font,""), game_Text(game_Font,"")
 GameEngine::~GameEngine()
 {
 	delete game_Window;
+
 	//clean instance
 	instance = nullptr;
 }
 
+#pragma region Intialiser
 //intialise the game window
 void GameEngine::init_gameWindow()
 {
 	_Window_Size = { 640,360 };
 	game_Window = new sf::RenderWindow(sf::VideoMode(_Window_Size), "Game");
-	mini_Game.init_UI();
 	//game_Window->setFramerateLimit(60);
 
-	game_Window->setMouseCursorVisible(false);
-	cursor_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Cursor_PNG.png"));
-	cursor_Sprite.setTexture(cursor_Texture,true);
-	cursor_Sprite.setOrigin({ cursor_Texture.getSize().x / 2.f,cursor_Texture.getSize().y / 2.f });
+	 _Camera = game_Window->getDefaultView();
+	 base_Center = _Camera.getCenter();
 
-	if (game_Font.openFromFile("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/SpecialElite-Regular.ttf"))
-	{
-		std::cout << "got the font\n";
-	}
-	game_Font.setSmooth(false);
-
-	end_Text = sf::Text(game_Font, "", 100);
-	end_Text.setStyle(sf::Text::Bold);
-	end_Text.setScale({ 0.5f,0.5f });
-
-	game_Text = sf::Text(game_Font, "", 60);
-	game_Text.setString("Press any key to Start");
-	game_Text.setFillColor(sf::Color::White);
-	game_Text.setOutlineColor(sf::Color::Black);
-	game_Text.setOutlineThickness(5.f);
-	game_Text.setStyle(sf::Text::Bold);
-	game_Text.setScale({ 0.5f,0.5f });
-	sf::FloatRect bounds = game_Text.getLocalBounds();
-	game_Text.setOrigin({ bounds.size.x / 2.f, bounds.size.y / 2.f });
-	game_Text.setPosition({ _Window_Size.x / 2.f, 300 });
-	
+	 init_UI();
 }
 
 
@@ -111,6 +91,40 @@ void GameEngine::init_Entities()
 	_TileMap->add_Observer(this);
 }
 
+void GameEngine::init_UI()
+{
+	mini_Game.init_UI();
+
+	game_Window->setMouseCursorVisible(false);
+	cursor_Texture = sf::Texture(sf::Image("Assets/UI/Cursor_PNG.png"));
+	cursor_Sprite.setTexture(cursor_Texture, true);
+	cursor_Sprite.setOrigin({ cursor_Texture.getSize().x / 2.f,cursor_Texture.getSize().y / 2.f });
+
+	if (game_Font.openFromFile("Assets/UI/SpecialElite-Regular.ttf"))
+	{
+		std::cout << "got the font\n";
+	}
+	game_Font.setSmooth(false);
+
+	end_Text = sf::Text(game_Font, "", 100);
+	end_Text.setStyle(sf::Text::Bold);
+	end_Text.setScale({ 0.5f,0.5f });
+
+	game_Text = sf::Text(game_Font, "", 60);
+	game_Text.setString("Press any key to Start");
+	game_Text.setFillColor(sf::Color::White);
+	game_Text.setOutlineColor(sf::Color::Black);
+	game_Text.setOutlineThickness(5.f);
+	game_Text.setStyle(sf::Text::Bold);
+	game_Text.setScale({ 0.5f,0.5f });
+	sf::FloatRect bounds = game_Text.getLocalBounds();
+	game_Text.setOrigin({ bounds.size.x / 2.f, bounds.size.y / 2.f });
+	game_Text.setPosition({ _Window_Size.x / 2.f, 300 });
+
+}
+
+#pragma endregion
+
 void GameEngine::run()
 {
 	// update and render loop when game is running
@@ -139,13 +153,10 @@ void GameEngine::poll_Event()
 		}
 		if (event->is<sf::Event::KeyPressed>())
 		{
-			if (event->getIf<sf::Event::KeyPressed>())
+			is_Game_Start = true;
+			if (is_Game_Over)
 			{
-				is_Game_Start = true;
-				if (is_Game_Over)
-				{
-					game_Window->close();
-				}
+				game_Window->close();
 			}
 		}
 	}
@@ -162,12 +173,18 @@ void GameEngine::on_Event(const Event& event)
 		is_Game_Over = true;
 		game_End_State = data->state;
 	}
+	else if (auto* data = dynamic_cast<const camera_Shake*>(&event))
+	{
+		shake.trigger(data->duration, data->magnitude);
+	}
 }
 
 //unity update
 void GameEngine::update(float deltatime)
 {
 	cursor();
+
+	cameraShake(deltatime);
 
 	if (is_Game_Over)
 	{
@@ -185,8 +202,6 @@ void GameEngine::update(float deltatime)
 
 }
 
-
-
 //render objects here
 void GameEngine::render()
 {
@@ -197,35 +212,7 @@ void GameEngine::render()
 		e->render(*game_Window);
 	}
 	mini_Game.render(*game_Window);
-
-	if (is_Game_Over)
-	{
-		if (game_End_State == 0)
-		{
-			end_Text.setFillColor(sf::Color::Red);
-			end_Text.setString("You Died");
-		}
-		else
-		{
-			end_Text.setFillColor(sf::Color::Yellow);
-			end_Text.setString("Terraforming Complete");
-		}
-		sf::FloatRect bounds = end_Text.getLocalBounds();
-		end_Text.setOrigin({ bounds.size.x / 2.f, bounds.size.y / 2.f });
-		end_Text.setPosition({ _Window_Size.x / 2.f, _Window_Size.y / 2.f });
-
-		game_Text.setString("Press any key to Quit");
-		game_Window->draw(game_Text);
-
-
-		game_Window->draw(end_Text);
-
-	}
-	if (!is_Game_Start)
-	{
-		game_Window->draw(game_Text);
-	}
-	
+	game_Text_Render();
 	game_Window->draw(cursor_Sprite);
 
 
@@ -268,6 +255,43 @@ void GameEngine::cursor()
 	sf::Vector2i mousePos = sf::Mouse::getPosition(*game_Window);
 	sf::Vector2f worldPos = game_Window->mapPixelToCoords(mousePos);
 	cursor_Sprite.setPosition(worldPos);
+}
+
+void GameEngine::cameraShake(float deltatime)
+{
+	sf::Vector2f offset = shake.update(deltatime);
+	_Camera.setCenter(base_Center + offset);
+	game_Window->setView(_Camera);
+}
+void GameEngine::game_Text_Render()
+{
+	if (is_Game_Over)
+	{
+		if (game_End_State == 0)
+		{
+			end_Text.setFillColor(sf::Color::Red);
+			end_Text.setString("You Died");
+		}
+		else
+		{
+			end_Text.setFillColor(sf::Color::Yellow);
+			end_Text.setString("Terraforming Complete");
+		}
+		sf::FloatRect bounds = end_Text.getLocalBounds();
+		end_Text.setOrigin({ bounds.size.x / 2.f, bounds.size.y / 2.f });
+		end_Text.setPosition({ _Window_Size.x / 2.f, _Window_Size.y / 2.f });
+
+		game_Text.setString("Press any key to Quit");
+		game_Window->draw(game_Text);
+
+
+		game_Window->draw(end_Text);
+
+	}
+	if (!is_Game_Start)
+	{
+		game_Window->draw(game_Text);
+	}
 }
 
 

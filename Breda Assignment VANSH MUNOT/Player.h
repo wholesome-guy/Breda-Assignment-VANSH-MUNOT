@@ -102,6 +102,7 @@ private:
 	player_terraforming_Factor_Event terraforming_Factor_Event;
 	game_Difficulty game_Difficulty_Event;
 	transformaion_Event transform_Event;
+	camera_Shake camera_Sake_Event;
 
 	//functions
 	void init_playerSprite();

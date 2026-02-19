@@ -159,4 +159,9 @@ struct transformaion_Event :Event
 {
     int state;
 };
+struct camera_Shake :Event 
+{
+    float duration;
+    float magnitude;
+};
 

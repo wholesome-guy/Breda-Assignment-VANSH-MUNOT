@@ -12,6 +12,7 @@
 #include "EnemySpawner.h"
 #include "TranformationMiniGame.h"
 #include "EventSystem.h"
+#include "CameraShake.h"
 class PlayerUI;
 class Observer;
 class TileMap;
@@ -65,6 +66,11 @@ private:
 	sf::Clock clock;
 	sf::RenderWindow* game_Window;
 	sf::Vector2u _Window_Size;
+
+	//xamera shake
+	CameraShake shake;
+	sf::View _Camera;
+	sf::Vector2f base_Center;
 	// a kind of array that stores smart pointer to enitity base classes 
 	// thus to all entity derived classes
 	std::vector<std::unique_ptr<EntityBase>> Entities;
@@ -96,14 +102,19 @@ private:
 	//basic functions
 	void update(float deltatime);
 	void render();
-	void cursor();
-	// intialises Entities
-	void init_Entities();
-
 	//poll = check events of the window
 	void poll_Event();
+
+	void cursor();
+	void cameraShake(float deltatime);
+
+	// intialises Entities
+	void init_Entities();
 	//intialise window
 	void init_gameWindow();
+	void init_UI();
+
+	void game_Text_Render();
 
 	void miniGame_Update(float deltatime);
 

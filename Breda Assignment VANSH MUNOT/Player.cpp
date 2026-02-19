@@ -568,6 +568,14 @@ void Player::player_Health(float _Damage)
 
     current_player_Health = std::clamp(current_player_Health, 0.f, max_player_Health);
 
+    if (_Damage > 0)
+    {
+        camera_Sake_Event.duration = 0.1f;
+        camera_Sake_Event.magnitude = 10;
+        notify_Observers(camera_Sake_Event);
+    }
+
+
     health_Event.health = current_player_Health;
     notify_Observers(health_Event);
 

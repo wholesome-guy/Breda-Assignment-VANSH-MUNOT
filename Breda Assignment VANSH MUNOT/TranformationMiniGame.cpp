@@ -61,14 +61,20 @@ void TranformationMiniGame::init_UI()
     letter_Text.setFillColor(sf::Color::Color(170, 17, 217));
     letter_Text.setStyle(sf::Text::Bold);
     letter_Text.setScale({ 0.5f,0.5f });
+    letter_Text.setOutlineColor(sf::Color::Black);
+    letter_Text.setOutlineThickness(5.f);
 
     result_Text = sf::Text(game_font, "", static_cast<unsigned int>(80 * scale));
     result_Text.setScale({ 0.5f,0.5f });
+    result_Text.setOutlineColor(sf::Color::Black);
+    result_Text.setOutlineThickness(5.f);
 
     round_Text = sf::Text(game_font, "", static_cast<unsigned int>(48 * scale));
     round_Text.setScale({ 0.5f,0.5f });
     round_Text.setFillColor(sf::Color::Color(242, 212, 85));
     round_Text.setPosition({ _Centre.x - 180.f * scale, _Centre.y - 180.f * scale });
+    round_Text.setOutlineColor(sf::Color::Black);
+    round_Text.setOutlineThickness(5.f);
 }
 void TranformationMiniGame::start_Mini_Game()
 {

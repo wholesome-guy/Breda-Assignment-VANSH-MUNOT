@@ -1,4 +1,6 @@
 ﻿#include "PlayerUI.h"
+#include <filesystem>
+
 
 PlayerUI::PlayerUI(): 
 	ammo_Text(game_Font, "x/x"),
@@ -114,18 +116,19 @@ void PlayerUI::init_UI()
     unsigned int base_Size_Large = static_cast<unsigned int>(80 * scale_Y);
     unsigned int base_Size_Small = static_cast<unsigned int>(60 * scale_Y);
 
-    if (game_Font.openFromFile("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/SpecialElite-Regular.ttf"))
+    if (game_Font.openFromFile("Assets/UI/SpecialElite-Regular.ttf"))
         std::cout << "got the font\n";
     game_Font.setSmooth(false);
 
+
     setup_Text(ammo_Text, std::to_string(15), base_Size_Large, sf::Color::Color(242, 212, 85), scale_Pos({ 55.f,   65.f }), { 0.5f,0.5f });
-    setup_Sprite(ammo_Sprite, ammo_Texture, "C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Ammo_UI_PNG.png", { 0.08f * scale_X, 0.08f * scale_Y }, scale_Pos({ 25.f, 88.f }),sf::Color::Color(242, 212, 85));
+    setup_Sprite(ammo_Sprite, ammo_Texture, "Assets/UI/Ammo_UI_PNG.png", { 0.08f * scale_X, 0.08f * scale_Y }, scale_Pos({ 25.f, 88.f }),sf::Color::Color(242, 212, 85));
 
     setup_Text(health_Text, std::to_string(150), base_Size_Large, sf::Color::Red, scale_Pos({ 56.f,   5.f }), { 0.5f,0.5f });
-    setup_Sprite(health_Sprite, health_Texture, "C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Heart_UI_PNG.png", { 0.08f * scale_X, 0.08f * scale_Y }, scale_Pos({ 27.f, 31.f }), sf::Color::Red);
+    setup_Sprite(health_Sprite, health_Texture, "Assets/UI/Heart_UI_PNG.png", { 0.08f * scale_X, 0.08f * scale_Y }, scale_Pos({ 27.f, 31.f }), sf::Color::Red);
 
     setup_Text(kill_Text, std::to_string(0), base_Size_Large, sf::Color::Color(170,17,217), {102.f, 15.f}, {0.5f,0.5f});
-    setup_Sprite(kill_Sprite, kill_Texture, "C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Skull_UI_PNG.png", { 0.08f * scale_X, 0.08f * scale_Y }, { 84.f, 28.f }, sf::Color::Color(170, 17, 217));
+    setup_Sprite(kill_Sprite, kill_Texture, "Assets/UI/Skull_UI_PNG.png", { 0.08f * scale_X, 0.08f * scale_Y }, { 84.f, 28.f }, sf::Color::Color(170, 17, 217));
 
     setup_Text(FPS_Text, "0", base_Size_Small, sf::Color::White, scale_Pos({ 1226.f, 688.f }), { 0.5f, 0.5f });
     setup_Text(interact_Text, "Left Click", base_Size_Large, sf::Color::Color(242, 212, 85), { 255, 51.2991f }, {0.5f,0.5f});
@@ -267,6 +270,8 @@ void PlayerUI::setup_Text(sf::Text& text, const std::string& content, unsigned i
     text.setFillColor(color);
     text.setPosition(position);
     text.setScale(scale);
+    text.setOutlineColor(sf::Color::Black);  // add this
+    text.setOutlineThickness(5.f);
 }
 
 // Helper function to setup sprite elements
@@ -281,4 +286,5 @@ void PlayerUI::setup_Sprite(sf::Sprite& sprite, sf::Texture& texture, const std:
     sprite.setOrigin({ static_cast<float>(texture.getSize().x / 2),
                       static_cast<float>(texture.getSize().y / 2) });
     sprite.setColor(color);
+    
 }
