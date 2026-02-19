@@ -39,11 +39,18 @@ private:
 	sf::Text terraforming_Percentage_Text;
 
 	sf::Text interact_Text;
+	sf::Text transform_Text;
+
+	bool is_tranform_Complete = false;
+	float transform_Text_Time = 2;
+	float transform_Text_Timer = 0;
 
 	bool is_Bar_Visible = false;
 	float bar_Size_Offset;
 
 	bool is_InContact_Interactable = false;
+	float InContact_Interactable_Text_Time = 2;
+	float InContact_Interactable_Text_Timer = 0;
 
 	sf::RenderWindow* game_Window;
 
@@ -68,6 +75,9 @@ private:
 	void setup_Sprite(sf::Sprite& sprite, sf::Texture& texture, const std::string& filepath,
 		const sf::Vector2f& scale, const sf::Vector2f& position,
 		const sf::Color& color = sf::Color::White);
+
+	void tranform_Text_Update(float deltatime);
+	void interact_Text_Update(float deltatime);
 
 
 	void UI_Mover(sf::Transformable& transform);

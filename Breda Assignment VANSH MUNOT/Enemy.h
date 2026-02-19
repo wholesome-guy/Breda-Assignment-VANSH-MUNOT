@@ -10,7 +10,7 @@ class Enemy: public Subject,public Observer
 {
 public:
 
-	Enemy();
+	Enemy(float,float,sf::Vector2f);
 	~Enemy() = default;
 
 	//core loop
@@ -42,8 +42,8 @@ private:
 	float max_enemy_Health;
 	float enemy_Damage;
 
-	float damage_Multiplier = 1;
-	float health_Multiplier = 1;
+	//float damage_Multiplier = 1;
+	//float health_Multiplier = 1;
 
 	bool Despawning = false;
 	bool is_Dead = false;
@@ -84,8 +84,8 @@ private:
 	bool knockback_Applied = false;
 
 	//functions
-	void init_Variables();
-	void init_Sprite();
+	void init_Variables(float, float);
+	void init_Sprite(sf::Vector2f);
 	void random_Enemy_Type();
 
 	void direction_Calculate();

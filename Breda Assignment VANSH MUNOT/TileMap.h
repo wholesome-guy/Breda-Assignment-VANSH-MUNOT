@@ -28,11 +28,17 @@ public:
     
     void on_Event(const Event& event) override;
 
+    void set_MiniGame_Active(bool);
+
 private:
     int tile_Size = 16;
-    int _Columns = 672 / tile_Size; // 40
-    int _Rows = 392 / tile_Size; // 22
-    int total_Tiles = _Columns * _Rows;     // 880
+    int _Columns = 672 / tile_Size; 
+    int _Rows = 392 / tile_Size; 
+    int total_Tiles = _Columns * _Rows; 
+
+    int tileSet_0_Columns = 4;
+    int tileSet_0_Rows = 4;
+    int total_Tiles_0 = tileSet_0_Columns * tileSet_0_Rows;
 
      sf::Texture  tile_0_Texture;
      sf::Texture  tile_1_Texture;
@@ -47,6 +53,7 @@ private:
 
     int tile_1_Count = 0;
     bool  is_Won = false;
+    bool is_MiniGame_Active = false;
 
     std::mt19937 rng
     { std::random_device{}()};

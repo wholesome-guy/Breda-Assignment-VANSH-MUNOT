@@ -155,4 +155,8 @@ struct game_Over :Event
 {
     int state;
 };
+struct transformaion_Event :Event 
+{
+    int state;
+};
 

@@ -57,7 +57,7 @@ private:
 	character_Values Crocodile;
 	character_Values Peacock;
 	int current_Character;
-	int last_Character = -1;
+	int last_Character = 0;
 
 	float invincibility_Time;
 	float invincibility_Timer;
@@ -73,7 +73,7 @@ private:
 	Weapon* _Pistol = nullptr;
 	Weapon* _Grenade_Launcher = nullptr;
 	Weapon* _Shotgun = nullptr;
-	int last_Weapon = -1;
+	int last_Weapon = 0;
 
 	EnemySpawner* _EnemySpawner;
 	bool can_Attack = true;
@@ -89,6 +89,7 @@ private:
 
 	bool can_Interact_Square;
 
+	//randomiser
 	std::mt19937 rng;
 	std::random_device rd ;
 
@@ -100,6 +101,7 @@ private:
 	weapon_State weapon_State_Event;
 	player_terraforming_Factor_Event terraforming_Factor_Event;
 	game_Difficulty game_Difficulty_Event;
+	transformaion_Event transform_Event;
 
 	//functions
 	void init_playerSprite();
@@ -120,7 +122,7 @@ private:
 	void player_Invincibility(float deltatime);
 
 	void weapon_Cooldown(float deltatime);
-	void transform_Weapon();
+	void transform_Weapon(bool);
 	void weapon_Transformation_Cooldown(float deltatime);
 	void weapon_Assigner(Weapon* weapon);
 

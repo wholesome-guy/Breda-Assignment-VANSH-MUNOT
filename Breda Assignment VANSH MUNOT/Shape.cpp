@@ -79,7 +79,7 @@ void Shape::collision()
         minigame_Interaction_State.state = true;
         notify_Observers(minigame_Interaction_State);
 
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right) && !is_MiniGame_Active)
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && !is_MiniGame_Active)
         {
 
             is_MiniGame_Active = true;

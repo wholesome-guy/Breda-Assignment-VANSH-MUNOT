@@ -83,7 +83,7 @@ private:
 	sf::Sprite cursor_Sprite;
 
 	sf::Font game_Font;
-	sf::Text start_Text;
+	sf::Text game_Text;
 	sf::Text end_Text;
 
 	bool minigame_Completed_Handled = false;

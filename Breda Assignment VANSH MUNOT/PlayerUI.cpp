@@ -9,7 +9,8 @@ PlayerUI::PlayerUI():
     kill_Sprite(kill_Texture),
     FPS_Text(game_Font,"0"),
     interact_Text(game_Font,"press f"),
-    terraforming_Percentage_Text(game_Font,"0")
+    terraforming_Percentage_Text(game_Font,"0"), 
+    transform_Text(game_Font,"")
 {
     _Player = GameEngine::get_Instance()->get_Player();
 	init_UI();
@@ -17,7 +18,9 @@ PlayerUI::PlayerUI():
 
 void PlayerUI::update(float deltatime)
 {
-    //UI_Mover(kill_Sprite);
+    UI_Mover(interact_Text);
+    tranform_Text_Update(deltatime);
+    interact_Text_Update(deltatime);
     //FPS_Counter(deltatime);
 
 }
@@ -80,6 +83,21 @@ void PlayerUI::on_Event(const Event& event)
             terraforming_Percentage_Text.setFillColor(sf::Color::Green);
         }
     }
+    else if (auto* data = dynamic_cast<const transformaion_Event*>(&event))
+    {
+        is_tranform_Complete = true;
+        if (data->state == 0)
+        {
+            transform_Text.setString("Weapon Transformed");
+            transform_Text.setPosition({ 121, 296 });
+        }
+        else
+        {
+            transform_Text.setString("Character Transformed");
+            transform_Text.setPosition({81,296});
+
+        }
+    }
 
 }
 
@@ -110,24 +128,22 @@ void PlayerUI::init_UI()
     setup_Sprite(kill_Sprite, kill_Texture, "C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/Skull_UI_PNG.png", { 0.08f * scale_X, 0.08f * scale_Y }, { 84.f, 28.f }, sf::Color::Color(170, 17, 217));
 
     setup_Text(FPS_Text, "0", base_Size_Small, sf::Color::White, scale_Pos({ 1226.f, 688.f }), { 0.5f, 0.5f });
-    setup_Text(interact_Text, "Right Click", base_Size_Large, sf::Color::Color(170, 17, 217), scale_Pos({ 510.f,  635.f }), { 0.5f,0.5f });
+    setup_Text(interact_Text, "Left Click", base_Size_Large, sf::Color::Color(242, 212, 85), { 255, 51.2991f }, {0.5f,0.5f});
 
     setup_Text(terraforming_Percentage_Text, "0%", base_Size_Large, sf::Color::Red, { 304.f, 10.f }, { 0.5f, 0.5f });
 
     cooldown_Bar.setFillColor(sf::Color::Color(242, 212, 85));
+
+    setup_Text(transform_Text, "", base_Size_Large*2, sf::Color::Color(242, 212, 85), { 145.f, 296.f }, { 0.5f, 0.5f });
+
 }
 
 void PlayerUI::cooldown_Bar_Update(float value, float mulitplier, sf::Color colour)
 {
-
-        sf::Vector2f offset = { -20,-30 };
-
-        cooldown_Bar.setPosition(_Player->get_Position() + offset);
-
-        cooldown_Bar.setSize({ value * mulitplier,5 });
-
-        cooldown_Bar.setFillColor(colour);
-
+    sf::Vector2f offset = { -20,-30 };
+    cooldown_Bar.setPosition(_Player->get_Position() + offset);
+    cooldown_Bar.setSize({ value * mulitplier,5 });
+    cooldown_Bar.setFillColor(colour);
 }
 
 
@@ -155,6 +171,13 @@ void PlayerUI::render_UI(sf::RenderTarget& target)
     {
         target.draw(interact_Text);
     }
+
+
+    if (is_tranform_Complete)
+    {
+        target.draw(transform_Text);
+    }
+
 }
 
 
@@ -188,6 +211,51 @@ void PlayerUI::FPS_Counter(float deltatime)
     }
 }
 
+
+
+void PlayerUI::tranform_Text_Update(float deltatime)
+{
+    if (!is_tranform_Complete)
+    {
+        return;
+    }
+    transform_Text_Timer += deltatime;
+    if (transform_Text_Timer > transform_Text_Time)
+    {
+        is_tranform_Complete = false;
+        transform_Text_Timer = 0;
+    }
+}
+
+void PlayerUI::interact_Text_Update(float deltatime)
+{
+    if (!is_InContact_Interactable)
+    {
+        return;
+    }
+    InContact_Interactable_Text_Timer += deltatime;
+    if (InContact_Interactable_Text_Timer > InContact_Interactable_Text_Time)
+    {
+        is_InContact_Interactable = false;
+        InContact_Interactable_Text_Timer = 0;
+    }
+}
+
+void PlayerUI::UI_Mover(sf::Transformable& transform)
+{
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
+        transform.move({ 0, -0.2 });
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
+        transform.move({ 0, 0.2 });
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
+        transform.move({ 0.2, 0 });
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
+        transform.move({ -0.2, 0 });
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
+        std::cout << "Position: " << transform.getPosition().x << ", "
+        << transform.getPosition().y << std::endl;
+}
 // Helper function to setup text elements
 void PlayerUI::setup_Text(sf::Text& text, const std::string& content, unsigned int size,
     const sf::Color& color, const sf::Vector2f& position,
@@ -213,20 +281,4 @@ void PlayerUI::setup_Sprite(sf::Sprite& sprite, sf::Texture& texture, const std:
     sprite.setOrigin({ static_cast<float>(texture.getSize().x / 2),
                       static_cast<float>(texture.getSize().y / 2) });
     sprite.setColor(color);
-}
-
-void PlayerUI::UI_Mover(sf::Transformable& transform)
-{
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
-        transform.move({ 0, -1 });
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
-        transform.move({ 0, 1 });
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
-        transform.move({ 1, 0 });
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
-        transform.move({ -1, 0 });
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
-        std::cout << "Position: " << transform.getPosition().x << ", "
-        << transform.getPosition().y << std::endl;
 }

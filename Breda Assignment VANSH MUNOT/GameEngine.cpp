@@ -9,7 +9,7 @@ GameEngine* GameEngine::instance = nullptr;
 
 //constructor -- unity start method
 GameEngine::GameEngine() :cursor_Sprite(cursor_Texture),
-end_Text(game_Font,""),start_Text(game_Font,"")
+end_Text(game_Font,""), game_Text(game_Font,"")
 {
 	//instance is assigned
 	instance = this;
@@ -47,16 +47,16 @@ void GameEngine::init_gameWindow()
 	end_Text.setStyle(sf::Text::Bold);
 	end_Text.setScale({ 0.5f,0.5f });
 
-	start_Text = sf::Text(game_Font, "", 60);
-	start_Text.setString("Press Enter to Start");
-	start_Text.setFillColor(sf::Color::White);
-	start_Text.setOutlineColor(sf::Color::Black);
-	start_Text.setOutlineThickness(5.f);
-	start_Text.setStyle(sf::Text::Bold);
-	start_Text.setScale({ 0.5f,0.5f });
-	sf::FloatRect bounds = start_Text.getLocalBounds();
-	start_Text.setOrigin({ bounds.size.x / 2.f, bounds.size.y / 2.f });
-	start_Text.setPosition({ _Window_Size.x / 2.f, 300 });
+	game_Text = sf::Text(game_Font, "", 60);
+	game_Text.setString("Press any key to Start");
+	game_Text.setFillColor(sf::Color::White);
+	game_Text.setOutlineColor(sf::Color::Black);
+	game_Text.setOutlineThickness(5.f);
+	game_Text.setStyle(sf::Text::Bold);
+	game_Text.setScale({ 0.5f,0.5f });
+	sf::FloatRect bounds = game_Text.getLocalBounds();
+	game_Text.setOrigin({ bounds.size.x / 2.f, bounds.size.y / 2.f });
+	game_Text.setPosition({ _Window_Size.x / 2.f, 300 });
 	
 }
 
@@ -139,9 +139,13 @@ void GameEngine::poll_Event()
 		}
 		if (event->is<sf::Event::KeyPressed>())
 		{
-			if (event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::Enter)
+			if (event->getIf<sf::Event::KeyPressed>())
 			{
 				is_Game_Start = true;
+				if (is_Game_Over)
+				{
+					game_Window->close();
+				}
 			}
 		}
 	}
@@ -209,12 +213,17 @@ void GameEngine::render()
 		sf::FloatRect bounds = end_Text.getLocalBounds();
 		end_Text.setOrigin({ bounds.size.x / 2.f, bounds.size.y / 2.f });
 		end_Text.setPosition({ _Window_Size.x / 2.f, _Window_Size.y / 2.f });
+
+		game_Text.setString("Press any key to Quit");
+		game_Window->draw(game_Text);
+
+
 		game_Window->draw(end_Text);
 
 	}
 	if (!is_Game_Start)
 	{
-		game_Window->draw(start_Text);
+		game_Window->draw(game_Text);
 	}
 	
 	game_Window->draw(cursor_Sprite);
@@ -236,6 +245,7 @@ void GameEngine::miniGame_Update(float deltatime)
 		mini_Game.start_Mini_Game();
 		minigame_Active_Event.active = true;
 		notify_Observers(minigame_Active_Event);
+		_TileMap->set_MiniGame_Active(true);
 	}
 
 	if (mini_Game.get_Is_Complete() && !minigame_Completed_Handled)
@@ -243,6 +253,8 @@ void GameEngine::miniGame_Update(float deltatime)
 		minigame_Completed_Handled = true;
 		minigame_Active_Event.active = false;
 		notify_Observers(minigame_Active_Event);
+		_TileMap->set_MiniGame_Active(false);
+
 		if (mini_Game.get_Is_Won())
 		{
 			notify_Observers(miniGame_Win_Event);

@@ -68,6 +68,8 @@ void EnemySpawner::on_Event(const Event& event)
 	{
 		spawn_Timer = data->spawn_Time;
 		max_Enemies = data->max_Enemies;
+		damage_Multiplier = data->damage_Multiplier;
+		health_Multiplier = data->Health_Multiplier;
 
 	}
 }
@@ -76,9 +78,7 @@ void EnemySpawner::spawn_Enemy()
 {
 	Player* player = GameEngine::get_Instance()->get_Player();
 
-	auto new_Enemy = std::make_unique<Enemy>();
-
-	new_Enemy->set_Position(get_Random_Spawn_Position());
+	auto new_Enemy = std::make_unique<Enemy>(damage_Multiplier, health_Multiplier, get_Random_Spawn_Position());
 
 	//adding observer, player and enemyspawner are observers of enemy
 	new_Enemy->add_Observer(player);
@@ -120,6 +120,7 @@ void EnemySpawner::erase_Enemy(int i)
 		player_Health_Event._Change = -5.f;
 		notify_Observers(player_Health_Event);
 
+		//on kill reduce terraforming time
 		notify_Observers(reduce_Terraforming_Event);
 	}
 }

@@ -29,7 +29,7 @@ void TileMap::init_Tiles()
 
 void TileMap::update(float deltatime)
 {
-    if (is_Won) 
+    if (is_Won ||is_MiniGame_Active) 
     { 
         return; 
     }
@@ -118,4 +118,9 @@ void TileMap::on_Event(const Event& event)
     {
         on_Kill();
     }
+}
+
+void TileMap::set_MiniGame_Active(bool state)
+{
+    is_MiniGame_Active = state;
 }

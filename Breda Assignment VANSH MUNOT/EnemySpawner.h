@@ -31,6 +31,9 @@ private:
     int current_Enemy_Count;
     int kill_Enemy_Count;
 
+    float damage_Multiplier=1;
+    float health_Multiplier=1;
+
     bool is_MiniGame_Active = false;
     // Spawn area boundaries
     sf::Vector2f spawn_Area_Min;

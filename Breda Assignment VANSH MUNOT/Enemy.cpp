@@ -6,16 +6,16 @@
 #include "Player.h" 
 #include "EnemySpawner.h"
 
-Enemy::Enemy() :enemy_Sprite(enemy_Texture)
+Enemy::Enemy(float damage_Multiplier, float health_Multiplier, sf::Vector2f position) :enemy_Sprite(enemy_Texture)
 {
     random_Enemy_Type();
-    init_Variables();
-    init_Sprite();
+    init_Variables(damage_Multiplier, health_Multiplier);
+    init_Sprite(position);
 
 }
 #pragma region Intialise
 
-void Enemy::init_Variables()
+void Enemy::init_Variables(float damage_Multiplier, float health_Multiplier)
 {
     //random type selected for two category of enemies
     switch (type)
@@ -46,7 +46,7 @@ void Enemy::init_Variables()
     despawn_Time = 0.25f;
     despawn_Timer = 0;
 }
-void Enemy::init_Sprite()
+void Enemy::init_Sprite(sf::Vector2f position)
 {
     //sprite properties
     switch (type)
@@ -62,14 +62,14 @@ void Enemy::init_Sprite()
     }
     //setting sprite properties
     enemy_Sprite.setTexture(enemy_Texture, true);
-    enemy_Sprite.setPosition({ 100.f, 100.f });
+    enemy_Sprite.setPosition(position);
     enemy_Sprite.setScale({ 0.25f, 0.25f });
     enemy_Sprite.setOrigin({ static_cast<float>(enemy_Texture.getSize().x / 2),static_cast<float>(enemy_Texture.getSize().y / 2) });
 
     //health bar sprite
     health_Bar.setFillColor(sf::Color::Red);
 
-    background_Bar.setFillColor(sf::Color::Color(255,255,255,150));
+    background_Bar.setFillColor(sf::Color::Color(0,0,0,100));
     background_Bar.setSize({ max_enemy_Health * 0.5f,5 });
 
 }
@@ -131,7 +131,7 @@ void Enemy::on_Event(const Event& event)
     }
     else if (auto* data = dynamic_cast<const game_Difficulty*>(&event))
     {
-        damage_Multiplier = data->damage_Multiplier;
+        /*damage_Multiplier = data->damage_Multiplier;
         health_Multiplier = data->Health_Multiplier;
 
         switch (type)
@@ -145,7 +145,7 @@ void Enemy::on_Event(const Event& event)
             enemy_Damage = 30 * damage_Multiplier;
             break;
         }
-        enemy_Health = max_enemy_Health;
+        enemy_Health = max_enemy_Health;*/
     }
 }
 #pragma endregion

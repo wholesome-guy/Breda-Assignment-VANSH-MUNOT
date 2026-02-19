@@ -323,7 +323,7 @@ void Player::weapon_Transformation_Cooldown(float deltatime)
             is_weapon_Cooldown = true;
 
             weapon_Transform_Timer = 0;
-            transform_Weapon();
+            transform_Weapon(true);
             //turn off rendering of bar
             weapon_State_Event.state = false;
             notify_Observers(weapon_State_Event);
@@ -331,7 +331,7 @@ void Player::weapon_Transformation_Cooldown(float deltatime)
     }
 }
 
-void Player::transform_Weapon()
+void Player::transform_Weapon(bool text_visble)
 {
         //get seed
         //std::random_device rd;
@@ -416,6 +416,12 @@ void Player::transform_Weapon()
         //ui event
         ammo_Event.ammo = current_weapon_Ammo;
         notify_Observers(ammo_Event);
+        if (text_visble)
+        {
+            transform_Event.state = 0;
+            notify_Observers(transform_Event);
+        }
+
 }
 
 void Player::weapon_Assigner(Weapon* weapon)
@@ -452,6 +458,7 @@ void Player::character_Transform()
 
     case 1:
         character_Assigner(Crocodile, last_Position);
+
         game_Difficulty_Event.damage_Multiplier = 2;
         game_Difficulty_Event.Health_Multiplier = 2;
         game_Difficulty_Event.max_Enemies = 50;
@@ -462,6 +469,7 @@ void Player::character_Transform()
 
     case 2:
         character_Assigner(Peacock, last_Position);
+
         game_Difficulty_Event.damage_Multiplier = 0.75;
         game_Difficulty_Event.Health_Multiplier = 1.5;
         game_Difficulty_Event.max_Enemies = 25;
@@ -471,7 +479,13 @@ void Player::character_Transform()
         break;
     }
     last_Character = random;
-    transform_Weapon();
+
+    //ui text for transformation
+    transform_Event.state = 1;
+    notify_Observers(transform_Event);
+
+
+    transform_Weapon(false);
 }
 
 void Player::character_Assigner(character_Values character, sf::Vector2f position)
