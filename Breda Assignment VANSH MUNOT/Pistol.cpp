@@ -20,7 +20,7 @@ void Pistol::init_Variables()
 void Pistol::init_Sprite()
 {
     //sprite
-    weapon_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Pistol_PNG.png"));
+    weapon_Texture = sf::Texture(sf::Image("Assets/Player/Pistol_PNG.png"));
     weapon_Sprite.setTexture(weapon_Texture, true);
     weapon_Sprite.setOrigin({ 10,17 });
     weapon_Sprite.setPosition({ 100,100 });

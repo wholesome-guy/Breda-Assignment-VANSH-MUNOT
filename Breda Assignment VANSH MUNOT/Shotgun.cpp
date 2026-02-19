@@ -27,7 +27,7 @@ void Shotgun::init_Variables()
 void Shotgun::init_Sprite()
 {
     //sprite
-    weapon_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Shotgun_PNG.png"));
+    weapon_Texture = sf::Texture(sf::Image("Assets/Player/Shotgun_PNG.png"));
     weapon_Sprite.setTexture(weapon_Texture, true);
     weapon_Sprite.setOrigin({ 4,8 });
     weapon_Sprite.setPosition({ 100,100 });

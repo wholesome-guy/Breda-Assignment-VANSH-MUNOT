@@ -52,11 +52,11 @@ void Enemy::init_Sprite(sf::Vector2f position)
     switch (type)
     {
     case 0:
-        enemy_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Enemy_0_PNG.png"));
+        enemy_Texture = sf::Texture(sf::Image("Assets/Player/Enemy_0_PNG.png"));
 
         break;
     case 1:
-        enemy_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Enemy_1_PNG.png"));
+        enemy_Texture = sf::Texture(sf::Image("Assets/Player/Enemy_1_PNG.png"));
 
         break;
     }

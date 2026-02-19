@@ -49,7 +49,7 @@ bool Shape::get_Despawn()
 
 void Shape::init_Sprite(sf::Vector2f position)
 {
-    square_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Square_PNG.png"));
+    square_Texture = sf::Texture(sf::Image("Assets/Player/Square_PNG.png"));
 
     //setting sprite properties
     shape_Sprite.setTexture(square_Texture, true);

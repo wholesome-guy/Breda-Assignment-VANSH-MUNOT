@@ -109,6 +109,8 @@ void GameEngine::init_UI()
 	end_Text = sf::Text(game_Font, "", 100);
 	end_Text.setStyle(sf::Text::Bold);
 	end_Text.setScale({ 0.5f,0.5f });
+	end_Text.setOutlineColor(sf::Color::Black);
+	end_Text.setOutlineThickness(5.f);
 
 	game_Text = sf::Text(game_Font, "", 60);
 	game_Text.setString("Press any key to Start");
@@ -207,10 +209,17 @@ void GameEngine::render()
 {
 	game_Window->clear();
 
-	for (auto& e : Entities)
+	if (is_Game_Start)
 	{
-		e->render(*game_Window);
+		if (!is_Game_Over)
+		{
+			for (auto& e : Entities)
+			{
+				e->render(*game_Window);
+			}
+		}
 	}
+	
 	mini_Game.render(*game_Window);
 	game_Text_Render();
 	game_Window->draw(cursor_Sprite);

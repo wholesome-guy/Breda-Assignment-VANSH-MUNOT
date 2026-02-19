@@ -29,7 +29,7 @@ void Mace::init_Variables()
 
 void Mace::init_Sprite()
 {
-    weapon_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Mace_PNG.png"));
+    weapon_Texture = sf::Texture(sf::Image("Assets/Player/Mace_PNG.png"));
     weapon_Sprite.setTexture(weapon_Texture, true);
     weapon_Sprite.setOrigin({ 161,301 });
     weapon_Sprite.setPosition({ 100,100 });

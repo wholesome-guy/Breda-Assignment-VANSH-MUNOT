@@ -53,7 +53,7 @@ void TranformationMiniGame::init_UI()
     white_Bar.setOrigin({ 6.f * scale, 15.f * scale });
     white_Bar.setFillColor(sf::Color::White);
 
-    if (game_font.openFromFile("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/UI/SpecialElite-Regular.ttf"))
+    if (game_font.openFromFile("Assets/UI/SpecialElite-Regular.ttf"))
         std::cout << "got the font\n";
     game_font.setSmooth(false);
 

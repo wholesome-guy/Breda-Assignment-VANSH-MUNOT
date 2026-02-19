@@ -19,7 +19,7 @@ void GrenadeLauncher::init_Variables()
 void GrenadeLauncher::init_Sprite()
 {
     //sprrite
-    weapon_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Grenade_Launcher_PNG.png"));
+    weapon_Texture = sf::Texture(sf::Image("Assets/Player/Grenade_Launcher_PNG.png"));
     weapon_Sprite.setTexture(weapon_Texture, true);
     weapon_Sprite.setOrigin({ 15,13 });
     weapon_Sprite.setPosition({ 100,100 });

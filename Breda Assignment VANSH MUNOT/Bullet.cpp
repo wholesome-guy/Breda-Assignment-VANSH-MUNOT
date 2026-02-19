@@ -25,7 +25,7 @@ void Bullet::init_Variables(float damage, float range)
 void Bullet::init_Sprite(sf::Vector2f position, sf::Angle rotation)
 {
 	//sprite 
-	projectile_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Bullet_PNG.png"));
+	projectile_Texture = sf::Texture(sf::Image("Assets/Player/Bullet_PNG.png"));
 	projectile_Sprite.setTexture(projectile_Texture,true);
 	projectile_Sprite.setScale({ 1,1 });
 	projectile_Sprite.setOrigin({ static_cast<float>(projectile_Texture.getSize().x / 2),static_cast<float>(projectile_Texture.getSize().y / 2) });

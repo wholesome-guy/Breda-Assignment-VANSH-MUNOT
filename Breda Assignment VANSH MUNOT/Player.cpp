@@ -90,20 +90,20 @@ void Player::init_Character()
     Penguin.character_Speed = 250.f;
     Penguin.max_character_Health = 150;
     Penguin.character_Terraforming_Factor = 2;
-    Penguin.character_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Penguin_PNG.png"));
+    Penguin.character_Texture = sf::Texture(sf::Image("Assets/Player/Penguin_PNG.png"));
     Penguin.character_Index = 0;
 
     Crocodile.character_Speed = 150.f;
     Crocodile.max_character_Health = 300;
     Crocodile.character_Terraforming_Factor = 1;
-    Crocodile.character_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Crocodile_PNG.png"));
+    Crocodile.character_Texture = sf::Texture(sf::Image("Assets/Player/Crocodile_PNG.png"));
     Crocodile.character_Index = 1;
 
 
     Peacock.character_Speed = 350.f;
     Peacock.max_character_Health = 50;
     Peacock.character_Terraforming_Factor = 5;
-    Peacock.character_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Peacock_PNG.png"));
+    Peacock.character_Texture = sf::Texture(sf::Image("Assets/Player/Peacock_PNG.png"));
     Peacock.character_Index = 2;
 
 

@@ -15,7 +15,7 @@ void TileMap::load_Textures()
     {
         int x = (i % tileSet_0_Columns) * tile_Size;
         int y = (i / tileSet_0_Columns) * tile_Size;
-        tile_0_Texture[i].loadFromFile("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Tile_0_PNG.png", false, sf::IntRect({ x, y }, { tile_Size, tile_Size }));
+        tile_0_Texture[i].loadFromFile("Assets/Player/Tile_0_PNG.png", false, sf::IntRect({ x, y }, { tile_Size, tile_Size }));
     }
 
     // Load tileset 1
@@ -24,10 +24,10 @@ void TileMap::load_Textures()
     {
         int x = (i % tileSet_1_Columns) * tile_Size;
         int y = (i / tileSet_1_Columns) * tile_Size;
-        tile_1_Texture[i].loadFromFile("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Tile_1_PNG.png",false, sf::IntRect({ x, y }, { tile_Size, tile_Size }));
+        tile_1_Texture[i].loadFromFile("Assets/Player/Tile_1_PNG.png",false, sf::IntRect({ x, y }, { tile_Size, tile_Size }));
     }
-    //tile_0_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Tile_0_PNG.png"));
-    //tile_1_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Tile_1_PNG.png"));
+    //tile_0_Texture = sf::Texture(sf::Image("Assets/Player/Tile_0_PNG.png"));
+    //tile_1_Texture = sf::Texture(sf::Image("Assets/Player/Tile_1_PNG.png"));
 }
 
 void TileMap::init_Tiles()

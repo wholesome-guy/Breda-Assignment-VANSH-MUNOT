@@ -36,7 +36,7 @@ void Missile::init_Variables(float damage, float range)
 
 void Missile::init_Sprite(sf::Vector2f position, sf::Angle rotation)
 {
-	projectile_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Missile_PNG.png"));
+	projectile_Texture = sf::Texture(sf::Image("Assets/Player/Missile_PNG.png"));
 	projectile_Sprite.setTexture(projectile_Texture,true);
 	projectile_Sprite.setScale({ 1,1 });
 	projectile_Sprite.setOrigin({ static_cast<float>(projectile_Texture.getSize().x / 2),static_cast<float>(projectile_Texture.getSize().y / 2) });
@@ -46,7 +46,7 @@ void Missile::init_Sprite(sf::Vector2f position, sf::Angle rotation)
 	projectile_Sprite.setRotation(rotation);
 
 
-	explosion_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Explosion_PNG.png"));
+	explosion_Texture = sf::Texture(sf::Image("Assets/Player/Explosion_PNG.png"));
 	explosion_Sprite.setTexture(explosion_Texture,true);
 	explosion_Sprite.setScale({ 5,5 });
 	explosion_Sprite.setOrigin({ static_cast<float>(explosion_Texture.getSize().x / 2),static_cast<float>(explosion_Texture.getSize().y / 2)});
