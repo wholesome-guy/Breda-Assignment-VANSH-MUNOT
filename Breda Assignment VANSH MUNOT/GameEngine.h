@@ -95,6 +95,9 @@ private:
 	sf::Texture cursor_Texture;
 	sf::Sprite cursor_Sprite;
 
+	sf::Texture title_Texture;
+	sf::Sprite title_Sprite;
+
 	sf::Font game_Font;
 	sf::Text game_Text;
 	sf::Text end_Text;

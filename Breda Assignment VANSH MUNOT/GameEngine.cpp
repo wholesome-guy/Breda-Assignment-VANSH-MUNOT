@@ -9,7 +9,7 @@ GameEngine* GameEngine::instance = nullptr;
 
 //constructor -- unity start method
 GameEngine::GameEngine() :cursor_Sprite(cursor_Texture),
-end_Text(game_Font,""), game_Text(game_Font,"")
+end_Text(game_Font,""), game_Text(game_Font,""),title_Sprite(title_Texture)
 {
 	//instance is assigned
 	instance = this;
@@ -133,7 +133,14 @@ void GameEngine::init_UI()
 	game_Text.setScale({ 0.5f,0.5f });
 	sf::FloatRect bounds = game_Text.getLocalBounds();
 	game_Text.setOrigin({ bounds.size.x / 2.f, bounds.size.y / 2.f });
-	game_Text.setPosition({ _Window_Size.x / 2.f, 300 });
+	game_Text.setPosition({ 350, 250 });
+
+	title_Texture = sf::Texture(sf::Image("Assets/UI/MainMenu_PNG.png"));
+	title_Sprite.setTexture(title_Texture, true);
+	title_Sprite.setOrigin({ title_Texture.getSize().x / 2.f,title_Texture.getSize().y / 2.f });
+	title_Sprite.setScale({0.417f, 0.351f});
+	title_Sprite.setPosition({ _Window_Size.x / 2.f ,_Window_Size.y / 2.f });
+
 
 }
 
@@ -323,13 +330,12 @@ void GameEngine::game_Text_Render()
 		game_Text.setString("Press Q to Quit");
 		game_Text.setPosition({ 370, 300 });
 		game_Window->draw(game_Text);
-
-
 		game_Window->draw(end_Text);
 
 	}
 	if (!is_Game_Start)
 	{
+		game_Window->draw(title_Sprite);
 		game_Window->draw(game_Text);
 	}
 }
