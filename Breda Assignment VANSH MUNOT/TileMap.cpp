@@ -9,8 +9,25 @@ TileMap::TileMap()
 
 void TileMap::load_Textures()
 {
-    tile_0_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Tile_0_PNG.png"));
-    tile_1_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Tile_1_PNG.png"));
+    // Load tileset 0
+    tile_0_Texture.resize(total_Tiles_0);
+    for (int i = 0; i < total_Tiles_0; i++)
+    {
+        int x = (i % tileSet_0_Columns) * tile_Size;
+        int y = (i / tileSet_0_Columns) * tile_Size;
+        tile_0_Texture[i].loadFromFile("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Tile_0_PNG.png", false, sf::IntRect({ x, y }, { tile_Size, tile_Size }));
+    }
+
+    // Load tileset 1
+    tile_1_Texture.resize(total_Tiles_1);
+    for (int i = 0; i < total_Tiles_1; i++)
+    {
+        int x = (i % tileSet_1_Columns) * tile_Size;
+        int y = (i / tileSet_1_Columns) * tile_Size;
+        tile_1_Texture[i].loadFromFile("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Tile_1_PNG.png",false, sf::IntRect({ x, y }, { tile_Size, tile_Size }));
+    }
+    //tile_0_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Tile_0_PNG.png"));
+    //tile_1_Texture = sf::Texture(sf::Image("C:/Users/vansh/CPP Games/Breda Assignment/Source/Repository/Breda Assignment VANSH MUNOT/Assets/Player/Tile_1_PNG.png"));
 }
 
 void TileMap::init_Tiles()
@@ -22,8 +39,23 @@ void TileMap::init_Tiles()
         for (int col = 0; col < _Columns; col++)
         {
             //emplace creats the object inside the vector, while push back needs a pointer to be moved into the vector
-            _Tiles.emplace_back(tile_0_Texture,sf::Vector2f{ static_cast<float>(col * tile_Size), static_cast<float>(row * tile_Size) });
+            sf::Texture texture = random_Tile_Generator(0);
+            _Tiles.emplace_back(texture, sf::Vector2f{static_cast<float>(col * tile_Size), static_cast<float>(row * tile_Size)});
         }
+    }
+}
+
+sf::Texture TileMap::random_Tile_Generator(int tileset)
+{
+    if (tileset == 0)
+    {
+        std::uniform_int_distribution<int> random(0, total_Tiles_0-1);
+        return tile_0_Texture[random(rng)];
+    }
+    else
+    {
+        std::uniform_int_distribution<int> random(0, total_Tiles_1-1);
+        return tile_1_Texture[random(rng)];
     }
 }
 
@@ -73,6 +105,7 @@ void TileMap::change_Random_Tiles(int count)
     //attempts to avoid a infinte loop
     int changed = 0;
     int attempts = 0;
+    std::uniform_int_distribution<int>  random_Tile(0, total_Tiles - 1);
 
     while (changed < count && attempts < total_Tiles)
     {
@@ -81,7 +114,8 @@ void TileMap::change_Random_Tiles(int count)
         if (_Tiles[index].type == TileType::Tile_0)
         {
             _Tiles[index].type = TileType::Tile_1;
-            _Tiles[index].sprite.setTexture(tile_1_Texture,true);
+            _Tiles[index].texture = random_Tile_Generator(1); // store it
+            _Tiles[index].sprite.setTexture(_Tiles[index].texture, true);
             tile_1_Count++;
             changed++;
         }

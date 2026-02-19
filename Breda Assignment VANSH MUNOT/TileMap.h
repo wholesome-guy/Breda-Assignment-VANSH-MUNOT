@@ -10,12 +10,13 @@ enum class TileType { Tile_0, Tile_1 };
 struct Tile
 {
     TileType        type = TileType::Tile_0;
+    sf::Texture texture;
     sf::Sprite      sprite;
-    Tile(sf::Texture& texture, sf::Vector2f position)
-        : type(TileType::Tile_0), sprite(texture)
+    Tile(sf::Texture tex, sf::Vector2f position)
+        : type(TileType::Tile_0), texture(std::move(tex)), sprite(this->texture)
     {
-        sprite.setTexture(texture,true);
-        sprite.setOrigin({ static_cast<float>(texture.getSize().x / 2),static_cast<float>(texture.getSize().y / 2) });
+        sprite.setTexture(this->texture, true);
+        sprite.setOrigin({ static_cast<float>(this->texture.getSize().x / 2), static_cast<float>(this->texture.getSize().y / 2) });
         sprite.setPosition(position);
     }
 };
@@ -36,12 +37,16 @@ private:
     int _Rows = 392 / tile_Size; 
     int total_Tiles = _Columns * _Rows; 
 
-    int tileSet_0_Columns = 4;
+    int tileSet_0_Columns = 2;
     int tileSet_0_Rows = 4;
     int total_Tiles_0 = tileSet_0_Columns * tileSet_0_Rows;
 
-     sf::Texture  tile_0_Texture;
-     sf::Texture  tile_1_Texture;
+    int tileSet_1_Columns = 2;
+    int tileSet_1_Rows = 4;
+    int total_Tiles_1 = tileSet_1_Columns * tileSet_1_Rows;
+
+    std::vector<sf::Texture>  tile_0_Texture;
+    std::vector<sf::Texture>  tile_1_Texture;
 
     std::vector<Tile>   _Tiles;
 
@@ -55,15 +60,16 @@ private:
     bool  is_Won = false;
     bool is_MiniGame_Active = false;
 
+    //ramdomiser
     std::mt19937 rng
     { std::random_device{}()};
-    std::uniform_int_distribution<int>  random_Tile{ 0, total_Tiles - 1 };
 
     //events 
     terraforming_Percentage_Event terraforming_Percentage;
 
     void load_Textures();
     void init_Tiles();
+    sf::Texture random_Tile_Generator(int tileset);
     void change_Random_Tiles(int count);
     void trigger_Terraform(int terraforming_Factor);
     void on_Kill();
