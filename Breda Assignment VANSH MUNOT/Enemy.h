@@ -1,6 +1,7 @@
 #pragma once
 #include "EntityBase.h"
 #include "EventSystem.h"
+#include <SFML/Audio.hpp>
 
 //forward declaration when i only need a pointer or reference
 class Player;
@@ -82,6 +83,14 @@ private:
 	float knockback_Force =1000;
 	float knockback_Decay = 0.9f;
 	bool knockback_Applied = false;
+
+	particle_Emit_Event particle_System;
+	SFX_Event sfx_Event;
+
+
+	sf::SoundBuffer damage;
+	sf::SoundBuffer die;
+
 
 	//functions
 	void init_Variables(float, float);

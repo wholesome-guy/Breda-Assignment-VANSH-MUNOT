@@ -25,6 +25,9 @@ private:
 	float explosion_Radius;
 	float explosion_Timer;
 	float explosion_Time = 3;
+
+	sf::SoundBuffer explosion_sfx;
+	SFX_Event sfx_Event;
 	
 	//Function
 

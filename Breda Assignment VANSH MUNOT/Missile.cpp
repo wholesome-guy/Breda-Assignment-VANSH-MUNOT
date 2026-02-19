@@ -31,6 +31,11 @@ void Missile::init_Variables(float damage, float range)
 	explosion_Time = 2;
 
 	_EnemySpawner = GameEngine::get_Instance()->get_EnemySpawner();
+	add_Observer(GameEngine::get_Instance());
+
+	if (!explosion_sfx.loadFromFile("Assets/Sound/Explosion_MP3.mp3"))
+		std::cout << "Failed to load explosion\n";
+
 
 }
 
@@ -118,6 +123,12 @@ void Missile::explosion()
 	if (can_Damage)
 	{
 		is_Moving = false;
+
+		sfx_Event.buffer = &explosion_sfx;
+		sfx_Event.volume = 80;
+		sfx_Event.pitch = 1;
+		sfx_Event.randomise_pitch = true;
+		notify_Observers(sfx_Event);
 
 		sf::Vector2f missile_Position = projectile_Sprite.getPosition();
 

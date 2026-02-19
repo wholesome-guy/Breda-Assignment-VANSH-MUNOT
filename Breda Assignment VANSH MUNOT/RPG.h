@@ -27,6 +27,8 @@ private:
 	//missiles array
 	std::vector<std::unique_ptr<Missile>> Missiles;
 
+	sf::SoundBuffer shoot;
+	SFX_Event sfx_Event;
 
 };
 

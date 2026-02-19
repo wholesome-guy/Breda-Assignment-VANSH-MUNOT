@@ -38,6 +38,14 @@ void GameEngine::init_gameWindow()
 	 base_Center = _Camera.getCenter();
 
 	 init_UI();
+
+	 if (game_Music.openFromFile("Assets/Sound/Music_MP3.mp3"))
+	 {
+		 std::cout << "got the music" << "\n";
+	 }
+	 game_Music.setLooping(true);
+	 game_Music.setVolume(40);
+	 game_Music.play();
 }
 
 
@@ -158,7 +166,10 @@ void GameEngine::poll_Event()
 			is_Game_Start = true;
 			if (is_Game_Over)
 			{
-				game_Window->close();
+				if (event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::Q)
+				{
+					game_Window->close();
+				}
 			}
 		}
 	}
@@ -173,11 +184,20 @@ void GameEngine::on_Event(const Event& event)
 	else if (auto* data = dynamic_cast<const game_Over*>(&event))
 	{
 		is_Game_Over = true;
+		game_Music.stop();
 		game_End_State = data->state;
 	}
 	else if (auto* data = dynamic_cast<const camera_Shake*>(&event))
 	{
 		shake.trigger(data->duration, data->magnitude);
+	}
+	else if (auto* data = dynamic_cast<const particle_Emit_Event*>(&event))
+	{
+		particle_System.emit(data->position, data->count, data->colour, data->speed, data->lifetime);
+	}
+	else if (auto* data = dynamic_cast<const SFX_Event*>(&event))
+	{
+		sfx_System.play(*data->buffer, data->volume, data->pitch, data->randomise_pitch);
 	}
 }
 
@@ -199,7 +219,11 @@ void GameEngine::update(float deltatime)
 			e->update(deltatime);
 		}
 
-		miniGame_Update(deltatime);
+		miniGame_Update(deltatime);			
+		particle_System.update(deltatime);
+		sfx_System.update();
+
+
 	}
 
 }
@@ -217,6 +241,8 @@ void GameEngine::render()
 			{
 				e->render(*game_Window);
 			}
+
+			particle_System.render(*game_Window);
 		}
 	}
 	
@@ -290,7 +316,8 @@ void GameEngine::game_Text_Render()
 		end_Text.setOrigin({ bounds.size.x / 2.f, bounds.size.y / 2.f });
 		end_Text.setPosition({ _Window_Size.x / 2.f, _Window_Size.y / 2.f });
 
-		game_Text.setString("Press any key to Quit");
+		game_Text.setString("Press Q to Quit");
+		game_Text.setPosition({ 370, 300 });
 		game_Window->draw(game_Text);
 
 

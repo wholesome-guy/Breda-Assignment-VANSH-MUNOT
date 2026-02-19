@@ -1,4 +1,5 @@
 #include "Pistol.h"
+#include<iostream>
 
 Pistol::Pistol() : Weapon()
 {
@@ -14,6 +15,9 @@ void Pistol::init_Variables()
     //despawn time for bullet
     _Range = 4.f;
     cooldown_Timer = 0.5f;
+
+    if (!shoot.loadFromFile("Assets/Sound/Shoot_WAV.wav"))
+        std::cout << "Failed to load shoot\n";
 
 }
 
@@ -59,6 +63,11 @@ void Pistol::Attack()
     //make new bullet
     Bullets.push_back(std::make_unique<Bullet>(Position, Rotation, shoot_Direction, _Damage, _Range));
 
+    sfx_Event.buffer = &shoot;
+    sfx_Event.volume = 100;
+    sfx_Event.pitch = 1;
+    sfx_Event.randomise_pitch = true;
+    notify_Observers(sfx_Event);
 }
 
 void Pistol::weapon_Rotate(sf::RenderWindow& game_Window)

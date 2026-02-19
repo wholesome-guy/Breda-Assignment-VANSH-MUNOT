@@ -16,6 +16,9 @@ void Rifle::init_Variables()
     _Range = 4.f;
     cooldown_Timer = 0.1f;
 
+    if (!shoot.loadFromFile("Assets/Sound/Shoot_WAV.wav"))
+        std::cout << "Failed to load shoot\n";
+
 }
 
 void Rifle::init_Sprite()
@@ -60,6 +63,11 @@ void Rifle::Attack()
     //make new bullet
     Bullets.push_back(std::make_unique<Bullet>(Position, Rotation, shoot_Direction,_Damage,_Range));
 
+    sfx_Event.buffer = &shoot;
+    sfx_Event.volume = 100;
+    sfx_Event.pitch = 1;
+    sfx_Event.randomise_pitch = true;
+    notify_Observers(sfx_Event);
 }
 
 void Rifle::weapon_Rotate(sf::RenderWindow& game_Window)

@@ -27,5 +27,8 @@ private:
 
 	//all bullets
 	std::vector<std::unique_ptr<Bullet>> Bullets;
+
+	sf::SoundBuffer shoot;
+	SFX_Event sfx_Event;
 };
 

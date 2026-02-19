@@ -1,7 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "EventSystem.h"
 
-class Weapon
+class Weapon: public Subject
 {
 public:
 

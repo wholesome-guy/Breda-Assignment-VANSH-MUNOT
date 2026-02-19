@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 #include <algorithm>
+#include <SFML/Graphics.hpp>
+#include<SFML/Audio.hpp>
 //make a base event to use as a package which we will send
 // we can make specfic events and even add data if we have to transfer it
 struct Event 
@@ -163,5 +165,18 @@ struct camera_Shake :Event
 {
     float duration;
     float magnitude;
+};
+struct particle_Emit_Event : Event {
+    sf::Vector2f position;
+    int count;
+    sf::Color colour;
+    float speed;
+    float lifetime;
+};
+struct SFX_Event : public Event {
+    sf::SoundBuffer* buffer;
+    float volume = 100.f;
+    float pitch = 1.f;
+    bool randomise_pitch;
 };
 

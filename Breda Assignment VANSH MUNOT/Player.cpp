@@ -21,7 +21,7 @@ Player::Player():
     init_Variables();
     init_playerSprite();
     init_Weapons();
-
+    init_SFX();
 }
 
 #pragma region Intialise Variables
@@ -52,6 +52,7 @@ void Player::init_Variables()
     screen_Height = static_cast<float>(screen_Size.y);
 
     _EnemySpawner = GameEngine::get_Instance()->get_EnemySpawner();
+    _GameEngine = GameEngine::get_Instance();
 
     //Timers
     invincibility_Time = 0.5f;
@@ -67,15 +68,32 @@ void Player::init_Variables()
 void Player::init_Weapons()
 {
     //initialising weapons
-    _Sword = new Sword();  
+    _Sword = new Sword();
+    _Sword->add_Observer(_GameEngine);
+
     _Rifle = new Rifle();
+    _Rifle->add_Observer(_GameEngine);
+
     _RPG = new RPG();
+    _RPG->add_Observer(_GameEngine);
+
     _Mace = new Mace();
+    _Mace->add_Observer(_GameEngine);
+
     _WarAxe = new WarAxe();
+    _WarAxe->add_Observer(_GameEngine);
+
     _LMG = new LMG();
+    _LMG->add_Observer(_GameEngine);
+
     _Pistol = new Pistol();
+    _Pistol->add_Observer(_GameEngine);
+
     _Shotgun = new Shotgun();
+    _Shotgun->add_Observer(_GameEngine);
+
     _Grenade_Launcher = new GrenadeLauncher();
+    _Grenade_Launcher->add_Observer(_GameEngine);
 
     //first weapon on start
     current_Weapon = _Sword;
@@ -89,20 +107,20 @@ void Player::init_Character()
 {
     Penguin.character_Speed = 250.f;
     Penguin.max_character_Health = 150;
-    Penguin.character_Terraforming_Factor = 2;
+    Penguin.character_Terraforming_Factor = 5;
     Penguin.character_Texture = sf::Texture(sf::Image("Assets/Player/Penguin_PNG.png"));
     Penguin.character_Index = 0;
 
-    Crocodile.character_Speed = 150.f;
+    Crocodile.character_Speed = 200.f;
     Crocodile.max_character_Health = 300;
-    Crocodile.character_Terraforming_Factor = 1;
+    Crocodile.character_Terraforming_Factor = 2;
     Crocodile.character_Texture = sf::Texture(sf::Image("Assets/Player/Crocodile_PNG.png"));
     Crocodile.character_Index = 1;
 
 
     Peacock.character_Speed = 350.f;
     Peacock.max_character_Health = 50;
-    Peacock.character_Terraforming_Factor = 5;
+    Peacock.character_Terraforming_Factor = 10;
     Peacock.character_Texture = sf::Texture(sf::Image("Assets/Player/Peacock_PNG.png"));
     Peacock.character_Index = 2;
 
@@ -113,6 +131,21 @@ void Player::init_Character()
     player_Texture = Penguin.character_Texture;
     current_Character = Penguin.character_Index;
 
+}
+
+void Player::init_SFX()
+{
+    if (!damage.loadFromFile("Assets/Sound/Player_Damage_WAV.wav"))
+        std::cout << "Failed to load Player_Damage\n";
+    if (!heal.loadFromFile("Assets/Sound/Heal_WAV.wav"))
+        std::cout << "Failed to load Heal\n";
+
+    if (!weapon_transformation.loadFromFile("Assets/Sound/Weapon_Transform_OGG.ogg"))
+        std::cout << "Failed to load Weapon_Transform\n";
+    if (!character_transformation.loadFromFile("Assets/Sound/Character_Transfrom_OGG.ogg"))
+        std::cout << "Failed to load Character_Transform\n";
+    if (!die.loadFromFile("Assets/Sound/Dead_MP3.mp3"))
+        std::cout << "Failed to load Dead\n";
 }
 
 #pragma endregion
@@ -324,6 +357,14 @@ void Player::weapon_Transformation_Cooldown(float deltatime)
 
             weapon_Transform_Timer = 0;
             transform_Weapon(true);
+
+            sfx_Event.buffer = &weapon_transformation;
+            sfx_Event.volume = 100;
+            sfx_Event.pitch = 1;
+            sfx_Event.randomise_pitch = false;
+            notify_Observers(sfx_Event);
+
+
             //turn off rendering of bar
             weapon_State_Event.state = false;
             notify_Observers(weapon_State_Event);
@@ -420,6 +461,13 @@ void Player::transform_Weapon(bool text_visble)
         {
             transform_Event.state = 0;
             notify_Observers(transform_Event);
+
+            particle_System.position = player_Sprite.getPosition();
+            particle_System.count = 50;
+            particle_System.colour = sf::Color::Color(242, 212, 85);
+            particle_System.speed = 2000;
+            particle_System.lifetime = 1.f;
+            notify_Observers(particle_System);
         }
 
 }
@@ -483,6 +531,19 @@ void Player::character_Transform()
     //ui text for transformation
     transform_Event.state = 1;
     notify_Observers(transform_Event);
+
+    particle_System.position = player_Sprite.getPosition();
+    particle_System.count = 50;
+    particle_System.colour = sf::Color::Color(170, 17, 217);
+    particle_System.speed = 2000;
+    particle_System.lifetime = 1.f;
+    notify_Observers(particle_System);
+
+    sfx_Event.buffer = &character_transformation;
+    sfx_Event.volume = 100;
+    sfx_Event.pitch = 1;
+    sfx_Event.randomise_pitch = false;
+    notify_Observers(sfx_Event);
 
 
     transform_Weapon(false);
@@ -573,6 +634,27 @@ void Player::player_Health(float _Damage)
         camera_Sake_Event.duration = 0.1f;
         camera_Sake_Event.magnitude = 10;
         notify_Observers(camera_Sake_Event);
+
+        particle_System.position = player_Sprite.getPosition();
+        particle_System.count = 50;
+        particle_System.colour = sf::Color::Red;
+        particle_System.speed = 2000;
+        particle_System.lifetime = 1.f;
+        notify_Observers(particle_System);
+
+        sfx_Event.buffer = &damage;
+        sfx_Event.volume = 100;
+        sfx_Event.pitch = 1;
+        sfx_Event.randomise_pitch = true;
+        notify_Observers(sfx_Event);
+    }
+    else
+    {
+        sfx_Event.buffer = &heal;
+        sfx_Event.volume = 100;
+        sfx_Event.pitch = 1;
+        sfx_Event.randomise_pitch = true;
+        notify_Observers(sfx_Event);
     }
 
 
@@ -581,6 +663,12 @@ void Player::player_Health(float _Damage)
 
     if (current_player_Health <= 0)
     {
+        sfx_Event.buffer = &die;
+        sfx_Event.volume = 100;
+        sfx_Event.pitch = 1;
+        sfx_Event.randomise_pitch = false;
+        notify_Observers(sfx_Event);
+
         game_Over event;
         event.state = 0;
         notify_Observers(event);

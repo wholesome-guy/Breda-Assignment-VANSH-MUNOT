@@ -1,4 +1,5 @@
 #include "RPG.h"
+#include<iostream>
 RPG::RPG() : Weapon()
 {
     init_Variables();
@@ -13,6 +14,9 @@ void RPG::init_Variables()
     //despawn time for missle
     _Range = 1.5f;
     cooldown_Timer = 2.f;
+
+    if (!shoot.loadFromFile("Assets/Sound/Shoot_WAV.wav"))
+        std::cout << "Failed to load shoot\n";
 
 }
 
@@ -56,6 +60,12 @@ void RPG::Attack()
 
     //make new missile
     Missiles.push_back(std::make_unique<Missile>(Position, Rotation, shoot_Direction, _Damage, _Range));
+
+    sfx_Event.buffer = &shoot;
+    sfx_Event.volume = 100;
+    sfx_Event.pitch = 1;
+    sfx_Event.randomise_pitch = true;
+    notify_Observers(sfx_Event);
 }
 
 void RPG::weapon_Rotate(sf::RenderWindow& game_Window)

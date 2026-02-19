@@ -25,6 +25,9 @@ private:
 	float explosion_Timer;
 	float explosion_Time = 3;
 
+	sf::SoundBuffer explosion_sfx;
+	SFX_Event sfx_Event;
+
 	//Function
 
 	void init_Sprite(sf::Vector2f position, sf::Angle rotation) override;

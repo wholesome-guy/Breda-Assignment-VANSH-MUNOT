@@ -82,6 +82,7 @@ void EnemySpawner::spawn_Enemy()
 
 	//adding observer, player and enemyspawner are observers of enemy
 	new_Enemy->add_Observer(player);
+	new_Enemy->add_Observer(_GameEngine);
 
 	//player's observer is enemy
 	player->add_Observer(new_Enemy.get());

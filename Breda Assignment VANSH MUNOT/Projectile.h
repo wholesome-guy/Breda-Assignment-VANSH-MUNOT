@@ -1,8 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "EnemySpawner.h"
-
-class Projectile
+#include "EventSystem.h"
+class Projectile:public Subject
 {
 public:
 

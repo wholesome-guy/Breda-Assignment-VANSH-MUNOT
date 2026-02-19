@@ -45,6 +45,13 @@ void Enemy::init_Variables(float damage_Multiplier, float health_Multiplier)
     Despawning = false;
     despawn_Time = 0.25f;
     despawn_Timer = 0;
+
+    if (!damage.loadFromFile("Assets/Sound/Enemy_Damage_WAV.wav"))
+        std::cout << "Failed to load damage enemy\n";
+
+    if (!damage.loadFromFile("Assets/Sound/Enemy_Die_MP3.mp3"))
+        std::cout << "Failed to load die enemy\n";
+
 }
 void Enemy::init_Sprite(sf::Vector2f position)
 {
@@ -128,24 +135,6 @@ void Enemy::on_Event(const Event& event)
     if (dynamic_cast<const minigame_Complete*>(&event))
     {
         enemy_KnockBack();
-    }
-    else if (auto* data = dynamic_cast<const game_Difficulty*>(&event))
-    {
-        /*damage_Multiplier = data->damage_Multiplier;
-        health_Multiplier = data->Health_Multiplier;
-
-        switch (type)
-        {
-        case 0:
-            max_enemy_Health = 100.f * health_Multiplier;
-            enemy_Damage = 10 * damage_Multiplier;
-            break;
-        case 1:
-            max_enemy_Health = 200.f * health_Multiplier;
-            enemy_Damage = 30 * damage_Multiplier;
-            break;
-        }
-        enemy_Health = max_enemy_Health;*/
     }
 }
 #pragma endregion
@@ -293,6 +282,19 @@ void Enemy::take_Damage(float _Damage)
     enemy_Health -= _Damage;
     enemy_Health = std::clamp(enemy_Health, 0.f, max_enemy_Health);
 
+    particle_System.position = enemy_Sprite.getPosition();
+    particle_System.count = 10;
+    particle_System.colour = sf::Color::Magenta;
+    particle_System.speed = 1000;
+    particle_System.lifetime = 1.f;
+    notify_Observers(particle_System);
+
+    sfx_Event.buffer = &damage;
+    sfx_Event.volume = 40;
+    sfx_Event.pitch = 1;
+    sfx_Event.randomise_pitch = true;
+    notify_Observers(sfx_Event);
+
     //knockback
     enemy_KnockBack();
 
@@ -347,6 +349,11 @@ void Enemy::despawning_Enemy(float deltatime)
     despawn_Timer += deltatime;
     if (despawn_Timer > despawn_Time)
     {
+        sfx_Event.buffer = &die;
+        sfx_Event.volume = 100;
+        sfx_Event.pitch = 1;
+        sfx_Event.randomise_pitch = true;
+        notify_Observers(sfx_Event);
         is_Dead = true;
 
     }

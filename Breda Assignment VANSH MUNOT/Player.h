@@ -4,8 +4,10 @@
 #include "Weapon.h"
 #include <cmath>
 #include <random>
+#include<SFML/Audio.hpp>
 
 class EnemySpawner;
+class GameEngine;
 
 struct character_Values 
 {
@@ -76,6 +78,7 @@ private:
 	int last_Weapon = 0;
 
 	EnemySpawner* _EnemySpawner;
+	GameEngine* _GameEngine;
 	bool can_Attack = true;
 	bool is_weapon_Cooldown = false;
 
@@ -88,6 +91,14 @@ private:
 	bool is_weapon_Transforming = false;
 
 	bool can_Interact_Square;
+
+	//sound
+	sf::SoundBuffer damage;
+	sf::SoundBuffer heal;
+	sf::SoundBuffer weapon_transformation;
+	sf::SoundBuffer character_transformation;
+	sf::SoundBuffer die;
+
 
 	//randomiser
 	std::mt19937 rng;
@@ -103,12 +114,15 @@ private:
 	game_Difficulty game_Difficulty_Event;
 	transformaion_Event transform_Event;
 	camera_Shake camera_Sake_Event;
+	particle_Emit_Event particle_System;
+	SFX_Event sfx_Event;
 
 	//functions
 	void init_playerSprite();
 	void init_Variables();
 	void init_Weapons();
 	void init_Character();
+	void init_SFX();
 
 
 	void player_Movement(float deltatime);

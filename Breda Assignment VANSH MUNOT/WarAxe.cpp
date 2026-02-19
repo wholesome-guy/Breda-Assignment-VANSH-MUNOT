@@ -25,6 +25,9 @@ void WarAxe::init_Variables()
 
     _EnemySpawner = GameEngine::get_Instance()->get_EnemySpawner();
 
+    if (!swing.loadFromFile("Assets/Sound/Swing_MP3.mp3"))
+        std::cout << "Failed to load swing\n";
+
 }
 
 void WarAxe::init_Sprite()
@@ -39,6 +42,12 @@ void WarAxe::init_Sprite()
 void WarAxe::attack_Animation_Intialiser()
 {
     is_Swinging = true;
+
+    sfx_Event.buffer = &swing;
+    sfx_Event.volume = 100;
+    sfx_Event.pitch = 1;
+    sfx_Event.randomise_pitch = true;
+    notify_Observers(sfx_Event);
 
     swing_Timer = 0.f;
     // swing is larger than 120 for looks, looks better

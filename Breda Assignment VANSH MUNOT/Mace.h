@@ -29,6 +29,9 @@ private:
 
 	EnemySpawner* _EnemySpawner;
 
+	sf::SoundBuffer swing;
+	SFX_Event sfx_Event;
+
 	void attack_Animation_Intialiser();
 	void attack_Animation_Update(float deltatime);
 	void attack_Enemy_Collision();

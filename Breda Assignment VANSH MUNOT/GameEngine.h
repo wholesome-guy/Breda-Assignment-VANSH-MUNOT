@@ -4,6 +4,7 @@
 #include<SFML/Main.hpp>
 #include <SFML/Window.hpp>
 #include<SFML/System.hpp>
+#include<SFML/Audio.hpp>
 #include <iostream>
 #include<vector>
 #include "EntityBase.h"
@@ -13,6 +14,9 @@
 #include "TranformationMiniGame.h"
 #include "EventSystem.h"
 #include "CameraShake.h"
+#include "ParticleSystem.h"
+#include "SFXSystem.h"
+
 class PlayerUI;
 class Observer;
 class TileMap;
@@ -79,8 +83,11 @@ private:
 	EnemySpawner* _EnemySpawner;
 	Observer* _PlayerUI;
 	TileMap* _TileMap;
+	ParticleSystem particle_System;
+	SFXSystem sfx_System;
 
 	TranformationMiniGame mini_Game;
+
 	//events
 	minigame_Active_State minigame_Active_Event;
 	minigame_Win miniGame_Win_Event;
@@ -91,6 +98,8 @@ private:
 	sf::Font game_Font;
 	sf::Text game_Text;
 	sf::Text end_Text;
+
+	sf::Music game_Music;
 
 	bool minigame_Completed_Handled = false;
 	bool pending_MiniGame_Start = false;
