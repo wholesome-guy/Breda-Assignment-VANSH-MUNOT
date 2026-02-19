@@ -12,7 +12,8 @@ PlayerUI::PlayerUI():
     FPS_Text(game_Font,"0"),
     interact_Text(game_Font,"press f"),
     terraforming_Percentage_Text(game_Font,"0"), 
-    transform_Text(game_Font,"")
+    transform_Text(game_Font,""),
+    ammo_Over_Text(game_Font,"")
 {
     _Player = GameEngine::get_Instance()->get_Player();
 	init_UI();
@@ -20,7 +21,7 @@ PlayerUI::PlayerUI():
 
 void PlayerUI::update(float deltatime)
 {
-    UI_Mover(interact_Text);
+    UI_Mover(ammo_Over_Text);
     tranform_Text_Update(deltatime);
     interact_Text_Update(deltatime);
     //FPS_Counter(deltatime);
@@ -47,12 +48,12 @@ void PlayerUI::on_Event(const Event& event)
     else if (auto* data = dynamic_cast<const weapon_Reload_Cooldown*>(&event))
     {
         float Value = data->value;
-        cooldown_Bar_Update(Value, 100, sf::Color::Color(242,212,85));
+        cooldown_Bar_Update(Value, 100, sf::Color::Color(242,212,85),false);
     }
     else if (auto* data = dynamic_cast<const weapon_Transform_Cooldown*>(&event))
     {
         float Value = data->value;
-        cooldown_Bar_Update(Value, 30, sf::Color::Magenta);
+        cooldown_Bar_Update(Value, 30, sf::Color::Magenta,true);
     }
     else if (auto* data = dynamic_cast<const weapon_State*>(&event))
     {
@@ -131,7 +132,7 @@ void PlayerUI::init_UI()
     setup_Sprite(kill_Sprite, kill_Texture, "Assets/UI/Skull_UI_PNG.png", { 0.08f * scale_X, 0.08f * scale_Y }, { 84.f, 28.f }, sf::Color::Color(170, 17, 217));
 
     setup_Text(FPS_Text, "0", base_Size_Small, sf::Color::White, scale_Pos({ 1226.f, 688.f }), { 0.5f, 0.5f });
-    setup_Text(interact_Text, "Left Click", base_Size_Large, sf::Color::Color(242, 212, 85), { 255, 51.2991f }, {0.5f,0.5f});
+    setup_Text(interact_Text, "Right Click", base_Size_Large, sf::Color::Color(242, 212, 85), { 255, 51.2991f }, {0.5f,0.5f});
 
     setup_Text(terraforming_Percentage_Text, "0%", base_Size_Large, sf::Color::Red, { 304.f, 10.f }, { 0.5f, 0.5f });
 
@@ -139,14 +140,28 @@ void PlayerUI::init_UI()
 
     setup_Text(transform_Text, "", base_Size_Large*2, sf::Color::Color(242, 212, 85), { 145.f, 296.f }, { 0.5f, 0.5f });
 
+    setup_Text(ammo_Over_Text, "Ammo Over", base_Size_Large * 2, sf::Color::Color(242, 212, 85), { 213.201f, 77.4995f }, { 0.5f, 0.5f });
+
 }
 
-void PlayerUI::cooldown_Bar_Update(float value, float mulitplier, sf::Color colour)
+void PlayerUI::cooldown_Bar_Update(float value, float mulitplier, sf::Color colour,bool ammo_Over)
 {
     sf::Vector2f offset = { -20,-30 };
     cooldown_Bar.setPosition(_Player->get_Position() + offset);
     cooldown_Bar.setSize({ value * mulitplier,5 });
     cooldown_Bar.setFillColor(colour);
+
+    if (ammo_Over)
+    {
+        if (value > 0.25f)
+        {
+            is_reloading_Complete = false;
+        }
+        else
+        {
+            is_reloading_Complete = true;
+        }
+    }
 }
 
 
@@ -179,6 +194,11 @@ void PlayerUI::render_UI(sf::RenderTarget& target)
     if (is_tranform_Complete)
     {
         target.draw(transform_Text);
+    }
+
+    if (!is_reloading_Complete)
+    {
+        target.draw(ammo_Over_Text);
     }
 
 }

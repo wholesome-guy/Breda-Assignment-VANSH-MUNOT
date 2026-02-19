@@ -143,7 +143,7 @@ void EnemySpawner::spawn_Square(int i)
 {
 	std::uniform_int_distribution<int> random(0, 100);
 
-	if (random(random_Generator) < 10)//make it 30 later
+	if (random(random_Generator) < 10)//make it 10 later
 	{
 		auto new_Shape = std::make_unique<Shape>(_Enemies[i]->get_Position());
 		

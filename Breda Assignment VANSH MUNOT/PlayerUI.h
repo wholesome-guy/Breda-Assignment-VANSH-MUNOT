@@ -26,6 +26,7 @@ private:
 
 	sf::Texture ammo_Texture;
 	sf::Sprite ammo_Sprite;
+	sf::Text ammo_Over_Text;
 	sf::Texture health_Texture;
 	sf::Sprite health_Sprite;
 
@@ -45,6 +46,9 @@ private:
 	float transform_Text_Time = 2;
 	float transform_Text_Timer = 0;
 
+	bool is_reloading_Complete = true;
+
+
 	bool is_Bar_Visible = false;
 	float bar_Size_Offset;
 
@@ -62,7 +66,7 @@ private:
 
 	//functions
 
-	void cooldown_Bar_Update(float,float,sf::Color);
+	void cooldown_Bar_Update(float,float,sf::Color,bool);
 
 	void render_UI(sf::RenderTarget& target);
 

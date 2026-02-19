@@ -302,6 +302,8 @@ void Player::Attack()
             //turn on rendering of bar
             weapon_State_Event.state = true;
             notify_Observers(weapon_State_Event);
+
+
         }
     }
 }
@@ -342,6 +344,8 @@ void Player::weapon_Transformation_Cooldown(float deltatime)
     if (is_weapon_Transforming)
     {
         can_Attack = false;
+        current_Weapon->weapon_Colour(sf::Color::Color(255, 255, 255, 0));
+
 
         weapon_Transform_Timer += deltatime;
 
@@ -356,6 +360,8 @@ void Player::weapon_Transformation_Cooldown(float deltatime)
             is_weapon_Cooldown = true;
 
             weapon_Transform_Timer = 0;
+            current_Weapon->weapon_Colour(sf::Color::White);
+
             transform_Weapon(true);
 
             sfx_Event.buffer = &weapon_transformation;
