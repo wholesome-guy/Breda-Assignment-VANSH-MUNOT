@@ -21,7 +21,7 @@ PlayerUI::PlayerUI():
 
 void PlayerUI::update(float deltatime)
 {
-    //UI_Mover(ammo_Over_Text);
+    //UI_Mover(interact_Text);
     tranform_Text_Update(deltatime);
     interact_Text_Update(deltatime);
     //FPS_Counter(deltatime);
@@ -92,12 +92,12 @@ void PlayerUI::on_Event(const Event& event)
         if (data->state == 0)
         {
             transform_Text.setString("Weapon Transformed");
-            transform_Text.setPosition({ 121, 296 });
+            transform_Text.setPosition({ 127.802f, 77.4995f });
         }
         else
         {
             transform_Text.setString("Character Transformed");
-            transform_Text.setPosition({81,296});
+            transform_Text.setPosition({ 90.6029f, 77.4995f });
 
         }
     }
@@ -138,7 +138,7 @@ void PlayerUI::init_UI()
 
     cooldown_Bar.setFillColor(sf::Color::Color(242, 212, 85));
 
-    setup_Text(transform_Text, "", base_Size_Large*2, sf::Color::Color(242, 212, 85), { 145.f, 296.f }, { 0.5f, 0.5f });
+    setup_Text(transform_Text, "Character Transformed", base_Size_Large*2, sf::Color::Color(242, 212, 85), { 213.201f, 77.4995f }, { 0.5f, 0.5f });
 
     setup_Text(ammo_Over_Text, "Ammo Over", base_Size_Large * 2, sf::Color::Color(242, 212, 85), { 213.201f, 77.4995f }, { 0.5f, 0.5f });
 
@@ -189,6 +189,7 @@ void PlayerUI::render_UI(sf::RenderTarget& target)
     {
         target.draw(interact_Text);
     }
+
 
 
     if (is_tranform_Complete)

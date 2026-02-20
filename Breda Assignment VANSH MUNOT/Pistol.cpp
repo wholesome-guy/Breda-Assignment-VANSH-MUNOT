@@ -10,8 +10,8 @@ Pistol::Pistol() : Weapon()
 void Pistol::init_Variables()
 {
     //properties
-    _Ammo = 6;
-    _Damage = 150.f;
+    _Ammo = 10;
+    _Damage = 200.f;
     //despawn time for bullet
     _Range = 4.f;
     cooldown_Timer = 0.5f;
