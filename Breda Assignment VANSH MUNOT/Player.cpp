@@ -112,7 +112,7 @@ void Player::init_Character()
     Penguin.character_Index = 0;
 
     Crocodile.character_Speed = 200.f;
-    Crocodile.max_character_Health = 300;
+    Crocodile.max_character_Health = 500;
     Crocodile.character_Terraforming_Factor = 10;
     Crocodile.character_Texture = sf::Texture(sf::Image("Assets/Player/Crocodile_PNG.png"));
     Crocodile.character_Index = 1;

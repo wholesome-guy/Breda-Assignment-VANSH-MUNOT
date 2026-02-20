@@ -13,11 +13,11 @@ Mace::Mace() : Weapon()
 void Mace::init_Variables()
 {
     //properties
-    _Ammo = 10;
-    _Damage = 100.f;
+    _Ammo = 12;
+    _Damage = 150.f;
     //actual distance in pixels
     _Range = 150.f;
-    cooldown_Timer = 2.0f;
+    cooldown_Timer = 1.0f;
 
     is_Swinging = false;
     swing_Timer = 0.f;
