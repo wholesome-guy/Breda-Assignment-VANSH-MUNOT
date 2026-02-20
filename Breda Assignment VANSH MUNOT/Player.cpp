@@ -112,7 +112,7 @@ void Player::init_Character()
     Penguin.character_Index = 0;
 
     Crocodile.character_Speed = 200.f;
-    Crocodile.max_character_Health = 500;
+    Crocodile.max_character_Health = 300;
     Crocodile.character_Terraforming_Factor = 10;
     Crocodile.character_Texture = sf::Texture(sf::Image("Assets/Player/Crocodile_PNG.png"));
     Crocodile.character_Index = 1;
@@ -515,7 +515,7 @@ void Player::character_Transform()
 
         game_Difficulty_Event.damage_Multiplier = 2;
         game_Difficulty_Event.Health_Multiplier = 2;
-        game_Difficulty_Event.max_Enemies = 50;
+        game_Difficulty_Event.max_Enemies = 100;
         game_Difficulty_Event.spawn_Time = 1;
         notify_Observers(game_Difficulty_Event);
 
